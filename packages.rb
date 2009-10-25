@@ -28,13 +28,6 @@ pkg 'freeimage' do
   provides []
 end
 pkg 'gettext'
-pkg 'git' do
-  installs {
-    via :apt, 'git-core'
-    via :macports, 'git-core +svn +bash_completion'
-    via :brew, 'git'
-  }
-end
 pkg 'htop'
 gem 'image_science' do
   requires 'freeimage'
