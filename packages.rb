@@ -15,9 +15,6 @@ pkg 'curl' do
     via :apt, 'curl'
   }
 end
-dep 'doc' do
-  requires 'doxygen', 'gettext'
-end
 pkg 'doxygen'
 pkg 'erlang'
 pkg 'freeimage' do
