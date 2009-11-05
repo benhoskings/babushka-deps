@@ -1,5 +1,5 @@
 dep 'rubygems' do
-  requires 'rubygems installed', 'github source'
+  requires 'rubygems installed', 'github source', 'gemcutter source'
   setup {
     shell('ruby --version')['ruby 1.9'].nil? || definer.requires('fake json gem')
   }
@@ -29,6 +29,12 @@ dep 'fake json gem' do
       Babushka::GemHelper.install! 'json-1.1.9.gem', '--no-ri --no-rdoc'
     }
   }
+end
+
+dep 'gemcutter source' do
+  requires 'rubygems installed'
+  met? { shell("gem sources")["http://gemcutter.org"] }
+  meet { shell "gem sources -a http://gemcutter.org", !File.writable?(which('ruby')) }
 end
 
 dep 'github source' do
