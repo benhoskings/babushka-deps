@@ -15,7 +15,7 @@ pkg 'curl' do
     via :apt, 'curl'
   }
 end
-pkg 'doxygen'
+pkg 'gettext', :for => :linux
 pkg 'erlang'
 pkg 'freeimage' do
   installs {
