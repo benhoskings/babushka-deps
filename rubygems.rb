@@ -34,13 +34,13 @@ end
 dep 'gemcutter source' do
   requires 'rubygems installed'
   met? { shell("gem sources")["http://gemcutter.org"] }
-  meet { shell "gem sources -a http://gemcutter.org", !File.writable?(which('ruby')) }
+  meet { shell "gem sources -a http://gemcutter.org", :sudo => !File.writable?(which('ruby')) }
 end
 
 dep 'github source' do
   requires 'rubygems installed'
   met? { shell("gem sources")["http://gems.github.com"] }
-  meet { shell "gem sources -a http://gems.github.com", !File.writable?(which('ruby')) }
+  meet { shell "gem sources -a http://gems.github.com", :sudo => !File.writable?(which('ruby')) }
 end
 
 dep 'rubygems installed' do
