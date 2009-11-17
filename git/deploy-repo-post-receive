@@ -1,5 +1,5 @@
 cd ..
-env -i git reset --hard
+env -i git reset --hard deploy
 mkdir -p tmp
 rm -f public/javascripts/all.js
 rm -f public/stylesheets/all.css
