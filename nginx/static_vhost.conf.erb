@@ -4,5 +4,5 @@ server {
   listen 80;
   server_name <%= var :domain %> <%= var :extra_domains, :default => '' %> <%= var :www_aliases %>;
 
-  root <%= var :document_root, :default => "#{'/srv/http' / var(:domain) / 'public'}" %>;
+  root <%= var :document_root, :default => L{ "#{'/srv/http' / var(:domain) / 'public'}" } %>;
 }
