@@ -85,5 +85,5 @@ class PSQLBackup
 end
 
 PSQLBackup.new.run %w[
-  <%= offsite_host %>
+  <%= var :offsite_host %>
 ]
