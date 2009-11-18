@@ -5,7 +5,7 @@ dep 'user shell setup' do
 end
 
 src 'fish' do
-  requires 'ncurses', 'doc', 'coreutils', 'sed'
+  requires 'ncurses', 'coreutils', 'gettext'
   source "git://github.com/benhoskings/fish.git"
   preconfigure { shell "autoconf" }
   configure_env { on :osx, "LDFLAGS='-liconv -L/opt/local/lib'" }

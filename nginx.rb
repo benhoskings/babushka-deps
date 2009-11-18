@@ -16,10 +16,11 @@ end
 
 dep 'vhost configured' do
   requires 'webserver configured'
+  define_var :vhost_type, :default => 'passenger', :choices => %w[passenger proxy static]
   met? { File.exists? "/opt/nginx/conf/vhosts/#{var :domain}.conf" }
   meet {
-    render_erb "nginx/#{var :vhost_type, :default => 'passenger'}_vhost.conf.erb",   :to => "/opt/nginx/conf/vhosts/#{var :domain}.conf", :sudo => true
-    render_erb "nginx/#{var :vhost_type, :default => 'passenger'}_vhost.common.erb", :to => "/opt/nginx/conf/vhosts/#{var :domain}.common", :sudo => true, :optional => true
+    render_erb "nginx/#{var :vhost_type}_vhost.conf.erb",   :to => "/opt/nginx/conf/vhosts/#{var :domain}.conf", :sudo => true
+    render_erb "nginx/#{var :vhost_type}_vhost.common.erb", :to => "/opt/nginx/conf/vhosts/#{var :domain}.common", :sudo => true, :optional => true
   }
   after { restart_nginx if File.exists? "/opt/nginx/conf/vhosts/on/#{var :domain}.conf" }
 end

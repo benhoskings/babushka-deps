@@ -1,5 +1,5 @@
 dep 'rubygems' do
-  requires 'rubygems installed', 'github source'
+  requires 'rubygems installed', 'github source', 'gemcutter source'
   setup {
     shell('ruby --version')['ruby 1.9'].nil? || definer.requires('fake json gem')
   }
@@ -31,10 +31,16 @@ dep 'fake json gem' do
   }
 end
 
+dep 'gemcutter source' do
+  requires 'rubygems installed'
+  met? { shell("gem sources")["http://gemcutter.org"] }
+  meet { shell "gem sources -a http://gemcutter.org", :sudo => !File.writable?(which('ruby')) }
+end
+
 dep 'github source' do
   requires 'rubygems installed'
   met? { shell("gem sources")["http://gems.github.com"] }
-  meet { shell "gem sources -a http://gems.github.com", !File.writable?(which('ruby')) }
+  meet { shell "gem sources -a http://gems.github.com", :sudo => !File.writable?(which('ruby')) }
 end
 
 dep 'rubygems installed' do
