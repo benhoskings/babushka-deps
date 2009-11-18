@@ -1,0 +1,129 @@
+# <%= generated_by_babushka %>
+
+# Never forward plain names (without a dot or domain part)
+domain-needed
+# Never forward addresses in the non-routed address spaces.
+bogus-priv
+# Filter useless windows-originated DNS requests.
+filterwin2k
+
+# Read upstream DNS servers provided by PPPoE.
+#resolv-file=/etc/ppp/resolv.conf
+
+# Change uid / gid to something other than the default.
+user=dnsmasq
+#group=
+
+#interface=eth0
+#no-dhcp-interface=eth1
+
+expand-hosts
+domain=<%= var :dns_domain %>
+
+# localhost services all DNS requests for the internal domain
+#server=/<%= var :dns_domain %>/<%= var :dns_server_ip %>
+address=/#/<%= var :dns_server_ip %>
+#local=/<%= var :dns_domain %>/
+
+# Set the cachesize here.
+cache-size=512
+
+<% confirm "Should dnsmasq serve DHCP as well as DNS", :default => 'y' do %>
+# Network / DHCP range config
+# dynamic addresses allocated from here
+dhcp-range=dynamic,<%= var :dhcp_start_address %>,<%= var :dhcp_end_address %>,<%= var :dhcp_subnet %>,24h
+# fixed clients
+#dhcp-range=fixed,192.168.4.0,static,255.255.0.0,24h
+
+# Load fixed IP definitions (should be on the 192.168.4.0/24 network)
+read-ethers
+
+# Send options to hosts which ask for a DHCP lease.
+# See RFC 2132 for details of available options.
+# Note that all the common settings, such as netmask and
+# broadcast address, DNS server and default route, are given
+# sane defaults by dnsmasq. You very likely will not need any
+# any dhcp-options. If you use Windows clients and Samba, there
+# are some options which are recommended, they are detailed at the
+# end of this section.
+# For reference, the common options are:
+# subnet mask - 1
+# default router - 3
+# DNS server - 6
+# broadcast address - 28
+
+# subnet
+dhcp-option=1,<%= var :dhcp_subnet %>
+# router
+#dhcp-option=3,<%= var :dhcp_router_ip %>
+# DNS server
+dhcp-option=6,<%= var :dns_server_ip %>
+# broadcast
+dhcp-option=28,<%= var :dhcp_broadcast_ip %>
+# NTP server
+#dhcp-option=42,0.0.0.0
+
+# Set the NIS domain name
+dhcp-option=40,<%= var :dns_domain %>
+
+# Set the default time-to-live to 50
+#dhcp-option=23,50
+
+# Set the "all subnets are local" flag
+dhcp-option=27,1
+
+# Send the etherboot magic flag and then etherboot options (a string).
+#dhcp-option=128,e4:45:74:68:00:00
+#dhcp-option=129,NIC=eepro100
+
+# Specify an option which will only be sent to the "red" network
+# (see dhcp-range for the declaration of the "red" network)
+#dhcp-option=red,42,192.168.1.1
+
+# The following DHCP options set up dnsmasq in the same way as is specified
+# for the ISC dhcpcd in
+# http://www.samba.org/samba/ftp/docs/textdocs/DHCP-Server-Configuration.txt
+# adapted for a typical dnsmasq installation where the host running
+# dnsmasq is also the host running samba.
+# you may want to uncomment them if you use Windows clients and Samba.
+dhcp-option=19,0           # option ip-forwarding off
+dhcp-option=44,0.0.0.0     # set netbios-over-TCP/IP nameserver(s) aka WINS server(s)
+dhcp-option=45,0.0.0.0     # netbios datagram distribution server
+dhcp-option=46,8           # netbios node type
+dhcp-option=47             # empty netbios scope.
+
+# Send RFC-3397 DNS domain search DHCP option. WARNING: Your DHCP client
+# probably doesn't support this......
+#dhcp-option=119,eng.apple.com,marketing.apple.com
+
+# Send RFC-3442 classless static routes (note the netmask encoding)
+#dhcp-option=121,192.168.1.0/24,1.2.3.4,10.0.0.0/8,5.6.7.8
+
+# Send encapsulated vendor-class specific options. The vendor-class
+# is sent as DHCP option 60, and all the options marked with the
+# vendor class are send encapsulated in DHCP option 43. The meaning of
+# the options is defined by the vendor-class. This example sets the
+# mtftp address to 0.0.0.0 for PXEClients
+#dhcp-option=vendor:PXEClient,1,0.0.0.0
+
+# Set the boot filename and tftpd server name and address
+# for BOOTP. You will only need this is you want to
+# boot machines over the network.
+#dhcp-boot=/var/ftpd/pxelinux.0,boothost,192.168.0.3
+
+# Set the limit on DHCP leases, the default is 150
+dhcp-lease-max=255
+
+# Set the DHCP server to authoritative mode. In this mode it will barge in
+# and take over the lease for any client which broadcasts on the network,
+# whether it has a record of the lease or not. This avoids long timeouts
+# when a machine wakes up on a new network. DO NOT enable this if there's
+# the slighest chance that you might end up accidentally configuring a DHCP
+# server for your campus/company accidentally. The ISC server uses the same
+# the same option, and this URL provides more information:
+# http://www.isc.org/index.pl?/sw/dhcp/authoritative.php
+dhcp-authoritative
+<% end %>
+
+# Return an MX record pointing to itself for all local machines.
+selfmx
