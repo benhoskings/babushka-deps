@@ -77,7 +77,7 @@ class PSQLBackup
 
   def git_push
     shell('git remote').split("\n").all? {|remote|
-      log_shell "Pushing to #{remote}", "git push #{remote} master"
+      log_shell "Pushing to #{remote}", "git push -f #{remote} master"
     }
   end
 
