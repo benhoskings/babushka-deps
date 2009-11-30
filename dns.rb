@@ -5,6 +5,7 @@ pkg 'dnsmasq' do
       :type => :ip_range,
       :default => '10.0.1.x',
       :message => "What network range would you like to serve DHCP on?"
+
     set :dhcp_subnet, L{ Babushka::IPRange.new(var(:dhcp_network)).subnet }
     set :dhcp_broadcast_ip, L{ Babushka::IPRange.new(var(:dhcp_network)).broadcast }
 
