@@ -57,12 +57,19 @@ class PSQLBackup
       true
     elsif FileUtils.mkdir_p(path)
       Dir.chdir path do
-        shell "git init"
+        init_git_repo
         hosts.all? {|host|
           shell "git remote add #{host} #{host}:#{RelativeRepoPath}"
         }
       end
     end
+  end
+
+  def init_git_repo
+    shell "git init"
+    shell "touch .gitignore"
+    shell "git add .gitignore"
+    log_shell "Making initial commit", "git commit -m 'Added .gitignore.'"
   end
 
   def dump_dbs
