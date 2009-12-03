@@ -43,7 +43,7 @@ dep 'user exists' do
     met? { grep(/^#{var(:username)}:/, '/etc/passwd') }
     meet {
       sudo "mkdir -p #{var :home_dir_base}" and
-      sudo "useradd #{var(:username)} -m -s /bin/bash -b #{var :home_dir_base} -G admin" and
+      sudo "useradd -m -s /bin/bash -b #{var :home_dir_base} -G admin #{var(:username)}" and
       sudo "chmod 701 #{var(:home_dir_base) / var(:username)}"
     }
   end
