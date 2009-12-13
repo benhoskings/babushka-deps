@@ -7,9 +7,6 @@ end
 src 'fish' do
   requires 'ncurses', 'coreutils', 'gettext'
   source "git://github.com/benhoskings/fish.git"
-  preconfigure { shell "autoconf" }
-  configure_env { on :osx, "LDFLAGS='-liconv -L/opt/local/lib'" }
-  configure_args "--without-xsel"
   after { append_to_file which('fish'), '/etc/shells' }
 end
 
