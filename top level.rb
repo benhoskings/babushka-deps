@@ -36,5 +36,8 @@ dep 'webapp' do
 end
 
 dep 'core software' do
-  requires 'fish', 'vim', 'curl', 'htop', 'jnettop', 'screen', 'nmap'
+  requires {
+    on :linux, 'fish', 'vim', 'curl', 'htop', 'jnettop', 'screen', 'nmap'
+    on :osx, 'fish', 'curl', 'jnettop', 'nmap'
+  }
 end
