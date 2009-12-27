@@ -9,7 +9,7 @@ dep 'vhost enabled' do
     }.join(' ')
   }
   requires 'vhost configured'
-  met? { File.exists? "/opt/nginx/conf/vhosts/on/#{var :domain}.conf" }
+  met? { "/opt/nginx/conf/vhosts/on/#{var :domain}.conf".p.exists? }
   meet { sudo "ln -sf '/opt/nginx/conf/vhosts/#{var :domain}.conf' '/opt/nginx/conf/vhosts/on/#{var :domain}.conf'" }
   after { restart_nginx }
 end
@@ -147,7 +147,7 @@ dep 'webserver installed' do
       installed_version = shell('/opt/nginx/sbin/nginx -V') {|shell| shell.stderr }.val_for('nginx version').sub('nginx/', '')
       if installed_version != var(:versions)[:nginx]
         unmet "an outdated version of nginx is installed (#{installed_version})"
-      elsif !shell('/opt/nginx/sbin/nginx -V') {|shell| shell.stderr }[Babushka::GemHelper.gem_path_for('passenger')]
+      elsif !shell('/opt/nginx/sbin/nginx -V') {|shell| shell.stderr }[Babushka::GemHelper.gem_path_for('passenger').to_s]
         unmet "nginx is installed, but built against the wrong passenger version"
       else
         met "nginx-#{installed_version} is installed"
