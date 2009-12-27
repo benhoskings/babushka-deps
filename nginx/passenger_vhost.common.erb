@@ -1,7 +1,7 @@
 # <%= generated_by_babushka %>
 
 server_name <%= var :domain %> <%= var :extra_domains, :default => '' %> <%= var :www_aliases %>;
-root <%= pathify(var :rails_root) / 'public' %>;
+root <%= var(:rails_root) / 'public' %>;
 passenger_enabled on;
 passenger_use_global_queue on;
 rails_env <%= var :rails_env, :default => 'production' %>;
@@ -12,7 +12,7 @@ if (-f $document_root/system/maintenance.html) {
 
 <% unless var(:x_send_asset_subpath, :default => '').blank? %>
 location <%= var :x_send_asset_subpath %> {
-  root <%= pathify(var :rails_root) %>;
+  root <%= var(:rails_root).p %>;
   internal;
 }
 <% end %>

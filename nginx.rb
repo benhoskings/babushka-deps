@@ -41,9 +41,9 @@ def build_nginx
       :input => [
         '', # enter to continue
         '2', # custom build
-        pathify("nginx-#{var(:versions)[:nginx]}"), # path to nginx source
+        "nginx-#{var(:versions)[:nginx]}".p, # path to nginx source
         '', # accept /opt/nginx target path
-        "--with-http_ssl_module --add-module='#{pathify "nginx_upload_module-#{var(:versions)[:upload_module]}"}'",
+        "--with-http_ssl_module --add-module='#{"nginx_upload_module-#{var(:versions)[:upload_module]}".p}'",
         '', # confirm settings
         '', # enter to continue
         '' # done

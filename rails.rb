@@ -1,11 +1,11 @@
 def parse_config_gem_deps
   IO.readlines(
-    pathify var(:rails_root) / 'config/environment.rb'
+    var(:rails_root) / 'config/environment.rb'
   ).grep(/^\s*config\.gem/).map {|l|
     i = l.scan /config\.gem[\s\('"]+([\w-]+)(['"],\s*\:version\s*=>\s*['"]([<>=!~.0-9\s]+)['"])?.*$/
 
     if i.first.nil? || i.first.first.nil?
-      log_error "Couldn't parse '#{l.chomp}' in #{pathify 'config/environment.rb'}."
+      log_error "Couldn't parse '#{l.chomp}' in #{'config/environment.rb'.p}."
     else
       ver i.first.first, i.first.last
     end
@@ -14,7 +14,7 @@ end
 
 def parse_rails_dep
   IO.readlines(
-    pathify var(:rails_root) / 'config/environment.rb'
+    var(:rails_root) / 'config/environment.rb'
   ).grep(/RAILS_GEM_VERSION/).map {|l|
     $1 if l =~ /^[^#]*RAILS_GEM_VERSION\s*=\s*["']([!~<>=]*\s*[\d.]+)["']/
   }.compact.map {|v|
@@ -49,7 +49,7 @@ dep 'migrated db' do
   met? {
     current_version = rails_rake("db:version") {|shell| shell.stdout.val_for('Current version') }
     latest_version = Dir[
-      pathify var(:rails_root) / 'db/migrate/*.rb'
+      var(:rails_root) / 'db/migrate/*.rb'
     ].map {|f| File.basename f }.push('0').sort.last.split('_', 2).first
 
     returning current_version == latest_version do |result|
@@ -68,7 +68,7 @@ dep 'migrated db' do
 end
 
 dep 'deployed app' do
-  met? { File.directory? pathify var(:rails_root) / 'app' }
+  met? { File.directory? var(:rails_root) / 'app' }
 end
 
 gem 'rails'
