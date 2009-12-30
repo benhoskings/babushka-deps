@@ -1,7 +1,3 @@
-pkg 'autoconf'
-pkg 'build-essential' do
-  provides 'gcc', 'g++', 'make', 'ld'
-end
 pkg 'coreutils', :for => :osx do
   provides 'gecho'
   after :on => :osx do
