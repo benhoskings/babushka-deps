@@ -3,7 +3,7 @@ dep 'system' do
 end
 
 dep 'user setup' do
-  requires 'user shell setup', 'passwordless ssh logins', 'public key'
+  requires 'dot files', 'passwordless ssh logins', 'public key'
   define_var :username, :default => shell('whoami')
   setup {
     set :username, shell('whoami')
@@ -37,7 +37,7 @@ end
 
 dep 'core software' do
   requires {
-    on :linux, 'fish', 'vim', 'curl', 'htop', 'jnettop', 'screen', 'nmap'
-    on :osx, 'fish', 'curl', 'jnettop', 'nmap'
+    on :linux, 'vim', 'curl', 'htop', 'jnettop', 'screen', 'nmap'
+    on :osx, 'curl', 'jnettop', 'nmap'
   }
 end
