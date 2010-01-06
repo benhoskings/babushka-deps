@@ -53,14 +53,6 @@ dep 'admin group' do
   meet { sudo 'groupadd admin' }
 end
 
-dep 'build tools' do
-  requires {
-    on :osx, 'xcode tools'
-    on :snow_leopard, 'llvm in path'
-    on :linux, 'build-essential', 'autoconf'
-  }
-end
-
 dep 'tmp cleaning grace period', :for => :ubuntu do
   met? { !grep(/^[^#]*TMPTIME=0/, "/etc/default/rcS") }
   meet { change_line "TMPTIME=0", "TMPTIME=30", "/etc/default/rcS" }
