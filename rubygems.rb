@@ -31,16 +31,20 @@ dep 'fake json gem' do
   }
 end
 
-dep 'gemcutter source' do
-  requires 'rubygems installed'
-  met? { shell("gem sources")["http://gemcutter.org"] }
-  meet { shell "gem sources -a http://gemcutter.org", :sudo => !File.writable?(which('ruby')) }
+meta :gem_source do
+  accepts_list_for :uri
+  template {
+    requires 'rubygems installed'
+    met? { uri.all? {|u| shell("gem sources")[u.to_s] } }
+    meet { uri.each {|u| shell "gem sources -a #{u.to_s}", :sudo => !File.writable?(which('ruby')) } }
+  }
 end
 
-dep 'github source' do
-  requires 'rubygems installed'
-  met? { shell("gem sources")["http://gems.github.com"] }
-  meet { shell "gem sources -a http://gems.github.com", :sudo => !File.writable?(which('ruby')) }
+gem_source 'gemcutter source' do
+  uri 'http://gemcutter.org'
+end
+gem_source 'github source' do
+  uri 'http://gems.github.com'
 end
 
 dep 'rubygems installed' do
