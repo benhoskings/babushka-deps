@@ -1,7 +1,7 @@
 dep 'rubygems' do
   requires 'rubygems installed', 'github source', 'gemcutter source'
   setup {
-    shell('ruby --version')['ruby 1.9'].nil? || definer.requires('fake json gem')
+    definer.requires('fake json gem') if shell('ruby --version')['ruby 1.9']
   }
 end
 
