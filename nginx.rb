@@ -139,7 +139,7 @@ end
 
 dep 'webserver installed' do
   requires 'passenger', 'build tools', 'libssl headers', 'zlib headers'
-  merge :versions, {:nginx => '0.8.15', :upload_module => '2.0.10'}
+  merge :versions, {:nginx => '0.7.64', :upload_module => '2.0.11'}
   met? {
     if !File.executable?('/opt/nginx/sbin/nginx')
       unmet "nginx isn't installed"
