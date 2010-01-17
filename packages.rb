@@ -59,6 +59,7 @@ end
 pkg 'nmap'
 pkg 'oniguruma'
 gem 'passenger' do
+  installs 'passenger' => '>= 2.2.9'
   provides 'passenger-install-nginx-module'
 end
 pkg 'rcconf' do
