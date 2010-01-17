@@ -36,7 +36,7 @@ def build_nginx
     get_source("http://sysoev.ru/nginx/nginx-#{var(:versions)[:nginx]}.tar.gz") and
     get_source("http://www.grid.net.ru/nginx/download/nginx_upload_module-#{var(:versions)[:upload_module]}.tar.gz") and
     log_shell("Building nginx (this takes a minute or two)",
-      "sudo passenger-install-nginx-module",
+      Babushka::GemHelper.gem_bin_path / 'passenger-install-nginx-module',
       :sudo => true,
       :input => [
         '', # enter to continue
