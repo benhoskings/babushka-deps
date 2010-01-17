@@ -1,13 +1,4 @@
 dep 'vhost enabled' do
-  define_var :www_aliases, :default => L{
-    "#{var :domain} #{var :extra_domains}".split(' ').compact.map(&:strip).reject {|d|
-      d.starts_with? '*.'
-    }.reject {|d|
-      d.starts_with? 'www.'
-    }.map {|d|
-      "www.#{d}"
-    }.join(' ')
-  }
   requires 'vhost configured'
   met? { "/opt/nginx/conf/vhosts/on/#{var :domain}.conf".p.exists? }
   meet { sudo "ln -sf '/opt/nginx/conf/vhosts/#{var :domain}.conf' '/opt/nginx/conf/vhosts/on/#{var :domain}.conf'" }
@@ -15,6 +6,15 @@ dep 'vhost enabled' do
 end
 
 dep 'vhost configured' do
+  helper :www_aliases do
+    "#{var :domain} #{var :extra_domains}".split(' ').compact.map(&:strip).reject {|d|
+      d.starts_with? '*.'
+    }.reject {|d|
+      d.starts_with? 'www.'
+    }.map {|d|
+      "www.#{d}"
+    }.join(' ')
+  end
   requires 'webserver configured'
   define_var :vhost_type, :default => 'passenger', :choices => %w[passenger proxy static]
   met? { File.exists? "/opt/nginx/conf/vhosts/#{var :domain}.conf" }
