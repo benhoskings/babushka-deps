@@ -118,9 +118,11 @@ end
 
 dep 'webserver configured' do
   requires 'webserver installed', 'www user and group'
+  define_var :nginx_prefix, :default => '/opt/nginx'
+  helper(:nginx_conf) { var(:nginx_prefix) / 'conf/nginx.conf' }
   met? {
-    if babushka_config? '/opt/nginx/conf/nginx.conf'
-      configured_root = IO.read('/opt/nginx/conf/nginx.conf').val_for('passenger_root')
+    if babushka_config? nginx_conf
+      configured_root = nginx_conf.read.val_for('passenger_root')
       passenger_root = Babushka::GemHelper.gem_path_for('passenger')
       returning configured_root == passenger_root do |result|
         log_result "nginx is configured to use #{File.basename configured_root}", :result => result
@@ -129,10 +131,10 @@ dep 'webserver configured' do
   }
   meet {
     set :passenger_root, Babushka::GemHelper.gem_path_for('passenger')
-    render_erb 'nginx/nginx.conf.erb', :to => '/opt/nginx/conf/nginx.conf', :sudo => true
+    render_erb 'nginx/nginx.conf.erb', :to => nginx_conf, :sudo => true
   }
   after {
-    sudo "mkdir -p /opt/nginx/conf/vhosts/on"
+    sudo "mkdir -p #{var(:nginx_prefix) / 'conf/vhosts/on'}"
     restart_nginx
   }
 end
@@ -141,13 +143,13 @@ dep 'webserver installed' do
   requires 'passenger', 'build tools', 'libssl headers', 'zlib headers'
   merge :versions, {:nginx => '0.7.64', :upload_module => '2.0.11'}
   met? {
-    if !File.executable?('/opt/nginx/sbin/nginx')
+    if !File.executable?(var(:nginx_prefix) / 'sbin/nginx')
       unmet "nginx isn't installed"
     else
-      installed_version = shell('/opt/nginx/sbin/nginx -V') {|shell| shell.stderr }.val_for('nginx version').sub('nginx/', '')
+      installed_version = shell(var(:nginx_prefix) / 'sbin/nginx -V') {|shell| shell.stderr }.val_for('nginx version').sub('nginx/', '')
       if installed_version != var(:versions)[:nginx]
         unmet "an outdated version of nginx is installed (#{installed_version})"
-      elsif !shell('/opt/nginx/sbin/nginx -V') {|shell| shell.stderr }[Babushka::GemHelper.gem_path_for('passenger').to_s]
+      elsif !shell(var(:nginx_prefix) / 'sbin/nginx -V') {|shell| shell.stderr }[Babushka::GemHelper.gem_path_for('passenger').to_s]
         unmet "nginx is installed, but built against the wrong passenger version"
       elsif !(Babushka::GemHelper.gem_path_for('passenger') / 'ext/nginx/HelperServer').exists?
         unmet "nginx is installed, but passenger's HelperServer wasn't built"
