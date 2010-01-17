@@ -149,6 +149,8 @@ dep 'webserver installed' do
         unmet "an outdated version of nginx is installed (#{installed_version})"
       elsif !shell('/opt/nginx/sbin/nginx -V') {|shell| shell.stderr }[Babushka::GemHelper.gem_path_for('passenger').to_s]
         unmet "nginx is installed, but built against the wrong passenger version"
+      elsif !(Babushka::GemHelper.gem_path_for('passenger') / 'ext/nginx/HelperServer').exists?
+        unmet "nginx is installed, but passenger's HelperServer wasn't built"
       else
         met "nginx-#{installed_version} is installed"
       end
