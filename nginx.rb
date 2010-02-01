@@ -130,7 +130,7 @@ nginx 'webserver configured' do
 end
 
 src 'nginx installed' do
-  requires 'passenger', 'libssl headers', 'zlib headers'
+  requires 'passenger', 'pcre', 'libssl headers', 'zlib headers'
   merge :versions, {:nginx => '0.7.64', :nginx_upload_module => '2.0.11'}
   source "http://sysoev.ru/nginx/nginx-#{var(:versions)[:nginx]}.tar.gz"
   extra_source "http://www.grid.net.ru/nginx/download/nginx_upload_module-#{var(:versions)[:nginx_upload_module]}.tar.gz"
