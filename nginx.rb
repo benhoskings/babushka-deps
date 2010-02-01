@@ -135,7 +135,7 @@ src 'nginx installed' do
   source "http://sysoev.ru/nginx/nginx-#{var(:versions)[:nginx]}.tar.gz"
   extra_source "http://www.grid.net.ru/nginx/download/nginx_upload_module-#{var(:versions)[:nginx_upload_module]}.tar.gz"
   configure_args "--with-pcre", "--with-http_ssl_module",
-    "--add-module='#{Babushka::GemHelper.gem_path_for('passenger') / 'ext/nginx'}'",
+    L{ "--add-module='#{Babushka::GemHelper.gem_path_for('passenger') / 'ext/nginx'}'" },
     "--add-module='../nginx_upload_module-#{var(:versions)[:nginx_upload_module]}'"
   setup {
     prefix var(:nginx_prefix, :default => '/opt/babushka-nginx')
