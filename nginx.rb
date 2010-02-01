@@ -143,6 +143,7 @@ src 'nginx installed' do
   }
 
   # We need to write to the passenger/ext dir.
+  configure { shell default_configure_command, :sudo => Babushka::GemHelper.should_sudo? }
   build { shell "make", :sudo => Babushka::GemHelper.should_sudo? }
   install { pkg_manager.install_src! 'make install', :sudo => Babushka::GemHelper.should_sudo? }
 
