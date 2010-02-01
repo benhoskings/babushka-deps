@@ -49,10 +49,29 @@ nginx 'vhost configured' do
   after { restart_nginx if nginx_conf_link_for(var(:domain)).exists? }
 end
 
-dep 'self signed cert' do
+nginx 'self signed cert' do
   requires 'webserver installed'
-  met? { %w[key csr crt].all? {|ext| File.exists? "/opt/nginx/conf/certs/#{var :domain}.#{ext}" } }
-  meet { generate_self_signed_cert }
+  met? { %w[key csr crt].all? {|ext| (nginx_cert_path / "#{var :domain}.#{ext}").exists? } }
+  meet {
+    in_dir nginx_cert_path, :create => "700", :sudo => true do
+      log_shell("generating private key", "openssl genrsa -out #{var :domain}.key 1024", :sudo => true) and
+      log_shell("generating certificate", "openssl req -new -key #{var :domain}.key -out #{var :domain}.csr",
+        :sudo => true, :input => [
+          var(:country, 'AU'),
+          var(:state),
+          var(:city, ''),
+          var(:organisation),
+          var(:organisational_unit, ''),
+          var(:domain),
+          var(:email),
+          '', # password
+          '', # optional company name
+          '' # done
+        ].join("\n")
+      ) and
+      log_shell("signing certificate with key", "openssl x509 -req -days 365 -in #{var :domain}.csr -signkey #{var :domain}.key -out #{var :domain}.crt", :sudo => true)
+    end
+  }
 end
 
 def build_nginx
@@ -74,26 +93,6 @@ def build_nginx
       ].join("\n")
     )
   }
-end
-
-def generate_self_signed_cert
-  in_dir "/opt/nginx/conf/certs", :create => "700", :sudo => true do
-    log_shell("generating private key", "openssl genrsa -out #{var :domain}.key 1024", :sudo => true) and
-    log_shell("generating certificate", "openssl req -new -key #{var :domain}.key -out #{var :domain}.csr", :sudo => true, :input => [
-        var(:country, 'AU'),
-        var(:state),
-        var(:city, ''),
-        var(:organisation),
-        var(:organisational_unit, ''),
-        var(:domain),
-        var(:email),
-        '', # password
-        '', # optional company name
-        '' # done
-      ].join("\n")
-    ) and
-    log_shell("signing certificate with key", "openssl x509 -req -days 365 -in #{var :domain}.csr -signkey #{var :domain}.key -out #{var :domain}.crt", :sudo => true)
-  end
 end
 
 def nginx_running?
