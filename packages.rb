@@ -65,7 +65,7 @@ end
 pkg 'pcre' do
   installs {
     via :brew, 'pcre'
-    via :apt, 'libpcre3'
+    via :apt, 'libpcre3-dev'
   }
   provides 'pcretest'
 end
