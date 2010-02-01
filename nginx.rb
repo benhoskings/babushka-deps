@@ -105,7 +105,7 @@ def restart_nginx
   end
 end
 
-dep 'webserver running' do
+nginx 'webserver running' do
   requires 'webserver configured', 'webserver startup script'
   met? {
     returning nginx_running? do |result|
