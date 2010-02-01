@@ -74,27 +74,6 @@ nginx 'self signed cert' do
   }
 end
 
-def build_nginx
-  in_build_dir {
-    get_source("http://sysoev.ru/nginx/nginx-#{var(:versions)[:nginx]}.tar.gz") and
-    get_source("http://www.grid.net.ru/nginx/download/nginx_upload_module-#{var(:versions)[:upload_module]}.tar.gz") and
-    log_shell("Building nginx (this takes a minute or two)",
-      Babushka::GemHelper.gem_bin_path / 'passenger-install-nginx-module',
-      :sudo => true,
-      :input => [
-        '', # enter to continue
-        '2', # custom build
-        "nginx-#{var(:versions)[:nginx]}".p, # path to nginx source
-        '', # accept /opt/nginx target path
-        "--with-http_ssl_module --add-module='#{"nginx_upload_module-#{var(:versions)[:upload_module]}".p}'",
-        '', # confirm settings
-        '', # enter to continue
-        '' # done
-      ].join("\n")
-    )
-  }
-end
-
 def nginx_running?
   shell "netstat -an | grep -E '^tcp.*[.:]80 +.*LISTEN'"
 end
@@ -160,9 +139,23 @@ nginx 'webserver configured' do
   }
 end
 
-dep 'webserver installed' do
-  requires 'passenger', 'build tools', 'libssl headers', 'zlib headers'
-  merge :versions, {:nginx => '0.7.64', :upload_module => '2.0.11'}
+src 'nginx installed' do
+  requires 'passenger', 'libssl headers', 'zlib headers'
+  merge :versions, {:nginx => '0.7.64', :nginx_upload_module => '2.0.11'}
+  source "http://sysoev.ru/nginx/nginx-#{var(:versions)[:nginx]}.tar.gz"
+  extra_source "http://www.grid.net.ru/nginx/download/nginx_upload_module-#{var(:versions)[:nginx_upload_module]}.tar.gz"
+  configure_args "--with-pcre", "--with-http_ssl_module",
+    "--add-module='#{Babushka::GemHelper.gem_path_for('passenger') / 'ext/nginx'}'",
+    "--add-module='../nginx_upload_module-#{var(:versions)[:nginx_upload_module]}'"
+  setup {
+    prefix var(:nginx_prefix, :default => '/opt/babushka-nginx')
+    provides var(:nginx_prefix) / 'sbin/nginx'
+  }
+
+  # We need to write to the passenger/ext dir.
+  build { shell "make", :sudo => Babushka::GemHelper.should_sudo? }
+  install { pkg_manager.install_src! 'make install', :sudo => Babushka::GemHelper.should_sudo? }
+
   met? {
     if !File.executable?(var(:nginx_prefix) / 'sbin/nginx')
       unmet "nginx isn't installed"
@@ -179,5 +172,4 @@ dep 'webserver installed' do
       end
     end
   }
-  meet { build_nginx }
 end
