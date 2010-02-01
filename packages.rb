@@ -62,6 +62,13 @@ gem 'passenger' do
   installs 'passenger' => '>= 2.2.9'
   provides 'passenger-install-nginx-module'
 end
+pkg 'pcre' do
+  installs {
+    via :brew, 'pcre'
+    via :apt, 'libpcre3'
+  }
+  provides 'pcretest'
+end
 pkg 'rcconf' do
   installs { via :apt, 'rcconf' }
 end
