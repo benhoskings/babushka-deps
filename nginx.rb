@@ -29,7 +29,7 @@ nginx 'vhost enabled' do
   after { restart_nginx }
 end
 
-dep 'vhost configured' do
+nginx 'vhost configured' do
   helper :www_aliases do
     "#{var :domain} #{var :extra_domains}".split(' ').compact.map(&:strip).reject {|d|
       d.starts_with? '*.'
@@ -41,12 +41,12 @@ dep 'vhost configured' do
   end
   requires 'webserver configured'
   define_var :vhost_type, :default => 'passenger', :choices => %w[passenger proxy static]
-  met? { File.exists? "/opt/nginx/conf/vhosts/#{var :domain}.conf" }
+  met? { nginx_conf_for(var(:domain)).exists? }
   meet {
-    render_erb "nginx/#{var :vhost_type}_vhost.conf.erb",   :to => "/opt/nginx/conf/vhosts/#{var :domain}.conf", :sudo => true
-    render_erb "nginx/#{var :vhost_type}_vhost.common.erb", :to => "/opt/nginx/conf/vhosts/#{var :domain}.common", :sudo => true, :optional => true
+    render_erb "nginx/#{var :vhost_type}_vhost.conf.erb",   :to => nginx_conf_for(var(:domain)), :sudo => true
+    render_erb "nginx/#{var :vhost_type}_vhost.common.erb", :to => nginx_conf_for(var(:domain), 'common'), :sudo => true, :optional => true
   }
-  after { restart_nginx if File.exists? "/opt/nginx/conf/vhosts/on/#{var :domain}.conf" }
+  after { restart_nginx if nginx_conf_link_for(var(:domain)).exists? }
 end
 
 dep 'self signed cert' do
