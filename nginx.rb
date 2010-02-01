@@ -22,10 +22,10 @@ meta :nginx do
   }
 end
 
-dep 'vhost enabled' do
+nginx 'vhost enabled' do
   requires 'vhost configured'
-  met? { "/opt/nginx/conf/vhosts/on/#{var :domain}.conf".p.exists? }
-  meet { sudo "ln -sf '/opt/nginx/conf/vhosts/#{var :domain}.conf' '/opt/nginx/conf/vhosts/on/#{var :domain}.conf'" }
+  met? { nginx_conf_link_for(var(:domain)).exists? }
+  meet { sudo "ln -sf '#{nginx_conf_for(var(:domain))}' '#{nginx_conf_link_for(var(:domain))}'" }
   after { restart_nginx }
 end
 
