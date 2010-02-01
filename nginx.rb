@@ -129,7 +129,7 @@ nginx 'webserver configured' do
   }
 end
 
-src 'nginx installed' do
+src 'webserver installed' do
   requires 'passenger', 'pcre', 'libssl headers', 'zlib headers'
   merge :versions, {:nginx => '0.7.64', :nginx_upload_module => '2.0.11'}
   source "http://sysoev.ru/nginx/nginx-#{var(:versions)[:nginx]}.tar.gz"
