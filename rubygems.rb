@@ -52,13 +52,9 @@ dep 'rubygems installed' do
   merge :versions, :rubygems => '1.3.5'
   met? { cmds_in_path? 'gem', cmd_dir('ruby') }
   meet {
-    in_build_dir {
-      get_source("http://rubyforge.org/frs/download.php/60718/rubygems-#{var(:versions)[:rubygems]}.tgz") and
-
-      in_dir "rubygems-#{var(:versions)[:rubygems]}" do
-        shell "ruby setup.rb", :sudo => !File.writable?(which('ruby'))
-      end
-    }
+    handle_source "http://rubyforge.org/frs/download.php/60718/rubygems-#{var(:versions)[:rubygems]}.tgz" do
+      shell "ruby setup.rb", :sudo => !File.writable?(which('ruby'))
+    end
   }
   after {
     in_dir cmd_dir('ruby') do
