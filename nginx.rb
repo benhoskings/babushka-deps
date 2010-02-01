@@ -120,7 +120,7 @@ nginx 'webserver running' do
   end
 end
 
-dep 'webserver startup script' do
+nginx 'webserver startup script' do
   requires 'webserver installed'
   on :linux do
     requires 'rcconf'
