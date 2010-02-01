@@ -74,16 +74,6 @@ nginx 'self signed cert' do
   }
 end
 
-def nginx_running?
-  shell "netstat -an | grep -E '^tcp.*[.:]80 +.*LISTEN'"
-end
-
-def restart_nginx
-  if nginx_running?
-    log_shell "Restarting nginx", "/opt/nginx/sbin/nginx -s reload", :sudo => true
-  end
-end
-
 nginx 'webserver running' do
   requires 'webserver configured', 'webserver startup script'
   met? {
