@@ -138,7 +138,7 @@ src 'nginx installed' do
     L{ "--add-module='#{Babushka::GemHelper.gem_path_for('passenger') / 'ext/nginx'}'" },
     "--add-module='../nginx_upload_module-#{var(:versions)[:nginx_upload_module]}'"
   setup {
-    prefix var(:nginx_prefix, :default => '/opt/babushka-nginx')
+    prefix var(:nginx_prefix, :default => '/opt/nginx')
     provides var(:nginx_prefix) / 'sbin/nginx'
   }
 
