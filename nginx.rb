@@ -139,10 +139,9 @@ nginx 'webserver startup script' do
   end
 end
 
-dep 'webserver configured' do
+nginx 'webserver configured' do
   requires 'webserver installed', 'www user and group'
   define_var :nginx_prefix, :default => '/opt/nginx'
-  helper(:nginx_conf) { var(:nginx_prefix) / 'conf/nginx.conf' }
   met? {
     if babushka_config? nginx_conf
       configured_root = nginx_conf.read.val_for('passenger_root')
@@ -153,7 +152,6 @@ dep 'webserver configured' do
     end
   }
   meet {
-    set :passenger_root, Babushka::GemHelper.gem_path_for('passenger')
     render_erb 'nginx/nginx.conf.erb', :to => nginx_conf, :sudo => true
   }
   after {
