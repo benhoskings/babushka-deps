@@ -11,6 +11,7 @@ app 'RubyMine.app' do
 end
 
 app 'Chromium.app' do
+  requires_when_unmet "Chromium.app download cleared"
   source L{
     "http://build.chromium.org/buildbot/snapshots/chromium-rel-mac/#{version}/chrome-mac.zip"
   }
@@ -20,4 +21,10 @@ app 'Chromium.app' do
   current_version {|path|
     IO.read(path / 'Contents/Info.plist').xml_val_for('SVNRevision')
   }
+end
+
+# TODO better version handling will make this unnecessary.
+dep "Chromium.app download cleared" do
+  met? { in_download_dir { !'chrome-mac.zip'.p.exists? } }
+  meet { in_download_dir { 'chrome-mac.zip'.p.rm } }
 end
