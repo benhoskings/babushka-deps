@@ -9,3 +9,15 @@ end
 app 'RubyMine.app' do
   source 'http://download.jetbrains.com/ruby/rubymine-2.0.1.dmg'
 end
+
+app 'Chromium.app' do
+  source L{
+    "http://build.chromium.org/buildbot/snapshots/chromium-rel-mac/#{version}/chrome-mac.zip"
+  }
+  latest_version {
+    shell "curl http://build.chromium.org/buildbot/snapshots/chromium-rel-mac/LATEST"
+  }
+  current_version {|path|
+    IO.read(path / 'Contents/Info.plist').xml_val_for('SVNRevision')
+  }
+end
