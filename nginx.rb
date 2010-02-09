@@ -145,7 +145,7 @@ src 'webserver installed' do
   # We need to write to the passenger/ext dir.
   configure { log_shell "configure", default_configure_command, :sudo => Babushka::GemHelper.should_sudo? }
   build { log_shell "build", "make", :sudo => Babushka::GemHelper.should_sudo? }
-  install { pkg_manager.install_src! 'make install', :sudo => Babushka::GemHelper.should_sudo? }
+  install { log_shell "install", "make install", :sudo => Babushka::GemHelper.should_sudo? }
 
   met? {
     if !File.executable?(var(:nginx_prefix) / 'sbin/nginx')
