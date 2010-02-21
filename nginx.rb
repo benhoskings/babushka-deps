@@ -57,11 +57,11 @@ nginx 'self signed cert' do
       log_shell("generating private key", "openssl genrsa -out #{var :domain}.key 1024", :sudo => true) and
       log_shell("generating certificate", "openssl req -new -key #{var :domain}.key -out #{var :domain}.csr",
         :sudo => true, :input => [
-          var(:country, 'AU'),
+          var(:country, :default => 'AU'),
           var(:state),
-          var(:city, ''),
+          var(:city, :default => ''),
           var(:organisation),
-          var(:organisational_unit, ''),
+          var(:organisational_unit, :default => ''),
           var(:domain),
           var(:email),
           '', # password
