@@ -44,7 +44,11 @@ end
 dep 'migrated db' do
   requires 'deployed app', 'existing db', 'rails'
   setup {
-    set :db_name, yaml(var(:rails_root) / 'config/database.yml')[var(:rails_env)]['database']
+    if (db_config = yaml(var(:rails_root) / 'config/database.yml')[var(:rails_env)]).nil?
+      log_error "There's no database.yml entry for the #{var(:rails_env)} environment."
+    else
+      set :db_name, db_config['database']
+    end
   }
   met? {
     current_version = rails_rake("db:version") {|shell| shell.stdout.val_for('Current version') }
