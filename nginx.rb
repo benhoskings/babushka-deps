@@ -5,7 +5,7 @@ meta :nginx do
     helper(:nginx_bin) { var(:nginx_prefix) / 'sbin/nginx' }
     helper(:nginx_conf) { var(:nginx_prefix) / 'conf/nginx.conf' }
     helper(:nginx_cert_path) { var(:nginx_prefix) / 'conf/certs' }
-    helper(:nginx_conf_for) {|domain,ext| var(:nginx_prefix) / "conf/vhosts/#{domain}.#{ext || 'conf'}" }
+    helper(:nginx_conf_for) {|domain,ext| var(:nginx_prefix) / "conf/vhosts/#{domain}.#{ext}" }
     helper(:nginx_conf_link_for) {|domain| var(:nginx_prefix) / "conf/vhosts/on/#{domain}.conf" }
 
     helper(:passenger_root) { Babushka::GemHelper.gem_path_for('passenger') }
@@ -25,7 +25,7 @@ end
 nginx 'vhost enabled' do
   requires 'vhost configured'
   met? { nginx_conf_link_for(var(:domain)).exists? }
-  meet { sudo "ln -sf '#{nginx_conf_for(var(:domain))}' '#{nginx_conf_link_for(var(:domain))}'" }
+  meet { sudo "ln -sf '#{nginx_conf_for(var(:domain), 'conf')}' '#{nginx_conf_link_for(var(:domain))}'" }
   after { restart_nginx }
 end
 
@@ -41,9 +41,9 @@ nginx 'vhost configured' do
   end
   requires 'webserver configured'
   define_var :vhost_type, :default => 'passenger', :choices => %w[passenger proxy static]
-  met? { nginx_conf_for(var(:domain)).exists? }
+  met? { nginx_conf_for(var(:domain), 'conf').exists? }
   meet {
-    render_erb "nginx/#{var :vhost_type}_vhost.conf.erb",   :to => nginx_conf_for(var(:domain)), :sudo => true
+    render_erb "nginx/#{var :vhost_type}_vhost.conf.erb",   :to => nginx_conf_for(var(:domain), 'conf'), :sudo => true
     render_erb "nginx/#{var :vhost_type}_vhost.common.erb", :to => nginx_conf_for(var(:domain), 'common'), :sudo => true, :optional => true
   }
   after { restart_nginx if nginx_conf_link_for(var(:domain)).exists? }
