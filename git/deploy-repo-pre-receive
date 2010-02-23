@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+refspecs = STDIN.read.chomp.split("\n")
+
+if refspecs.length != 1
+  puts %Q{
+remote says:
+  Hi there, you just pushed #{refspecs.length} branches, but I only accept one branch
+  at a time, because I use it to update the working copy.
+
+  The best way to push just a single branch is like this:
+    $ git push <remote-name> <branch-name>
+
+}
+  exit 1
+end

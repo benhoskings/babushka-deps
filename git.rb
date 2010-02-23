@@ -7,8 +7,10 @@ dep 'passenger deploy repo hook' do
   met? { (var(:passenger_repo_root) / '.git/hooks/post-receive').executable? }
   meet {
     in_dir var(:passenger_repo_root), :create => true do
-      render_erb "git/deploy-repo-post-receive", :to => '.git/hooks/post-receive'
-      shell "chmod +x .git/hooks/post-receive"
+      %w[pre-receive post-receive].each {|hook_name|
+        render_erb "git/deploy-repo-#{hook_name}", :to => ".git/hooks/#{hook_name}"
+        shell "chmod +x .git/hooks/#{hook_name}"
+      }
     end
   }
 end
