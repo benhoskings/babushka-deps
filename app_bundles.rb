@@ -1,7 +1,3 @@
-app 'TextMate.app' do
-  source 'http://download-b.macromates.com/TextMate_1.5.9.dmg'
-end
-
 app 'Fluid.app' do
   source 'http://fluidapp.com/dist/Fluid_0.9.6.zip'
 end
