@@ -1,5 +1,5 @@
 dep 'rubygems' do
-  requires 'rubygems installed', 'github source', 'gemcutter source'
+  requires 'rubygems up to date', 'github source', 'gemcutter source'
   setup {
     definer.requires('fake json gem') if shell('ruby --version')['ruby 1.9']
   }
@@ -45,6 +45,12 @@ gem_source 'gemcutter source' do
 end
 gem_source 'github source' do
   uri 'http://gems.github.com'
+end
+
+dep 'rubygems up to date' do
+  requires 'rubygems installed'
+  met? { shell('gem --version').to_version >= '1.3.6' }
+  meet { log_shell "Updating the rubygems install in #{which('gem').p.parent}", 'gem update --system', :sudo => !which('gem').p.writable? }
 end
 
 dep 'rubygems installed' do
