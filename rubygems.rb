@@ -55,10 +55,10 @@ end
 
 dep 'rubygems installed' do
   requires 'ruby', 'curl'
-  merge :versions, :rubygems => '1.3.5'
+  merge :versions, :rubygems => '1.3.6'
   met? { provided? %w[gem ruby] }
   meet {
-    handle_source "http://rubyforge.org/frs/download.php/60718/rubygems-#{var(:versions)[:rubygems]}.tgz" do
+    handle_source "http://rubyforge.org/frs/download.php/69365/rubygems-#{var(:versions)[:rubygems]}.tgz" do
       shell "ruby setup.rb", :sudo => !File.writable?(which('ruby'))
     end
   }
