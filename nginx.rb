@@ -78,7 +78,7 @@ nginx 'webserver running' do
   requires 'webserver configured', 'webserver startup script'
   met? {
     returning nginx_running? do |result|
-      result "There is #{result ? 'something' : 'nothing'} listening on #{result ? result.scan(/[0-9.*]+[.:]80/).first : 'port 80'}", :result => result
+      log "There is #{result ? 'something' : 'nothing'} listening on #{result ? result.scan(/[0-9.*]+[.:]80/).first : 'port 80'}"
     end
   }
   meet :on => :linux do
