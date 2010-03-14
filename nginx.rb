@@ -128,8 +128,20 @@ nginx 'webserver configured' do
   }
 end
 
+dep 'passenger helper_server' do
+  requires 'passenger', 'build tools'
+  met? {
+    (Babushka::GemHelper.gem_path_for('passenger') / 'ext/nginx/HelperServer').exists?
+  }
+  meet {
+    in_dir Babushka::GemHelper.gem_path_for('passenger') do
+      shell "rake clean nginx", :sudo => Babushka::GemHelper.should_sudo?
+    end
+  }
+end
+
 src 'webserver installed' do
-  requires 'passenger', 'pcre', 'libssl headers', 'zlib headers'
+  requires 'passenger helper_server', 'pcre', 'libssl headers', 'zlib headers'
   merge :versions, {:nginx => '0.7.64', :nginx_upload_module => '2.0.11'}
   source "http://sysoev.ru/nginx/nginx-#{var(:versions)[:nginx]}.tar.gz"
   extra_source "http://www.grid.net.ru/nginx/download/nginx_upload_module-#{var(:versions)[:nginx_upload_module]}.tar.gz"
@@ -155,8 +167,6 @@ src 'webserver installed' do
         unmet "an outdated version of nginx is installed (#{installed_version})"
       elsif !shell(var(:nginx_prefix) / 'sbin/nginx -V') {|shell| shell.stderr }[Babushka::GemHelper.gem_path_for('passenger').to_s]
         unmet "nginx is installed, but built against the wrong passenger version"
-      elsif !(Babushka::GemHelper.gem_path_for('passenger') / 'ext/nginx/HelperServer').exists?
-        unmet "nginx is installed, but passenger's HelperServer wasn't built"
       else
         met "nginx-#{installed_version} is installed"
       end
