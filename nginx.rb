@@ -147,7 +147,7 @@ src 'webserver installed' do
   extra_source "http://www.grid.net.ru/nginx/download/nginx_upload_module-#{var(:versions)[:nginx_upload_module]}.tar.gz"
   configure_args "--with-pcre", "--with-http_ssl_module",
     L{ "--add-module='#{Babushka::GemHelper.gem_path_for('passenger') / 'ext/nginx'}'" },
-    "--add-module='../nginx_upload_module-#{var(:versions)[:nginx_upload_module]}'"
+    "--add-module='../../nginx_upload_module-#{var(:versions)[:nginx_upload_module]}/nginx_upload_module-#{var(:versions)[:nginx_upload_module]}'"
   setup {
     prefix var(:nginx_prefix, :default => '/opt/nginx')
     provides var(:nginx_prefix) / 'sbin/nginx'
