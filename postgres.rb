@@ -47,7 +47,7 @@ pkg 'postgres software' do
     via :brew, 'postgresql'
   }
   provides 'psql'
-  on :osx, after do
+  after :on => :osx do
     sudo "ln -s #{Babushka::MacportsHelper.prefix / "lib/postgresql83/bin/*"} #{Babushka::MacportsHelper.prefix / 'bin/'}"
 
     sudo "mkdir -p /opt/local/var/db/postgresql83/defaultdb" and
