@@ -114,7 +114,6 @@ nginx 'webserver configured' do
   met? {
     if babushka_config? nginx_conf
       configured_root = nginx_conf.read.val_for('passenger_root')
-      passenger_root = Babushka::GemHelper.gem_path_for('passenger')
       returning configured_root == passenger_root do |result|
         log_result "nginx is configured to use #{File.basename configured_root}", :result => result
       end
