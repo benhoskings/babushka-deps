@@ -96,7 +96,13 @@ class PSQLBackup
     shell "git checkout -b #{branch}"
     shell "git checkout #{branch}"
     shell "git add ."
-    log_shell("\nCommitting", 'git commit -a -m "via postgres_offsite_backup"')
+    returning log_shell("\nCommitting", 'git commit -a -m "via postgres_offsite_backup"') do
+      git_gc
+    end
+  end
+
+  def git_gc
+    shell "git gc"
   end
 
   def git_push
