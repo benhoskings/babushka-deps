@@ -29,6 +29,17 @@ class PSQLBackup
 
   attr_reader :path
 
+  def self.run hosts
+    reopen_outputs
+    new.run(hosts)
+  end
+
+  def self.reopen_outputs
+    @reopened_outputs ||= [STDOUT, STDERR].each {|fd|
+      fd.reopen File.expand_path(LogPath), 'a'
+    }
+  end
+
   def initialize
     @path = File.expand_path "~/backups/psqldumps.git"
   end
@@ -113,5 +124,4 @@ class PSQLBackup
 
 end
 
-STDOUT.reopen(File.expand_path(LogPath), 'a')
-PSQLBackup.new.run %w[<%= var :offsite_host %>]
+PSQLBackup.run %w[<%= var :offsite_host %>]
