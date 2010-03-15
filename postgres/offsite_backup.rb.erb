@@ -114,7 +114,4 @@ class PSQLBackup
 end
 
 STDOUT.reopen(File.expand_path(LogPath), 'a')
-
-PSQLBackup.new.run %w[
-  <%= var :offsite_host %>
-]
+PSQLBackup.new.run %w[<%= var :offsite_host %>]
