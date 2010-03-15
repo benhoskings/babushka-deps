@@ -21,12 +21,24 @@ end
 
 class PSQLBackup
   RelativeRepoPath = "~/backups/psqldumps.git"
+  LogPath = "~/backups/psqldumps.offsite.log"
   ReservedDBNames = %w[
     template0
     template1
   ]
 
   attr_reader :path
+
+  def self.run hosts
+    reopen_outputs
+    new.run(hosts)
+  end
+
+  def self.reopen_outputs
+    @reopened_outputs ||= [STDOUT, STDERR].each {|fd|
+      fd.reopen File.expand_path(LogPath), 'a'
+    }
+  end
 
   def initialize
     @path = File.expand_path "~/backups/psqldumps.git"
@@ -112,6 +124,4 @@ class PSQLBackup
 
 end
 
-PSQLBackup.new.run %w[
-  <%= var :offsite_host %>
-]
+PSQLBackup.run %w[<%= var :offsite_host %>]

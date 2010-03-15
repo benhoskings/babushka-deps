@@ -114,7 +114,6 @@ nginx 'webserver configured' do
   met? {
     if babushka_config? nginx_conf
       configured_root = nginx_conf.read.val_for('passenger_root')
-      passenger_root = Babushka::GemHelper.gem_path_for('passenger')
       returning configured_root == passenger_root do |result|
         log_result "nginx is configured to use #{File.basename configured_root}", :result => result
       end
@@ -129,20 +128,32 @@ nginx 'webserver configured' do
   }
 end
 
+dep 'passenger helper_server' do
+  requires 'passenger', 'build tools'
+  met? {
+    (Babushka::GemHelper.gem_path_for('passenger') / 'ext/nginx/HelperServer').exists?
+  }
+  meet {
+    in_dir Babushka::GemHelper.gem_path_for('passenger') do
+      shell "rake clean nginx", :sudo => Babushka::GemHelper.should_sudo?
+    end
+  }
+end
+
 src 'webserver installed' do
-  requires 'passenger', 'pcre', 'libssl headers', 'zlib headers'
+  requires 'passenger helper_server', 'pcre', 'libssl headers', 'zlib headers'
   merge :versions, {:nginx => '0.7.64', :nginx_upload_module => '2.0.11'}
   source "http://sysoev.ru/nginx/nginx-#{var(:versions)[:nginx]}.tar.gz"
   extra_source "http://www.grid.net.ru/nginx/download/nginx_upload_module-#{var(:versions)[:nginx_upload_module]}.tar.gz"
   configure_args "--with-pcre", "--with-http_ssl_module",
     L{ "--add-module='#{Babushka::GemHelper.gem_path_for('passenger') / 'ext/nginx'}'" },
-    "--add-module='../nginx_upload_module-#{var(:versions)[:nginx_upload_module]}'"
+    "--add-module='../../nginx_upload_module-#{var(:versions)[:nginx_upload_module]}/nginx_upload_module-#{var(:versions)[:nginx_upload_module]}'"
   setup {
     prefix var(:nginx_prefix, :default => '/opt/nginx')
     provides var(:nginx_prefix) / 'sbin/nginx'
   }
 
-  # We need to write to the passenger/ext dir.
+  # The build process needs to write to passenger_root/ext/nginx.
   configure { log_shell "configure", default_configure_command, :sudo => Babushka::GemHelper.should_sudo? }
   build { log_shell "build", "make", :sudo => Babushka::GemHelper.should_sudo? }
   install { log_shell "install", "make install", :sudo => Babushka::GemHelper.should_sudo? }
@@ -156,8 +167,6 @@ src 'webserver installed' do
         unmet "an outdated version of nginx is installed (#{installed_version})"
       elsif !shell(var(:nginx_prefix) / 'sbin/nginx -V') {|shell| shell.stderr }[Babushka::GemHelper.gem_path_for('passenger').to_s]
         unmet "nginx is installed, but built against the wrong passenger version"
-      elsif !(Babushka::GemHelper.gem_path_for('passenger') / 'ext/nginx/HelperServer').exists?
-        unmet "nginx is installed, but passenger's HelperServer wasn't built"
       else
         met "nginx-#{installed_version} is installed"
       end
