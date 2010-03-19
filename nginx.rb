@@ -30,7 +30,7 @@ nginx 'vhost enabled' do
 end
 
 nginx 'vhost configured' do
-  helper :www_aliases do
+  define_var :www_aliases, :default => L{
     "#{var :domain} #{var :extra_domains}".split(' ').compact.map(&:strip).reject {|d|
       d.starts_with? '*.'
     }.reject {|d|
@@ -38,7 +38,7 @@ nginx 'vhost configured' do
     }.map {|d|
       "www.#{d}"
     }.join(' ')
-  end
+  }
   requires 'webserver configured'
   define_var :vhost_type, :default => 'passenger', :choices => %w[passenger proxy static]
   met? { nginx_conf_for(var(:domain), 'conf').exists? }
