@@ -100,7 +100,7 @@ nginx 'webserver startup script' do
     }
   end
   on :osx do
-    met? { !sudo('launchctl list').val_for('org.nginx').blank? }
+    met? { !sudo('launchctl list').grep(/org\.nginx/).empty? }
     meet {
       render_erb 'nginx/nginx.launchd.erb', :to => '/Library/LaunchDaemons/org.nginx.plist', :sudo => true
       sudo 'launchctl load -w /Library/LaunchDaemons/org.nginx.plist'
