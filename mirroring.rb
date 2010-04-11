@@ -1,6 +1,6 @@
 dep 'mirror has assets' do
   helper :assets do
-    var(:mirror_path).glob("**/*").select {|f|
+    var(:mirror_path).p.glob("**/*").select {|f|
       f[/html?|css/i]
     }.map {|f|
       f.p.read.scan(/url\(['"]?([^)'"]+)['"]?\)/).map {|url|
