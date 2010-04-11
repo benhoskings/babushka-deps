@@ -18,7 +18,7 @@ dep 'mirror has assets' do
   meet {
     nonexistent_assets.each {|asset|
       shell "mkdir -p '#{var(:mirror_path) / asset.p.dirname}'"
-      log_shell "Downloading #{asset}", "wget -O '#{var(:mirror_path) / asset}' '#{var(:mirror_domain) / asset}'"
+      log_shell "Downloading #{asset}", "wget -O '#{var(:mirror_path) / asset}' '#{File.join var(:mirror_domain), asset}'"
     }
   }
 end
