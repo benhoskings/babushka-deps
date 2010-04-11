@@ -1,4 +1,5 @@
 dep 'mirror has assets' do
+  define_var :mirror_domain, :default => L{ var(:mirror_path).p.basename }
   helper :assets do
     var(:mirror_path).p.glob("**/*").select {|f|
       f[/\.(html?|css)$/i]
@@ -17,7 +18,7 @@ dep 'mirror has assets' do
   meet {
     nonexistent_assets.each {|asset|
       shell "mkdir -p '#{var(:mirror_path) / asset.p.dirname}'"
-      log_shell "Downloading #{asset}", "wget -O '#{var(:mirror_path) / asset}' '#{asset}'"
+      log_shell "Downloading #{asset}", "wget -O '#{var(:mirror_path) / asset}' '#{var(:mirror_domain) / asset}'"
     }
   }
 end
