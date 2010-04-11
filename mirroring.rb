@@ -1,24 +1,34 @@
 dep 'mirror has assets' do
-  define_var :mirror_domain, :default => L{ "http://#{var(:mirror_path).p.basename}" }
-  helper :assets do
-    var(:mirror_path).p.glob("**/*").select {|f|
+  define_var :mirror_prefix, :default => '/srv/http' #L{ "http://#{var(:mirror_path).p.basename}" }
+  helper :scanned_urls do
+    (var(:mirror_prefix) / var(:mirror_domain)).glob("**/*").select {|f|
       f[/\.(html?|css)$/i]
     }.map {|f|
-      f.p.read.scan(/url\(['"]?([^)'"]+)['"]?\)/).map {|url|
-        url.starts_with?('/') ? url : (f.p.dirname / url).to_s.gsub(/^#{Regexp.escape(var(:mirror_path).p.to_s)}/, '')
-      }
-    }.flatten
+      f.p.read.scan(/url\(['"]?([^)'"]+)['"]?\)/).flatten
+    }.flatten.uniq
   end
-  helper :nonexistent_assets do
-    assets.reject {|asset|
-      (var(:mirror_path) / asset).exists? && !(var(:mirror_path) / asset).empty?
+  helper :asset_map do
+    scanned_urls.group_by {|url|
+      url[/^(http\:)?\/\//] ? url.scan(/^[http\:]*\/\/([^\/]+)/).flatten.first : var(:mirror_domain)
+    }.map_values {|domain,urls|
+      urls.map {|url| url.sub(/^(http\:)?\/\/[^\/]+\//, '') }
     }
   end
-  met? { nonexistent_assets.empty? }
+  helper :nonexistent_asset_map do
+    asset_map.map_values {|domain,assets|
+      assets.reject {|asset|
+        path = var(:mirror_prefix) / domain / asset
+        path.exists? && !path.empty?
+      }
+    }
+  end
+  met? { nonexistent_asset_map.values.all? &:empty? }
   meet {
-    nonexistent_assets.each {|asset|
-      shell "mkdir -p '#{var(:mirror_path) / asset.p.dirname}'"
-      log_shell "Downloading #{asset}", "wget -O '#{var(:mirror_path) / asset}' '#{File.join var(:mirror_domain), asset}'"
+    nonexistent_asset_map.each_pair {|domain,assets|
+      assets.each {|asset|
+        shell "mkdir -p '#{var(:mirror_prefix) / domain / File.dirname(asset)}'"
+        log_shell "Downloading http://#{domain}/#{asset}", "wget -O '#{var(:mirror_prefix) / domain / asset}' '#{File.join "http://#{domain}", asset}'"
+      }
     }
   }
 end
