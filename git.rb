@@ -1,5 +1,11 @@
 dep 'passenger deploy repo' do
-  requires 'passenger deploy repo exists', 'passenger deploy repo hook'
+  requires 'passenger deploy repo exists', 'passenger deploy repo hook', 'passenger deploy repo always receives'
+end
+
+dep 'passenger deploy repo always receives' do
+  requires 'passenger deploy repo exists'
+  met? { in_dir(var(:passenger_repo_root)) { shell("git config receive.denyCurrentBranch") == 'ignore' } }
+  meet { in_dir(var(:passenger_repo_root)) { shell("git config receive.denyCurrentBranch ignore") } }
 end
 
 dep 'passenger deploy repo hook' do
