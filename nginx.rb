@@ -143,7 +143,7 @@ end
 src 'webserver installed' do
   requires 'passenger helper_server', 'pcre', 'libssl headers', 'zlib headers'
   merge :versions, {:nginx => '0.7.65', :nginx_upload_module => '2.0.12'}
-  source "http://sysoev.ru/nginx/nginx-#{var(:versions)[:nginx]}.tar.gz"
+  source "http://nginx.org/download/nginx-#{var(:versions)[:nginx]}.tar.gz"
   extra_source "http://www.grid.net.ru/nginx/download/nginx_upload_module-#{var(:versions)[:nginx_upload_module]}.tar.gz"
   configure_args "--with-pcre", "--with-http_ssl_module",
     L{ "--add-module='#{Babushka::GemHelper.gem_path_for('passenger') / 'ext/nginx'}'" },
