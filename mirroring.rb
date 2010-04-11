@@ -1,5 +1,5 @@
 dep 'mirror has assets' do
-  define_var :mirror_domain, :default => L{ var(:mirror_path).p.basename.to_s }
+  define_var :mirror_domain, :default => L{ "http://#{var(:mirror_path).p.basename}" }
   helper :assets do
     var(:mirror_path).p.glob("**/*").select {|f|
       f[/\.(html?|css)$/i]
