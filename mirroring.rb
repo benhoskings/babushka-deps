@@ -10,7 +10,7 @@ dep 'mirror has assets' do
   end
   helper :nonexistent_assets do
     assets.reject {|asset|
-      (var(:mirror_path) / asset).exists?
+      (var(:mirror_path) / asset).exists? && !(var(:mirror_path) / asset).empty?
     }
   end
   met? { nonexistent_assets.empty? }
