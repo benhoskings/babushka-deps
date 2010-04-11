@@ -5,7 +5,7 @@ dep 'mirror has assets' do
       f[/\.(html?|css)$/i]
     }.map {|f|
       f.p.read.scan(/url\(['"]?([^)'"]+)['"]?\)/).map {|url|
-        url.starts_with?('/') ? url : (f.p.dirname / url).to_s.gsub(/^#{Regexp.escape(var(:mirror_path).to_s)}/, '')
+        url.starts_with?('/') ? url : (f.p.dirname / url).to_s.gsub(/^#{Regexp.escape(var(:mirror_path).p.to_s)}/, '')
       }
     }.flatten
   end
