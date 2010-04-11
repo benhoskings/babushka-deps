@@ -1,5 +1,5 @@
 dep 'passenger deploy repo' do
-  requires 'passenger deploy repo exists', 'passenger deploy repo hook', 'passenger deploy repo always receives'
+  requires 'passenger deploy repo exists', 'passenger deploy repo hooks', 'passenger deploy repo always receives'
 end
 
 dep 'passenger deploy repo always receives' do
@@ -8,7 +8,7 @@ dep 'passenger deploy repo always receives' do
   meet { in_dir(var(:passenger_repo_root)) { shell("git config receive.denyCurrentBranch ignore") } }
 end
 
-dep 'passenger deploy repo hook' do
+dep 'passenger deploy repo hooks' do
   requires 'passenger deploy repo exists'
   met? {
     %w[pre-receive post-receive].all? {|hook_name|
