@@ -1,7 +1,7 @@
 dep 'mirror has assets' do
   helper :assets do
     var(:mirror_path).p.glob("**/*").select {|f|
-      f[/html?|css/i]
+      f[/\.(html?|css)$/i]
     }.map {|f|
       f.p.read.scan(/url\(['"]?([^)'"]+)['"]?\)/).map {|url|
         url.starts_with?('/') ? url : (f.p.dirname / url).to_s.gsub('/Users/ben/projects/corkboard/current/public', '')
