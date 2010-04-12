@@ -53,11 +53,11 @@ end
 homebrew_mirror 'homebrew linked' do
   requires 'homebrew mirrored'
   helper :unlinked_urls do
-    urls.select {|url|
+    urls.tap {|urls| log "#{urls.length} URLs in the homebrew download pool." }.select {|url|
       path = var(:homebrew_downloads) / File.basename(url)
       link = var(:homebrew_vhost_root) / url.sub(/^[a-z]+:\/\/[^\/]+\//, '')
       path.exists? && !(link.exists? && link.readlink)
-    }
+    }.tap {|urls| log "Of those, #{urls.length} aren't symlinked into the vhost." }
   end
   met? { unlinked_urls.empty? }
   meet {
