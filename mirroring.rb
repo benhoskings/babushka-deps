@@ -37,7 +37,7 @@ end
 dep 'twitter avatars mirrored' do
   define_var :twitter_pass, :default => L{ 'secret' }
   helper :users do
-    "~/Desktop/rc7/campers.txt".p.read.split("\n").map {|name| name.sub(/^@/, '') }
+    "~/Desktop/rc7/campers.txt".p.read.split(/\n+/).map {|name| name.sub(/^@/, '') }
   end
   helper :missing_avatars do
     users.reject {|user|
