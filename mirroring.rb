@@ -59,6 +59,24 @@ dep 'twitter avatars mirrored' do
   }
 end
 
+dep 'gravatars mirrored' do
+  helper :users do
+    "~/Desktop/rc7/emails.txt".p.read.split(/\n+/)
+  end
+  helper :missing_avatars do
+    users.reject {|user| "~/Desktop/rc7/gravatars/#{user}.jpg".p.exists? }
+  end
+  met? { missing_avatars.empty? }
+  meet {
+    require 'digest/md5'
+    in_dir "~/Desktop/rc7/gravatars", :create => true do
+      missing_avatars.each {|email|
+        Babushka::Archive.download "http://gravatar.com/avatar/#{Digest::MD5.hexdigest(email)}.jpg?s=512&d=404", "#{email}.jpg"
+      }
+    end
+  }
+end
+
 dep 'google ajax libs mirrored' do
   define_var :mirror_root, :default => '/srv/http/ajax.googleapis.com'
   helper :search_libstate do |doc,key|
