@@ -33,3 +33,28 @@ dep 'mirror has assets' do
     }
   }
 end
+
+dep 'twitter avatars mirrored' do
+  define_var :twitter_pass, :default => L{ 'secret' }
+  helper :users do
+    "~/Desktop/rc7/campers.txt".p.read.split("\n").map {|name| name.sub(/^@/, '') }
+  end
+  helper :missing_avatars do
+    users.reject {|user|
+      path = "~/Desktop/rc7/avatars/#{user}".p
+      path.exists? && !path.empty?
+    }
+  end
+  met? { missing_avatars.empty? }
+  meet {
+    require 'rubygems'
+    require 'twitter'
+    client = Twitter::Base.new(Twitter::HTTPAuth.new(var(:twitter_username), var(:twitter_pass)))
+    in_dir "~/Desktop/rc7/avatars", :create => true do
+      missing_avatars.each {|name|
+        url = client.user(name)['profile_image_url'].sub(/_normal(\.[a-zA-Z]+)$/) { $1 }
+        Babushka::Archive.download url, name
+      }
+    end
+  }
+end
