@@ -1,32 +1,49 @@
 # <%= generated_by_babushka %>
 
-# Never forward plain names (without a dot or domain part)
+# Never forward plain names (without a dot or domain part).
 domain-needed
 # Never forward addresses in the non-routed address spaces.
 bogus-priv
 # Filter useless windows-originated DNS requests.
 filterwin2k
 
-# Read upstream DNS servers provided by PPPoE.
-#resolv-file=/etc/ppp/resolv.conf
-
-# Change uid / gid to something other than the default.
+# Drop privileges from root to this user and group.
 user=dnsmasq
-#group=
+group=nogroup
 
-#interface=eth0
-#no-dhcp-interface=eth1
+# Listen only on this interface, and the loopback interface.
+# Listens on all interfaces if this is omitted.
+interface=en0
 
-expand-hosts
+# Serve DNS but not DHCP on these interfaces.
+#no-dhcp-interface=en1
+
+# By default, dnsmasq binds the wildcard address, even when only listening on
+# specific interfaces. Turn this on to only bind the listen interfaces'
+# addresses. Only use this if things would conflict otherwise (e.g. two
+# instances of dnsmasq running on the same machine).
+bind-interfaces
+
+# Sets the DNS domain for the DHCP server.
 domain=<%= var :dns_domain %>
 
-# localhost services all DNS requests for the internal domain
-#server=/<%= var :dns_domain %>/<%= var :dns_server_ip %>
+# Append the domain to domainless names from /etc/hosts.
+expand-hosts
+
+# address=/domain/IP means always return IP for domain (for domain, '#' means everything).
 address=/#/<%= var :dns_server_ip %>
+
+# server=/domain/IP means forward queries for domain to IP (for domain, '#' means everything).
+#server=/<%= var :dns_domain %>/<%= var :dns_server_ip %>
+
+# local=/domain/ means don't forward queries for domain - respond only from /etc/hosts or DHCP.
 #local=/<%= var :dns_domain %>/
 
-# Set the cachesize here.
+# The number of DNS entries that dnsmasq will cache.
 cache-size=512
+
+# Return an MX record pointing to this machine for all local machines.
+#selfmx
 
 <% confirm "Should dnsmasq serve DHCP as well as DNS", :default => 'y' do %>
 # Network / DHCP range config
@@ -124,6 +141,3 @@ dhcp-lease-max=255
 # http://www.isc.org/index.pl?/sw/dhcp/authoritative.php
 dhcp-authoritative
 <% end %>
-
-# Return an MX record pointing to itself for all local machines.
-selfmx
