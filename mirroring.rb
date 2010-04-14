@@ -58,3 +58,35 @@ dep 'twitter avatars mirrored' do
     end
   }
 end
+
+dep 'google ajax libs mirrored' do
+  define_var :mirror_root, :default => '/srv/http/ajax.googleapis.com'
+  helper :search_libstate do |doc,key|
+    doc.search("dd.al-libstate[text()*='#{key}:']").text.gsub("#{key}:", '').strip
+  end
+  helper :urls do
+    require 'rubygems'
+    require 'hpricot'
+    require 'net/http'
+    Hpricot(Net::HTTP.get(URI.parse('http://code.google.com/apis/ajaxlibs/documentation/'))).search('.al-liblist').map {|lib|
+      lib_name = search_libstate(lib, 'name')
+      versions = search_libstate(lib, 'versions').split(/[, ]+/)
+      [search_libstate(lib, 'path'), search_libstate(lib, 'path(u)')].squash.map {|path_template|
+        versions.map {|version|
+          URI.parse path_template.gsub versions.last, version
+        }
+      }
+    }.flatten
+  end
+  helper :missing_urls do
+    urls.reject {|url| (var(:mirror_root) / url.path).exists? }
+  end
+  met? { missing_urls.empty? }
+  meet {
+    missing_urls.each {|url|
+      in_dir var(:mirror_root) / url.path.p.dirname, :create => true do
+        Babushka::Archive.download url
+      end
+    }
+  }
+end
