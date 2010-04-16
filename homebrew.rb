@@ -70,7 +70,7 @@ homebrew_mirror 'homebrew linked' do
     log urls.map {|url|
       url.scan(/^[a-z]+:\/\/([^\/]+)\//).flatten.first
     }.uniq.reject {|url|
-      url[/[_]/]
+      url[/[:]/]
     }.join(' ')
     log "Those are the domains you should alias the host to."
   }
