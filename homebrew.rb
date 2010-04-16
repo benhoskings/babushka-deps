@@ -28,7 +28,7 @@ urls = (Class.constants - before - classes_to_skip).reject {|k|
 }
 puts urls * "\n"
       }
-      shell("ruby", :input => script).split("\n").select {|url| url[/^(https?|ftp):/] }
+      shell("ruby", :input => script).split("\n").select {|url| url[/^(https?|ftp):/] }.uniq
     end
   }
 end
