@@ -66,4 +66,7 @@ homebrew_mirror 'homebrew linked' do
       log_shell "Linking #{url}", "ln -sf '#{var(:homebrew_downloads) / File.basename(url)}' '#{var(:homebrew_vhost_root) / url.sub(/^[a-z]+:\/\/[^\/]+\//, '')}'"
     }
   }
+  after {
+    log urls.map {|url| url.scan(/^[a-z]+:\/\/([^\/]+)\//).first }.inspect
+  }
 end
