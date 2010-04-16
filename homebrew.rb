@@ -68,7 +68,7 @@ homebrew_mirror 'homebrew linked' do
   }
   after {
     log urls.map {|url|
-      url.scan(/^[a-z]+:\/\/([^\/]+)\//).first
+      url.scan(/^[a-z]+:\/\/([^\/]+)\//).flatten.first
     }.uniq.reject {|url|
       url[/[_]/]
     }.join(' ')
