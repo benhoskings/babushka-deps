@@ -67,6 +67,7 @@ homebrew_mirror 'homebrew linked' do
     }
   }
   after {
-    log urls.map {|url| url.scan(/^[a-z]+:\/\/([^\/]+)\//).first }.inspect
+    log urls.map {|url| url.scan(/^[a-z]+:\/\/([^\/]+)\//).first }.join(' ')
+    log "Those are the domains you should alias the host to."
   }
 end
