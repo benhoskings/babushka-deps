@@ -41,6 +41,7 @@ nginx 'vhost configured' do
   }
   requires 'webserver configured'
   define_var :vhost_type, :default => 'passenger', :choices => %w[passenger proxy static]
+  define_var :document_root, :default => L{ '/srv/http' / var(:domain) / 'public' }
   met? { nginx_conf_for(var(:domain), 'conf').exists? }
   meet {
     render_erb "nginx/#{var :vhost_type}_vhost.conf.erb",   :to => nginx_conf_for(var(:domain), 'conf'), :sudo => true
