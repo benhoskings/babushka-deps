@@ -1,5 +1,5 @@
 dep 'rubygems' do
-  requires 'rubygems up to date', 'github source', 'gemcutter source'
+  requires 'rubygems up to date', 'rubygems.org source', 'github source'
   setup {
     definer.requires('fake json gem') if shell('ruby --version')['ruby 1.9']
   }
@@ -40,8 +40,8 @@ meta :gem_source do
   }
 end
 
-gem_source 'gemcutter source' do
-  uri 'http://gemcutter.org'
+gem_source 'rubygems.org source' do
+  uri 'http://rubygems.org'
 end
 gem_source 'github source' do
   uri 'http://gems.github.com'
