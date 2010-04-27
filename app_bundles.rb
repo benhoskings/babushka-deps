@@ -24,3 +24,15 @@ dep "Chromium.app download cleared" do
   met? { in_download_dir { !'chrome-mac.zip'.p.exists? } }
   meet { in_download_dir { 'chrome-mac.zip'.p.rm } }
 end
+
+app 'Skype.app' do
+  source 'http://download.skype.com/macosx/Skype_2.8.0.851.dmg'
+end
+
+app 'Coda.app' do
+  source 'http://www.panic.com/coda/d/Coda 1.6.10.zip'
+end
+
+app 'Opera.app' do
+  source 'http://mirror.aarnet.edu.au/pub/opera/mac/1052/Opera_10.52_Setup_Intel.dmg'
+end
