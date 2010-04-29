@@ -33,6 +33,10 @@ app 'Coda.app' do
   source 'http://www.panic.com/coda/d/Coda 1.6.10.zip'
 end
 
+app 'Transmit.app' do
+  source 'http://www.panic.com/transmit/d/Transmit 4.0.zip'
+end
+
 app 'Opera.app' do
   source 'http://mirror.aarnet.edu.au/pub/opera/mac/1052/Opera_10.52_Setup_Intel.dmg'
 end
