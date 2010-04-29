@@ -3,7 +3,7 @@ app 'Fluid.app' do
 end
 
 app 'RubyMine.app' do
-  source 'http://download.jetbrains.com/ruby/rubymine-2.0.1.dmg'
+  source 'http://download-ln.jetbrains.com/ruby/rubymine-2.0.2.dmg'
 end
 
 app 'Chromium.app' do
