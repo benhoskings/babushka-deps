@@ -19,6 +19,9 @@ http {
   include mime.types;
   default_type application/octet-stream;
 
+  log_format main '$remote_addr - [$time_local] ($http_host) "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for"';
+  access_log logs/access.log main;
+
   # Don't edit this to serve content; instead, add a vhost.
   server {
     listen 80;
