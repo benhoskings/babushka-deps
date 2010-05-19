@@ -34,17 +34,27 @@ dep 'mirror has assets' do
   }
 end
 
-dep 'twitter avatars mirrored' do
+meta :twitter do
+  template {
+    helper :users do
+      "~/Desktop/rc7/campers.txt".p.read.split(/\n+/).uniq.map {|name| name.sub(/^@/, '') }
+    end
+    helper :avatars do
+      users.map {|user|
+        path = "~/Desktop/rc7/avatars/".p.glob("#{user}.*").first
+        path.p unless path.nil?
+      }.compact
+    end
+    helper :missing_avatars do
+      avatars.reject {|avatar|
+        avatar.exists? && !avatar.empty?
+      }
+    end
+  }
+end
+
+twitter 'twitter avatars mirrored' do
   define_var :twitter_pass, :default => L{ 'secret' }
-  helper :users do
-    "~/Desktop/rc7/campers.txt".p.read.split(/\n+/).uniq.map {|name| name.sub(/^@/, '') }
-  end
-  helper :missing_avatars do
-    users.reject {|user|
-      path = "~/Desktop/rc7/avatars/#{user}".p
-      path.exists? && !path.empty?
-    }
-  end
   met? { missing_avatars.empty? }
   meet {
     require 'rubygems'
@@ -52,10 +62,36 @@ dep 'twitter avatars mirrored' do
     client = Twitter::Base.new(Twitter::HTTPAuth.new(var(:twitter_username), var(:twitter_pass)))
     in_dir "~/Desktop/rc7/avatars", :create => true do
       missing_avatars.each {|name|
-        url = client.user(name)['profile_image_url'].sub(/_normal(\.[a-zA-Z]+)$/) { $1 }
-        Babushka::Archive.download url, name
+        begin
+          url = client.user(name)['profile_image_url'].sub(/_normal(\.[a-zA-Z]+)$/) { $1 }
+          Babushka::Archive.download url, name
+        rescue Twitter::NotFound
+          log_error "#{name}: 404."
+        rescue Twitter::InformTwitter
+          log_error "#{name}: Fail whale!"
+        rescue JSON::ParserError
+          log_error "#{name}: Bad JSON."
+        end
       }
     end
+  }
+end
+
+twitter 'twitter avatars renamed' do
+  # requires 'twitter avatars mirrored'
+  met? { (avatars - missing_avatars).all? {|avatar| avatar.to_s[/\.[jpengif]{3,4}$/] } }
+  meet {
+    (avatars - missing_avatars).each {|avatar|
+      type = shell("file '#{avatar}'").scan(/([A-Z]+) image/).flatten.first
+      unless type.nil?
+        ext = type.downcase
+        shell "mv '#{avatar}' '#{avatar}.#{ext}'"
+      end
+    }
+  }
+  after {
+    log "These ones are broken:"
+    log avatars.reject {|avatar| avatar.to_s[/\.[jpengif]{3,4}$/] }.join("\n")
   }
 end
 
