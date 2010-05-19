@@ -1,8 +1,12 @@
-dep 'fish' do
-  requires 'fish installed'
-  met? { grep which('fish'), '/etc/shells' }
-  meet { append_to_file which('fish'), '/etc/shells', :sudo => true }
+meta :shell_setup do
+  template {
+    setup { requires "#{name} installed" }
+    met? { grep which(name), '/etc/shells' }
+    meet { append_to_file which(name), '/etc/shells', :sudo => true }
+  }
 end
+
+shell_setup 'fish'
 
 src 'fish installed' do
   requires 'ncurses', 'coreutils', 'gettext'
