@@ -40,3 +40,9 @@ end
 app 'Opera.app' do
   source 'http://mirror.aarnet.edu.au/pub/opera/mac/1052/Opera_10.52_Setup_Intel.dmg'
 end
+
+app 'pomodoro.app' do
+  source L { "http://pomodoro.ugolandini.com/pages/downloads_files/pomodoro-#{version}.zip" }
+  latest_version { from_page 'http://www.apple.com/downloads/macosx/development_tools/pomodoro.html', /<h2>Pomodoro\s*(\S*)</ }
+  current_version { |path| bundle_version(path, 'CFBundleVersion') }
+end
