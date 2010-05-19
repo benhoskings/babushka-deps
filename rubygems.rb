@@ -54,7 +54,8 @@ dep 'rubygems up to date' do
 end
 
 dep 'rubygems installed' do
-  requires 'ruby', 'curl'
+  requires 'ruby'
+  requires_when_unmet 'curl'
   merge :versions, :rubygems => '1.3.7'
   met? { provided? %w[gem ruby] }
   meet {
