@@ -56,7 +56,7 @@ dep 'migrated db' do
       var(:rails_root) / 'db/migrate/*.rb'
     ].map {|f| File.basename f }.push('0').sort.last.split('_', 2).first
 
-    returning current_version == latest_version do |result|
+    returning current_version.gsub(/^0+/, '') == latest_version.gsub(/^0+/, '') do |result|
       unless current_version.blank?
         if latest_version == '0'
           log_verbose "This app doesn't have any migrations yet."
