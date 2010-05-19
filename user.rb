@@ -4,18 +4,6 @@ dep 'user shell setup' do
   meet { sudo "chsh -s #{shell('which fish')} #{var(:username)}" }
 end
 
-dep 'fish' do
-  requires 'fish installed'
-  met? { grep which('fish'), '/etc/shells' }
-  meet { append_to_file which('fish'), '/etc/shells', :sudo => true }
-end
-
-src 'fish installed' do
-  requires 'ncurses', 'coreutils', 'gettext'
-  source "git://github.com/benhoskings/fish.git"
-  provides 'fish'
-end
-
 dep 'passwordless ssh logins' do
   requires 'user exists'
   met? { grep var(:your_ssh_public_key), '~/.ssh/authorized_keys' }
