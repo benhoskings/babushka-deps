@@ -40,10 +40,10 @@ meta :gem_source do
   }
 end
 
-gem_source 'rubygems.org source' do
+dep 'rubygems.org.gem_source' do
   uri 'http://rubygems.org'
 end
-gem_source 'github source' do
+dep 'github.gem_source' do
   uri 'http://gems.github.com'
 end
 

@@ -1,4 +1,4 @@
-src 'sphinx' do
+dep 'sphinx.src' do
   source 'http://www.sphinxsearch.com/downloads/sphinx-0.9.9.tar.gz'
   provides 'search', 'searchd', 'indexer'
   configure_args L{

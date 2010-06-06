@@ -1,12 +1,12 @@
-app 'Fluid.app' do
+dep 'Fluid.app' do
   source 'http://fluidapp.com/dist/Fluid_0.9.6.zip'
 end
 
-app 'RubyMine.app' do
+dep 'RubyMine.app' do
   source 'http://download-ln.jetbrains.com/ruby/rubymine-2.0.2.dmg'
 end
 
-app 'Chromium.app' do
+dep 'Chromium.app' do
   requires_when_unmet "Chromium.app download cleared"
   source L{
     "http://build.chromium.org/buildbot/snapshots/chromium-rel-mac/#{version}/chrome-mac.zip"
@@ -25,23 +25,23 @@ dep "Chromium.app download cleared" do
   meet { in_download_dir { 'chrome-mac.zip'.p.rm } }
 end
 
-app 'Skype.app' do
+dep 'Skype.app' do
   source 'http://download.skype.com/macosx/Skype_2.8.0.851.dmg'
 end
 
-app 'Coda.app' do
+dep 'Coda.app' do
   source 'http://www.panic.com/coda/d/Coda 1.6.10.zip'
 end
 
-app 'Transmit.app' do
+dep 'Transmit.app' do
   source 'http://www.panic.com/transmit/d/Transmit 4.0.zip'
 end
 
-app 'Opera.app' do
+dep 'Opera.app' do
   source 'http://mirror.aarnet.edu.au/pub/opera/mac/1052/Opera_10.52_Setup_Intel.dmg'
 end
 
-app 'pomodoro.app' do
+dep 'pomodoro.app' do
   source L { "http://pomodoro.ugolandini.com/pages/downloads_files/pomodoro-#{version}.zip" }
   latest_version { from_page 'http://www.apple.com/downloads/macosx/development_tools/pomodoro.html', /<h2>Pomodoro\s*(\S*)</ }
   current_version { |path| bundle_version(path, 'CFBundleVersion') }

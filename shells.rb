@@ -1,20 +1,23 @@
 meta :shell_setup do
   template {
-    setup { requires "#{name} installed" }
     met? { grep which(name), '/etc/shells' }
     meet { append_to_file which(name), '/etc/shells', :sudo => true }
   }
 end
 
-shell_setup 'fish'
+dep 'fish.shell_setup' do
+  requires 'fish.src'
+end
 
-src 'fish installed' do
+dep 'fish.src' do
   requires 'ncurses', 'coreutils', 'gettext'
   source "git://github.com/benhoskings/fish.git"
   provides 'fish'
 end
 
-shell_setup 'zsh'
+dep 'zsh.shell_setup' do
+  requires 'zsh installed'
+end
 
 pkg 'zsh installed' do
   installs 'zsh'
