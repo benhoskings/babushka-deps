@@ -22,6 +22,14 @@ http {
   log_format main '$remote_addr - [$time_local] ($http_host) "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for"';
   access_log logs/access.log main;
 
+  gzip on;
+  gzip_min_length 1024;
+  #gzip_vary on;
+  gzip_comp_level 9;
+  gzip_proxied any;
+  gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+  gzip_buffers 16 8k; # handle gzipped output up to 128kB
+
   # Don't edit this to serve content; instead, add a vhost.
   server {
     listen 80;
