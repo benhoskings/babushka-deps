@@ -17,9 +17,13 @@ location <%= var :x_send_asset_subpath %> {
 }
 <% end %>
 
-location ~* \.(js|css|jpg|jpeg|gif|png|ico|swf)$ {
-  if (-f $request_filename) {
-    expires 1d;
+location ~* \.(js|css|jpe?g|png|gif|ico|swf)$ {
+  if ($request_uri ~ "\?[0-9]+$") {
+    expires max; # cache timestamped assets forever...
+    break;
+  }
+  if ($request_uri !~ "\?[0-9]+$") {
+    expires 1d; # ...and others for 1 day
     break;
   }
 }
