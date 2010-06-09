@@ -3,14 +3,11 @@ meta :bab_tarball do
     helper :uri do
       'git://github.com/benhoskings/babushka.git'
     end
-    helper :prefix do
-      '~/current/public/tarballs'.p
-    end
     helper :latest do
-      prefix / 'LATEST'
+      var(:tarball_path) / 'LATEST'
     end
     helper :tarball_for do |commit_id|
-      prefix / "babushka-#{commit_id}.tgz"
+      var(:tarball_path) / "babushka-#{commit_id}.tgz"
     end
     helper :current_head do
       in_build_dir 'babushka' do
@@ -22,7 +19,10 @@ end
 
 bab_tarball 'babushka tarball' do
   requires 'babushka tarball linked', 'babushka tarball LATEST'
-  setup { git uri, :dir => 'babushka' }
+  setup {
+    set :tarball_path, './public/tarballs'.p
+    git uri, :dir => 'babushka'
+  }
 end
 
 bab_tarball 'babushka tarball LATEST' do
@@ -37,10 +37,10 @@ end
 bab_tarball 'babushka tarball linked' do
   requires 'babushka tarball exists'
   met? {
-    (prefix / 'babushka.tgz').readlink == tarball_for(current_head)
+    (var(:tarball_path) / 'babushka.tgz').readlink == tarball_for(current_head)
   }
   meet {
-    in_dir prefix, :create => true do
+    in_dir var(:tarball_path), :create => true do
       shell "ln -sf #{tarball_for(current_head)} babushka.tgz"
     end
   }
