@@ -50,6 +50,7 @@ bab_tarball 'babushka tarball exists' do
   met? {
     shell "tar -t -f #{tarball_for(current_head)}"
   }
+  before { shell "mkdir -p #{tarball_for(current_head).parent}" }
   meet {
     in_build_dir do
       shell "tar -zcv --exclude .git -f '#{tarball_for(current_head)}' babushka/"
