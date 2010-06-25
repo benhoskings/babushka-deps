@@ -1,3 +1,7 @@
+dep 'LaunchBar.app' do
+  source 'http://www.obdev.at/downloads/launchbar/LaunchBar-5.0.2.dmg'
+end
+
 dep 'Fluid.app' do
   source 'http://fluidapp.com/dist/Fluid_0.9.6.zip'
 end
