@@ -1,5 +1,5 @@
 dep 'rubygems' do
-  requires 'rubygems up to date', 'rubygems.org source', 'github source'
+  requires 'rubygems up to date', 'rubygems.org.gem_source', 'github.gem_source'
   setup {
     definer.requires('fake json gem') if shell('ruby --version')['ruby 1.9']
   }
