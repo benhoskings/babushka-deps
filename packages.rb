@@ -65,6 +65,7 @@ end
 pkg 'pcre' do
   installs {
     via :brew, 'pcre'
+    via :macports, 'pcre'
     via :apt, 'libpcre3-dev'
   }
   provides 'pcretest'
