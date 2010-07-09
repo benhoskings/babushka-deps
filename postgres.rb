@@ -1,5 +1,5 @@
 dep 'existing postgres db' do
-  requires 'postgres gem', 'postgres access'
+  requires 'postgres.gem', 'postgres access'
   met? {
     !shell("psql -l") {|shell|
       shell.stdout.split("\n").grep(/^\s*#{var :db_name}\s+\|/)
@@ -10,8 +10,8 @@ dep 'existing postgres db' do
   }
 end
 
-gem 'postgres gem' do
-  requires 'postgres software'
+dep 'postgres.gem' do
+  requires 'postgres.managed'
   installs 'pg'
   provides []
 end
@@ -23,7 +23,7 @@ dep 'postgres access' do
 end
 
 dep 'postgres backups' do
-  requires 'postgres software'
+  requires 'postgres.managed'
   met? { shell "test -x /etc/cron.hourly/postgres_offsite_backup" }
   before {
     returning sudo "ssh #{var :offsite_host} 'true'" do |result|
@@ -40,7 +40,7 @@ dep 'postgres backups' do
   }
 end
 
-pkg 'postgres software' do
+dep 'postgres.managed' do
   installs {
     via :macports, 'postgresql83-server'
     via :apt, %w[postgresql postgresql-client libpq-dev]

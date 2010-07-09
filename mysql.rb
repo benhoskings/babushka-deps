@@ -1,5 +1,5 @@
-gem 'mysql gem' do
-  requires 'mysql software'
+dep 'mysql.gem' do
+  requires 'mysql.managed'
   installs 'mysql'
   provides []
 end
@@ -23,12 +23,12 @@ dep 'mysql configured' do
 end
 
 dep 'mysql root password' do
-  requires 'mysql software'
+  requires 'mysql.managed'
   met? { failable_shell("echo '\q' | mysql -u root").stderr["Access denied for user 'root'@'localhost' (using password: NO)"] }
   meet { mysql(%Q{GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '#{var :db_admin_password}'}, 'root', false) }
 end
 
-pkg 'mysql software' do
+dep 'mysql.managed' do
   installs {
     via :apt, %w[mysql-server libmysqlclient15-dev]
     via :macports, 'mysql5-server'
