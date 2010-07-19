@@ -22,14 +22,14 @@ meta :nginx do
   }
 end
 
-nginx 'vhost enabled' do
+dep 'vhost enabled.nginx' do
   requires 'vhost configured'
   met? { nginx_conf_link_for(var(:domain)).exists? }
   meet { sudo "ln -sf '#{nginx_conf_for(var(:domain), 'conf')}' '#{nginx_conf_link_for(var(:domain))}'" }
   after { restart_nginx }
 end
 
-nginx 'vhost configured' do
+dep 'vhost configured.nginx' do
   define_var :www_aliases, :default => L{
     "#{var :domain} #{var :extra_domains}".split(' ').compact.map(&:strip).reject {|d|
       d.starts_with? '*.'
@@ -50,7 +50,7 @@ nginx 'vhost configured' do
   after { restart_nginx if nginx_conf_link_for(var(:domain)).exists? }
 end
 
-nginx 'self signed cert' do
+dep 'self signed cert.nginx' do
   requires 'webserver installed'
   met? { %w[key csr crt].all? {|ext| (nginx_cert_path / "#{var :domain}.#{ext}").exists? } }
   meet {
@@ -75,7 +75,7 @@ nginx 'self signed cert' do
   }
 end
 
-nginx 'webserver running' do
+dep 'webserver running.nginx' do
   requires 'webserver configured', 'webserver startup script'
   met? {
     returning nginx_running? do |result|
@@ -90,7 +90,7 @@ nginx 'webserver running' do
   end
 end
 
-nginx 'webserver startup script' do
+dep 'webserver startup script.nginx' do
   requires 'webserver installed'
   on :linux do
     requires 'rcconf'
@@ -109,7 +109,7 @@ nginx 'webserver startup script' do
   end
 end
 
-nginx 'webserver configured' do
+dep 'webserver configured.nginx' do
   requires 'webserver installed', 'www user and group'
   define_var :nginx_prefix, :default => '/opt/nginx'
   met? {
@@ -141,7 +141,7 @@ dep 'passenger helper_server' do
   }
 end
 
-src 'webserver installed' do
+dep 'webserver installed.src' do
   requires 'passenger helper_server', 'pcre', 'libssl headers', 'zlib headers'
   merge :versions, {:nginx => '0.7.65', :nginx_upload_module => '2.0.12'}
   source "http://nginx.org/download/nginx-#{var(:versions)[:nginx]}.tar.gz"

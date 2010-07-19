@@ -53,7 +53,7 @@ meta :twitter do
   }
 end
 
-twitter 'twitter avatars mirrored' do
+dep 'avatars mirrored.twitter' do
   define_var :twitter_pass, :default => L{ 'secret' }
   met? { missing_avatars.empty? }
   meet {
@@ -77,7 +77,7 @@ twitter 'twitter avatars mirrored' do
   }
 end
 
-twitter 'twitter avatars renamed' do
+dep 'avatars renamed.twitter' do
   # requires 'twitter avatars mirrored'
   met? { (avatars - missing_avatars).all? {|avatar| avatar.to_s[/\.[jpengif]{3,4}$/] } }
   meet {

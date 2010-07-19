@@ -37,7 +37,7 @@ end
 
 dep 'core software' do
   requires {
-    on :linux, 'vim', 'curl', 'htop', 'jnettop', 'screen', 'nmap', pkg('tree')
+    on :linux, 'vim', 'curl', 'htop', 'jnettop', 'screen', 'nmap', 'tree'
     on :osx, 'curl', 'jnettop', 'nmap'
   }
 end

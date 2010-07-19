@@ -17,15 +17,14 @@ meta :bab_tarball do
   }
 end
 
-bab_tarball 'babushka tarball' do
-  requires 'babushka tarball linked', 'babushka tarball LATEST'
+dep 'babushka tarball' do
+  requires 'linked.bab_tarball', 'LATEST.bab_tarball'
   setup {
     set :tarball_path, './public/tarballs'.p
-    git uri, :dir => 'babushka'
   }
 end
 
-bab_tarball 'babushka tarball LATEST' do
+dep 'LATEST.bab_tarball' do
   met? {
     latest.exists? && (latest.read.strip == current_head)
   }
@@ -34,8 +33,11 @@ bab_tarball 'babushka tarball LATEST' do
   }
 end
 
-bab_tarball 'babushka tarball linked' do
-  requires 'babushka tarball exists'
+dep 'linked.bab_tarball' do
+  requires 'exists.bab_tarball'
+  setup {
+    git uri, :dir => 'babushka'
+  }
   met? {
     (var(:tarball_path) / 'babushka.tgz').readlink == tarball_for(current_head)
   }
@@ -46,7 +48,7 @@ bab_tarball 'babushka tarball linked' do
   }
 end
 
-bab_tarball 'babushka tarball exists' do
+dep 'exists.bab_tarball' do
   met? {
     shell "tar -t -f #{tarball_for(current_head)}"
   }

@@ -1,4 +1,4 @@
-pkg 'dnsmasq' do
+dep 'dnsmasq.managed' do
   cfg '/etc/dnsmasq.conf'
   setup {
     define_var :dhcp_network,

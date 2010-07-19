@@ -33,7 +33,7 @@ puts urls * "\n"
   }
 end
 
-homebrew_mirror 'homebrew mirrored' do
+dep 'mirrored.homebrew_mirror' do
   define_var :homebrew_downloads, :default => '/srv/http/files'
   define_var :homebrew_vhost_root, :default => '/srv/http/homebrew'
   helper :missing_urls do
@@ -50,8 +50,8 @@ homebrew_mirror 'homebrew mirrored' do
   }
 end
 
-homebrew_mirror 'homebrew linked' do
-  requires 'homebrew mirrored'
+dep 'linked.homebrew_mirror' do
+  requires 'mirrored.homebrew_mirror'
   helper :unlinked_urls do
     urls.tap {|urls| log "#{urls.length} URLs in the homebrew download pool." }.select {|url|
       path = var(:homebrew_downloads) / File.basename(url)
