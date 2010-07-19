@@ -16,6 +16,7 @@ dep 'freeimage.managed' do
   installs {
     via :apt, %w[libfreeimage3 libfreeimage-dev]
     via :macports, 'freeimage'
+    via :brew, 'freeimage'
   }
   provides []
 end
