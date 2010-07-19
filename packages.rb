@@ -11,7 +11,6 @@ dep 'curl.managed' do
     via :apt, 'curl'
   }
 end
-dep 'gettext.managed', :for => :linux
 dep 'erlang.managed'
 dep 'freeimage.managed' do
   installs {
