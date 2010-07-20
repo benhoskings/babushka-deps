@@ -1,4 +1,4 @@
-dep 'dnsmasq.managed' do
+dep 'dnsmasq', :template => 'managed' do
   cfg '/etc/dnsmasq.conf'
   setup {
     define_var :dhcp_network,

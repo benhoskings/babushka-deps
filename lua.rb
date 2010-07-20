@@ -1,4 +1,4 @@
-dep 'lua.managed'
+dep 'lua', :template => 'managed'
 
 dep 'luarocks.src' do
   requires 'lua'

@@ -5,7 +5,7 @@ dep 'samba' do
   after { sudo "/etc/init.d/samba restart" }
 end
 
-dep 'samba.managed' do
+dep 'samba', :template => 'managed' do
   installs { via :apt, 'samba' }
   provides []
 end
