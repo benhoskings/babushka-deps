@@ -83,6 +83,7 @@ dep 'sshd', :template => 'managed' do
     via :apt, 'openssh-server'
   }
 end
+dep 'tree', :template => 'managed'
 dep 'vim', :template => 'managed'
 dep 'wget', :template => 'managed'
 dep 'zlib headers', :template => 'managed' do
