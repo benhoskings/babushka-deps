@@ -6,11 +6,6 @@ dep 'coreutils', :template => 'managed', :for => :osx do
     end
   end
 end
-dep 'curl', :template => 'managed' do
-  installs {
-    via :apt, 'curl'
-  }
-end
 dep 'erlang', :template => 'managed'
 dep 'freeimage', :template => 'managed' do
   installs {
