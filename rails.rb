@@ -42,7 +42,7 @@ dep 'gems installed' do
 end
 
 dep 'migrated db' do
-  requires 'deployed app', 'existing db', 'rails.gem'
+  requires 'deployed app', 'existing db', 'db gem', 'rails.gem'
   setup {
     if (db_config = yaml(var(:rails_root) / 'config/database.yml')[var(:rails_env)]).nil?
       log_error "There's no database.yml entry for the #{var(:rails_env)} environment."
