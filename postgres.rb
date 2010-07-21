@@ -1,5 +1,5 @@
 dep 'existing postgres db' do
-  requires 'postgres.gem', 'postgres access'
+  requires 'postgres access'
   met? {
     !shell("psql -l") {|shell|
       shell.stdout.split("\n").grep(/^\s*#{var :db_name}\s+\|/)
