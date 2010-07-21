@@ -31,6 +31,7 @@ dep 'gems installed' do
     parse_gem_deps.map {|gem_spec|
       # Make a new Dep for each gem this app needs...
       dep("#{gem_spec}.gem") {
+        installs gem_spec
         provides []
       }
     }.each {|dep|
