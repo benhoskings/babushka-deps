@@ -93,7 +93,7 @@ end
 dep 'webserver startup script.nginx' do
   requires 'webserver installed.src'
   on :linux do
-    requires 'rcconf'
+    requires 'rcconf.managed'
     met? { shell("rcconf --list").val_for('nginx') == 'on' }
     meet {
       render_erb 'nginx/nginx.init.d.erb', :to => '/etc/init.d/nginx', :perms => '755', :sudo => true
