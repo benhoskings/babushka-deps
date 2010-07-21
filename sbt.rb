@@ -1,5 +1,5 @@
 dep 'sbt' do
-  requires 'java'
+  requires 'java.managed'
   merge :versions, :sbt => '0.5.4'
   met? { which 'sbt' }
   meet {

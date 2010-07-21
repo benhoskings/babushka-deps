@@ -18,12 +18,11 @@ end
 dep 'gettext.managed'
 dep 'htop.managed'
 dep 'image_science.gem' do
-  requires 'freeimage'
+  requires 'freeimage.managed'
   provides []
 end
 dep 'java.managed' do
   installs { via :apt, 'sun-java6-jre' }
-  provides 'java'
   after { shell "set -Ux JAVA_HOME /usr/lib/jvm/java-6-sun" }
 end
 dep 'jnettop.managed' do

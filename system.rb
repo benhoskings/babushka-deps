@@ -15,7 +15,7 @@ dep 'hostname', :for => :linux do
 end
 
 dep 'secured ssh logins' do
-  requires 'sshd', 'sed'
+  requires 'sshd.managed', 'sed.managed'
   met? {
     # -o NumberOfPasswordPrompts=0
     output = failable_shell('ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no nonexistentuser@localhost').stderr
@@ -37,7 +37,7 @@ dep 'secured ssh logins' do
 end
 
 dep 'lax host key checking' do
-  requires 'sed'
+  requires 'sed.managed'
   met? { grep /^StrictHostKeyChecking[ \t]+no/, ssh_conf_path(:ssh) }
   meet { change_with_sed 'StrictHostKeyChecking', 'yes', 'no', ssh_conf_path(:ssh) }
 end
