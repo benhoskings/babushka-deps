@@ -1,6 +1,5 @@
 dep 'mysql.gem' do
   requires 'mysql.managed'
-  installs 'mysql'
   provides []
 end
 

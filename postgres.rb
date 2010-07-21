@@ -10,9 +10,8 @@ dep 'existing postgres db' do
   }
 end
 
-dep 'postgres.gem' do
+dep 'pg.gem' do
   requires 'postgres.managed'
-  installs 'pg'
   provides []
 end
 
