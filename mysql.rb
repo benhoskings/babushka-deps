@@ -28,7 +28,7 @@ dep 'mysql root password' do
   meet { mysql(%Q{GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '#{var :db_admin_password}'}, 'root', false) }
 end
 
-dep 'mysql', :template => 'managed' do
+dep 'mysql.managed' do
   installs {
     via :apt, %w[mysql-server libmysqlclient15-dev]
     via :macports, 'mysql5-server'

@@ -40,7 +40,7 @@ dep 'postgres backups' do
   }
 end
 
-dep 'postgres', :template => 'managed' do
+dep 'postgres.managed' do
   installs {
     via :macports, 'postgresql83-server'
     via :apt, %w[postgresql postgresql-client libpq-dev]

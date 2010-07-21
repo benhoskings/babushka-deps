@@ -1,4 +1,4 @@
-dep 'coreutils', :template => 'managed', :for => :osx do
+dep 'coreutils.managed', :for => :osx do
   provides 'gecho'
   after :on => :osx do
     in_dir pkg_manager.bin_path do
@@ -6,8 +6,8 @@ dep 'coreutils', :template => 'managed', :for => :osx do
     end
   end
 end
-dep 'erlang', :template => 'managed'
-dep 'freeimage', :template => 'managed' do
+dep 'erlang.managed'
+dep 'freeimage.managed' do
   installs {
     via :apt, %w[libfreeimage3 libfreeimage-dev]
     via :macports, 'freeimage'
@@ -15,49 +15,49 @@ dep 'freeimage', :template => 'managed' do
   }
   provides []
 end
-dep 'gettext', :template => 'managed'
-dep 'htop', :template => 'managed'
+dep 'gettext.managed'
+dep 'htop.managed'
 dep 'image_science.gem' do
   requires 'freeimage'
   provides []
 end
-dep 'java', :template => 'managed' do
+dep 'java.managed' do
   installs { via :apt, 'sun-java6-jre' }
   provides 'java'
   after { shell "set -Ux JAVA_HOME /usr/lib/jvm/java-6-sun" }
 end
-dep 'jnettop', :template => 'managed' do
+dep 'jnettop.managed' do
   installs { via :apt, 'jnettop' }
 end
-dep 'libssl headers', :template => 'managed' do
+dep 'libssl headers.managed' do
   installs { via :apt, 'libssl-dev' }
   provides []
 end
-dep 'libxml', :template => 'managed' do
+dep 'libxml.managed' do
   installs { via :apt, 'libxml2-dev' }
   provides []
 end
-dep 'mdns', :template => 'managed' do
+dep 'mdns.managed' do
   installs {
     via :apt, 'avahi-daemon'
   }
   provides []
 end
-dep 'memcached', :template => 'managed'
-dep 'ncurses', :template => 'managed' do
+dep 'memcached.managed'
+dep 'ncurses.managed' do
   installs {
     via :apt, 'libncurses5-dev', 'libncursesw5-dev'
     via :macports, 'ncurses', 'ncursesw'
   }
   provides []
 end
-dep 'nmap', :template => 'managed'
-dep 'oniguruma', :template => 'managed'
+dep 'nmap.managed'
+dep 'oniguruma.managed'
 dep 'passenger.gem' do
   installs 'passenger' => '>= 2.2.9'
   provides 'passenger-install-nginx-module'
 end
-dep 'pcre', :template => 'managed' do
+dep 'pcre.managed' do
   installs {
     via :brew, 'pcre'
     via :macports, 'pcre'
@@ -65,11 +65,11 @@ dep 'pcre', :template => 'managed' do
   }
   provides 'pcretest'
 end
-dep 'rcconf', :template => 'managed' do
+dep 'rcconf.managed' do
   installs { via :apt, 'rcconf' }
 end
-dep 'screen', :template => 'managed'
-dep 'sed', :template => 'managed' do
+dep 'screen.managed'
+dep 'sed.managed' do
   installs { via :macports, 'gsed' }
   provides 'sed'
   after {
@@ -78,15 +78,15 @@ dep 'sed', :template => 'managed' do
     end
   }
 end
-dep 'sshd', :template => 'managed' do
+dep 'sshd.managed' do
   installs {
     via :apt, 'openssh-server'
   }
 end
-dep 'tree', :template => 'managed'
-dep 'vim', :template => 'managed'
-dep 'wget', :template => 'managed'
-dep 'zlib headers', :template => 'managed' do
+dep 'tree.managed'
+dep 'vim.managed'
+dep 'wget.managed'
+dep 'zlib headers.managed' do
   installs { via :apt, 'zlib1g-dev' }
   provides []
 end

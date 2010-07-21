@@ -18,4 +18,4 @@ dep 'zsh.shell_setup' do
   requires 'zsh.managed'
 end
 
-dep 'zsh', :template => 'managed'
+dep 'zsh.managed'
