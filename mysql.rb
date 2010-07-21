@@ -5,14 +5,14 @@ dep 'mysql.gem' do
 end
 
 dep 'mysql access' do
-  requires 'mysql db exists'
+  requires 'existing mysql db'
   define_var :db_user, :default => :username
   define_var :db_host, :default => 'localhost'
   met? { mysql "use #{var(:db_name)}", var(:db_user) }
   meet { mysql %Q{GRANT ALL PRIVILEGES ON #{var :db_name}.* TO '#{var :db_user}'@'#{var :db_host}' IDENTIFIED BY '#{var :db_password}'} }
 end
 
-dep 'mysql db exists' do
+dep 'existing mysql db' do
   requires 'mysql configured'
   met? { mysql("SHOW DATABASES").split("\n")[1..-1].any? {|l| /\b#{var :db_name}\b/ =~ l } }
   meet { mysql "CREATE DATABASE #{var :db_name}" }
