@@ -1,48 +1,11 @@
-def parse_config_gem_deps
-  IO.readlines(
-    var(:rails_root) / 'config/environment.rb'
-  ).grep(/^\s*config\.gem/).map {|l|
-    i = l.scan /config\.gem[\s\('"]+([\w-]+)(['"],\s*\:version\s*=>\s*['"]([<>=!~.0-9\s]+)['"])?.*$/
-
-    if i.first.nil? || i.first.first.nil?
-      log_error "Couldn't parse '#{l.chomp}' in #{'config/environment.rb'.p}."
-    else
-      ver i.first.first, i.first.last
-    end
-  }.compact
-end
-
-def parse_rails_dep
-  IO.readlines(
-    var(:rails_root) / 'config/environment.rb'
-  ).grep(/RAILS_GEM_VERSION/).map {|l|
-    $1 if l =~ /^[^#]*RAILS_GEM_VERSION\s*=\s*["']([!~<>=]*\s*[\d.]+)["']/
-  }.compact.map {|v|
-    ver 'rails', v
-  }
-end
-
-def parse_gem_deps
-  parse_rails_dep + parse_config_gem_deps
-end
-
-dep 'gems installed' do
-  setup {
-    parse_gem_deps.map {|gem_spec|
-      # Make a new Dep for each gem this app needs...
-      dep("#{gem_spec}.gem") {
-        installs gem_spec
-        provides []
-      }
-    }.each {|dep|
-      # ... and set each one as a requirement of this dep.
-      requires dep.name
-    }
-  }
+dep 'app bundled' do
+  requires 'deployed app'
+  met? { in_dir(var(:rails_root)) { shell 'bundle check', :log => true } }
+  meet { in_dir(var(:rails_root)) { shell 'bundle install --without test', :log => true } }
 end
 
 dep 'migrated db' do
-  requires 'deployed app', 'existing db', 'db gem', 'rails.gem'
+  requires 'deployed app', 'existing db', 'db gem'
   setup {
     if (db_config = yaml(var(:rails_root) / 'config/database.yml')[var(:rails_env)]).nil?
       log_error "There's no database.yml entry for the #{var(:rails_env)} environment."
@@ -74,5 +37,3 @@ end
 dep 'deployed app' do
   met? { File.directory? var(:rails_root) / 'app' }
 end
-
-dep 'rails.gem'
