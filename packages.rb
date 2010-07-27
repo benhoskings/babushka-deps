@@ -1,3 +1,6 @@
+dep 'bundler.gem' do
+  provides 'bundle'
+end
 dep 'coreutils.managed', :for => :osx do
   provides 'gecho'
   after :on => :osx do
