@@ -1,10 +1,12 @@
 dep 'ruby19.src' do
   source 'ftp://ftp.ruby-lang.org//pub/ruby/1.9/ruby-1.9.2-p0.tar.gz'
+  provides 'ruby19'
   configure_args '--program-suffix=19'
 end
 
 dep 'ruby18.src' do
   source 'ftp://ftp.ruby-lang.org/pub/ruby/1.8/ruby-1.8.7-p302.tar.gz'
+  provides 'ruby18'
   configure_args '--program-suffix=18', '--enable-pthread'
 end
 
@@ -19,7 +21,7 @@ end
 dep 'ruby symlinked' do
   define_var :ruby_version, :choices => %w[18 19]
   helper :ruby_binaries do
-    %w[ruby gem testrb ri rdoc irb rake]
+    %w[ruby testrb ri rdoc irb erb]
   end
   helper :prefix do
     '/usr/local/bin'
