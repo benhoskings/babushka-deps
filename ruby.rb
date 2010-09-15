@@ -22,7 +22,9 @@ end
 dep 'ruby symlinked' do
   define_var :ruby_version, :choices => %w[18 19]
   helper :ruby_binaries do
-    %w[ruby testrb ri rdoc irb erb]
+    %w[erb gem irb rdoc ri ruby testrb rake].select {|rb|
+      (prefix / "#{rb}#{var(:ruby_version)}").exists?
+    }
   end
   helper :prefix do
     '/usr/local/bin'
