@@ -3,6 +3,9 @@ def ssh_conf_path file
 end
 
 dep 'hostname', :for => :linux do
+  helper :hostname do
+    shell 'hostname -f'
+  end
   met? {
     stored_hostname = '/etc/hostname'.p.read
     !stored_hostname.blank? && hostname == stored_hostname
