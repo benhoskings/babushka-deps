@@ -12,6 +12,7 @@ end
 
 dep 'rubygems18.src' do
   requires 'ruby18.src'
+  provides 'gem18'
   source 'http://rubyforge.org/frs/download.php/70696/rubygems-1.3.7.tgz'
   process_source {
     sudo 'ruby18 setup.rb'
