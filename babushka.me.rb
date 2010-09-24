@@ -68,7 +68,7 @@ dep 'babushka.me db dump' do
     db_dump_path / 'babushka.me.psql'
   end
   met? {
-    db_dump.exists? && (db_dump.mtime + 10 > Time.now) # less than 1 hour old
+    db_dump.exists? && (db_dump.mtime + 300 > Time.now) # less than 5 minutes old
   }
   before { db_dump_path.mkdir }
   meet {
