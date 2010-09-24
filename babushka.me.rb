@@ -59,3 +59,19 @@ dep 'exists.bab_tarball' do
     end
   }
 end
+
+dep 'babushka.me db dump' do
+  helper :db_dump_path do
+    './public/db'.p
+  end
+  helper :db_dump do
+    db_dump_path / 'babushka.me.psql'
+  end
+  met? {
+    db_dump.exists? && (db_dump.mtime + 10 > Time.now) # less than 1 hour old
+  }
+  before { db_dump_path.mkdir }
+  meet {
+    shell "pg_dump babushka_me_dev > '#{db_dump}.tmp' && mv '#{db_dump}.tmp' '#{db_dump}'"
+  }
+end
