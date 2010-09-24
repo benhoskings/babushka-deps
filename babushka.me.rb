@@ -72,6 +72,6 @@ dep 'babushka.me db dump' do
   }
   before { db_dump_path.mkdir }
   meet {
-    shell "pg_dump babushka_me_dev > '#{db_dump}.tmp' && mv '#{db_dump}.tmp' '#{db_dump}'"
+    shell "pg_dump babushka.me > '#{db_dump}.tmp' && mv '#{db_dump}.tmp' '#{db_dump}'"
   }
 end
