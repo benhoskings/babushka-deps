@@ -151,7 +151,7 @@ end
 
 dep 'webserver installed.src' do
   requires 'passenger helper_server', 'pcre.managed', 'libssl headers.managed', 'zlib headers.managed'
-  merge :versions, {:nginx => '0.7.65', :nginx_upload_module => '2.0.12'}
+  merge :versions, {:nginx => '0.7.67', :nginx_upload_module => '2.0.12'}
   source "http://nginx.org/download/nginx-#{var(:versions)[:nginx]}.tar.gz"
   extra_source "http://www.grid.net.ru/nginx/download/nginx_upload_module-#{var(:versions)[:nginx_upload_module]}.tar.gz"
   configure_args "--with-pcre", "--with-http_ssl_module",
