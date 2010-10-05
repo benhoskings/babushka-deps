@@ -57,7 +57,7 @@ end
 dep 'nmap.managed'
 dep 'oniguruma.managed'
 dep 'passenger.gem' do
-  installs 'passenger' => '>= 3.0.0.pre1'
+  installs 'passenger' => '>= 3.0.0.pre4'
   provides 'passenger-install-nginx-module'
 end
 dep 'pcre.managed' do
