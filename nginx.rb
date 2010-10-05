@@ -129,7 +129,7 @@ dep 'webserver configured.nginx' do
   }
 end
 
-dep 'passenger helper_server' do
+dep 'passenger built' do
   requires 'passenger.gem', 'build tools'
   met? {
     %W[
@@ -150,7 +150,7 @@ dep 'passenger helper_server' do
 end
 
 dep 'webserver installed.src' do
-  requires 'passenger helper_server', 'pcre.managed', 'libssl headers.managed', 'zlib headers.managed'
+  requires 'passenger built', 'pcre.managed', 'libssl headers.managed', 'zlib headers.managed'
   merge :versions, {:nginx => '0.7.67', :nginx_upload_module => '2.0.12'}
   source "http://nginx.org/download/nginx-#{var(:versions)[:nginx]}.tar.gz"
   extra_source "http://www.grid.net.ru/nginx/download/nginx_upload_module-#{var(:versions)[:nginx_upload_module]}.tar.gz"
