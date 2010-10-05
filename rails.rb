@@ -8,7 +8,7 @@ dep 'migrated db' do
     end
   }
   met? {
-    current_version = rails_rake("db:version") {|shell| shell.stdout.val_for('Current version') }
+    current_version = bundle_rake("db:version") {|shell| shell.stdout.val_for('Current version') }
     latest_version = Dir[
       var(:rails_root) / 'db/migrate/*.rb'
     ].map {|f| File.basename f }.push('0').sort.last.split('_', 2).first
@@ -25,5 +25,5 @@ dep 'migrated db' do
       end
     end
   }
-  meet { rails_rake "db:migrate --trace" }
+  meet { bundle_rake "db:migrate --trace" }
 end
