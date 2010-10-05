@@ -1,5 +1,5 @@
 dep 'app bundled' do
-  requires 'deployed app', 'bundler.gem'
+  requires 'deployed app', 'bundler.gem', 'db gem'
   met? { in_dir(var(:rails_root)) { shell 'bundle check', :log => true } }
   meet { in_dir(var(:rails_root)) {
     install_args = var(:rails_env) != 'production' ? '' : '--without development --without test --path ./vendor'
