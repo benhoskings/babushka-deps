@@ -25,7 +25,7 @@ dep 'postgres backups' do
   requires 'postgres.managed'
   met? { shell "test -x /etc/cron.hourly/postgres_offsite_backup" }
   before {
-    returning sudo "ssh #{var :offsite_host} 'true'" do |result|
+    returning sudo("ssh #{var :offsite_host} 'true'") do |result|
       if result
         log_ok "publickey login to #{var :offsite_host}"
       else

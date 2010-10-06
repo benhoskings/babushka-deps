@@ -127,7 +127,7 @@ dep 'google ajax libs mirrored' do
       versions = search_libstate(lib, 'versions').split(/[, ]+/)
       [search_libstate(lib, 'path'), search_libstate(lib, 'path(u)')].squash.map {|path_template|
         versions.map {|version|
-          URI.parse path_template.gsub versions.last, version
+          URI.parse path_template.gsub(versions.last, version)
         }
       }
     }.flatten
