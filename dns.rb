@@ -1,5 +1,6 @@
-dep 'dnsmasq.managed' do
-  cfg '/etc/dnsmasq.conf'
+dep 'dnsmasq' do
+  requires 'dnsmasq.managed'
+  helper(:dnsmasq_conf) { "/etc/dnsmasq.conf".p }
   setup {
     define_var :dhcp_network,
       :type => :ip_range,
@@ -15,4 +16,8 @@ dep 'dnsmasq.managed' do
     define_var :dhcp_start_address, :message => "DHCP starting address", :default => L{ Babushka::IP.new(var(:dns_server_ip)).next }
     define_var :dhcp_end_address, :message => "DHCP ending address", :default => L{ Babushka::IPRange.new(var(:dhcp_network)).last.prev }
   }
+  met? { babushka_config? dnsmasq_conf }
+  meet { render_erb "dnsmasq/dnsmasq.conf.erb", :to => dnsmasq_conf, :sudo => true }
 end
+
+dep 'dnsmasq.managed'
