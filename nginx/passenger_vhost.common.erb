@@ -10,13 +10,6 @@ if (-f $document_root/system/maintenance.html) {
   rewrite ^(.*)$ /system/maintenance.html break;
 }
 
-<% unless var(:x_send_asset_subpath, :default => '').blank? %>
-location <%= var :x_send_asset_subpath %> {
-  root <%= var(:rails_root).p %>;
-  internal;
-}
-<% end %>
-
 location ~* \.(js|css|jpe?g|png|gif|ico|swf)$ {
   if ($request_uri ~ "\?[0-9]+$") {
     expires max; # cache timestamped assets forever...
