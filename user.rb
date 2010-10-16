@@ -24,6 +24,11 @@ dep 'dot files' do
 end
 
 dep 'user exists' do
+  setup {
+    define_var :home_dir_base, :default => L{
+      var(:username)['.'] ? '/srv/http' : '/home'
+    }
+  }
   on :osx do
     met? { !shell("dscl . -list /Users").split("\n").grep(var(:username)).empty? }
     meet {
