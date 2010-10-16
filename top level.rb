@@ -7,7 +7,6 @@ dep 'user setup' do
   define_var :username, :default => shell('whoami')
   setup {
     set :username, shell('whoami')
-    set :home_dir_base, "/home"
   }
 end
 
