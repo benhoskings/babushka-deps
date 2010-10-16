@@ -26,7 +26,7 @@ dep 'passenger deploy repo hooks' do
 end
 
 dep 'passenger deploy repo exists' do
-  requires 'git', 'user exists'
+  requires 'git'
   define_var :passenger_repo_root, :default => :rails_root
   met? { (var(:passenger_repo_root) / '.git').dir? }
   meet {
