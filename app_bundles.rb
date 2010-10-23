@@ -1,5 +1,5 @@
 dep 'LaunchBar.app' do
-  source 'http://www.obdev.at/downloads/launchbar/LaunchBar-5.0.2.dmg'
+  source 'http://www.obdev.at/downloads/launchbar/LaunchBar-5.0.3.dmg'
 end
 
 dep 'Fluid.app' do
