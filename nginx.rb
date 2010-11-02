@@ -130,7 +130,7 @@ dep 'webserver configured.nginx' do
 end
 
 dep 'passenger built' do
-  requires 'passenger.gem', 'build tools'
+  requires 'passenger.gem', 'build tools', 'curl.managed'
   met? {
     %W[
       ./agents/nginx/PassengerHelperAgent
