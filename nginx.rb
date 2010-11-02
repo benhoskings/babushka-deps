@@ -137,7 +137,6 @@ dep 'passenger built' do
       ./agents/PassengerLoggingAgent
       ./agents/PassengerWatchdog
       ./ext/common/libpassenger_common.a
-      ./ext/ruby/#{Babushka::GemHelper.ruby_binary_slug}/passenger_native_support.#{Babushka::Base.host.library_ext}
     ].all? {|obj|
       (Babushka::GemHelper.gem_path_for('passenger') / obj).exists?
     }
