@@ -86,7 +86,7 @@ class PSQLBackup
   end
 
   def dump_dbs
-    database_names.all? {|db_name| dump_db db_name }
+    database_names.map {|db_name| dump_db db_name }.all?
   end
 
   def dump_db db_name
@@ -107,9 +107,9 @@ class PSQLBackup
   end
 
   def git_push
-    shell('git remote').split("\n").all? {|remote|
+    shell('git remote').split("\n").map {|remote|
       log_shell "Pushing to #{remote}", "git push -f #{remote} #{branch}"
-    }
+    }.all?
   end
 
   def shell cmd
