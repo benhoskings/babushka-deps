@@ -48,7 +48,8 @@ class PSQLBackup
     log "\nStarting sqldump run at #{Time.now}."
     git_init(hosts)
     Dir.chdir path do
-      dump_dbs and git_commit and git_push
+      dump_dbs and git_commit
+      git_push
     end
   end
 
