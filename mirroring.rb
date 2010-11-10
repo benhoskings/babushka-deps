@@ -133,7 +133,11 @@ dep 'google ajax libs mirrored' do
     }.flatten
   end
   helper :missing_urls do
-    urls.reject {|url| (var(:mirror_root) / url.path).exists? }
+    urls.tap {|urls|
+      log "#{urls.length} items to consider."
+    }.reject {|url| (var(:mirror_root) / url.path).exists? }.tap {|present|
+      log "Of those, we have #{present.length}."
+    }
   end
   met? { missing_urls.empty? }
   meet {
