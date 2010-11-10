@@ -20,7 +20,7 @@ classes_to_skip = %w[AspellLang COREUTILS_ALIASES DICT_CONF Rational SOLR_START_
 urls = (Class.constants - before - classes_to_skip).reject {|k|
   k =~ /DownloadStrategy$/
 }.map {|k|
-  eval(k).new
+  eval(k.to_s)
 }.select {|k|
   k.respond_to? :url
 }.map {|k|
