@@ -165,7 +165,7 @@ dep 'webserver installed.src' do
   # The build process needs to write to passenger_root/ext/nginx.
   configure { log_shell "configure", default_configure_command, :sudo => Babushka::GemHelper.should_sudo? }
   build { log_shell "build", "make", :sudo => Babushka::GemHelper.should_sudo? }
-  install { log_shell "install", "make install", :sudo => Babushka::GemHelper.should_sudo? }
+  install { log_shell "install", "make install", :sudo => true }
 
   met? {
     if !File.executable?(var(:nginx_prefix) / 'sbin/nginx')
