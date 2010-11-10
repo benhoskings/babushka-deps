@@ -45,7 +45,7 @@ dep 'mirrored.homebrew_mirror' do
   met? { missing_urls.empty? }
   meet {
     in_dir var(:homebrew_downloads) do
-      missing_urls.each {|url| Babushka::Archive.download url }
+      missing_urls.each {|url| Babushka::Resource.download url }
     end
   }
 end
