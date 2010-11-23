@@ -17,8 +17,8 @@ dep 'rvm' do
 end
 
 meta :rvm_mirror do
-  requires 'rvm'
   template {
+    requires 'rvm'
     helper :urls do
       shell("grep '_url=' ~/.rvm/config/db").split("\n").map {|l|
         l.sub(/^.*_url=/, '')
