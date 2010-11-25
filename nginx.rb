@@ -78,9 +78,9 @@ end
 dep 'webserver running.nginx' do
   requires 'webserver configured.nginx', 'webserver startup script.nginx'
   met? {
-    returning nginx_running? do |result|
+    nginx_running?.tap {|result|
       log "There is #{result ? 'something' : 'nothing'} listening on #{result ? result.scan(/[0-9.*]+[.:]80/).first : 'port 80'}"
-    end
+    }
   }
   meet :on => :linux do
     sudo '/etc/init.d/nginx start'
@@ -115,9 +115,9 @@ dep 'webserver configured.nginx' do
   met? {
     if babushka_config? nginx_conf
       configured_root = nginx_conf.read.val_for('passenger_root')
-      returning configured_root == passenger_root do |result|
+      (configured_root == passenger_root).tap {|result|
         log_result "nginx is configured to use #{File.basename configured_root}", :result => result
-      end
+      }
     end
   }
   meet {
