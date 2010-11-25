@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+STDOUT.sync = true # fuck yeah @sj26
+
 def shell cmd
   output = `#{cmd}`
   output.chomp if $? == 0
