@@ -101,7 +101,6 @@ do_reload() {
 
 case "$1" in
   start)
-  log_daemon_msg "lol"
   [ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
   do_start
   case "$?" in
