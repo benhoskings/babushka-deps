@@ -50,3 +50,11 @@ dep 'pomodoro.app' do
   latest_version { from_page 'http://www.apple.com/downloads/macosx/development_tools/pomodoro.html', /<h2>Pomodoro\s*(\S*)</ }
   current_version { |path| bundle_version(path, 'CFBundleVersion') }
 end
+
+dep 'Firefox.app' do
+  source 'http://download.mozilla.org/?product=firefox-3.6.10&os=osx&lang=en-US'
+end
+
+dep 'Airfoil.app' do
+  source 'http://www.rogueamoeba.com/airfoil/download/Airfoil.zip'
+end
