@@ -174,7 +174,7 @@ dep 'webserver installed.src' do
       installed_version = shell(var(:nginx_prefix) / 'sbin/nginx -V') {|shell| shell.stderr }.val_for('nginx version').sub('nginx/', '')
       if installed_version != var(:versions)[:nginx]
         unmet "an outdated version of nginx is installed (#{installed_version})"
-      elsif !shell(var(:nginx_prefix) / 'sbin/nginx -V') {|shell| shell.stderr }[Babushka::GemHelper.gem_path_for('passenger').to_s]
+      elsif !shell(var(:nginx_prefix) / 'sbin/nginx -V') {|shell| shell.stderr }[Babushka::GemHelper.gem_path_for('passenger').to_s + '/']
         unmet "nginx is installed, but built against the wrong passenger version"
       else
         met "nginx-#{installed_version} is installed"
