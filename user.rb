@@ -1,8 +1,12 @@
 dep 'passwordless ssh logins' do
-  met? { grep var(:your_ssh_public_key), '~/.ssh/authorized_keys' }
-  before { shell 'mkdir -p ~/.ssh; chmod 700 ~/.ssh' }
-  meet { append_to_file var(:your_ssh_public_key), "~/.ssh/authorized_keys" }
-  after { shell 'chmod 600 ~/.ssh/authorized_keys' }
+  helper(:ssh_dir) { var(:home_dir_base) / var(:username) / '.ssh' }
+  met? { sudo "grep '#{var(:your_ssh_public_key)}' '#{ssh_dir / 'authorized_keys'}'" }
+  before { sudo "mkdir -p '#{ssh_dir}'; chmod 700 '#{ssh_dir}'" }
+  meet { append_to_file var(:your_ssh_public_key), (ssh_dir / 'authorized_keys'), :sudo => true }
+  after {
+    shell "chown -R #{var(:username)}:#{var(:username)} '#{ssh_dir}'"
+    shell 'chmod 600 ~/.ssh/authorized_keys'
+  }
 end
 
 dep 'public key' do
