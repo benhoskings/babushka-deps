@@ -3,7 +3,7 @@ dep 'system' do
 end
 
 dep 'user setup' do
-  requires 'dot files', 'passwordless ssh logins', 'public key'
+  requires 'dot files', 'passwordless ssh logins', 'public key', 'zsh'
   define_var :username, :default => shell('whoami')
   setup {
     set :username, shell('whoami')
