@@ -16,7 +16,7 @@ end
 
 dep 'zsh' do
   requires 'zsh.shell_setup'
-  met? { shell('echo $SHELL') == which('zsh') }
+  met? { sudo('echo \$SHELL', :as => var(:username), :su => true) == which('zsh') }
   meet { sudo("chsh -s '#{which('zsh')}' #{var(:username)}") }
 end
 
