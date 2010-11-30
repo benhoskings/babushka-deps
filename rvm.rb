@@ -1,7 +1,7 @@
-dep 'ruby 1.9.2 in use' do
+dep 'ruby 1.9.2' do
   requires '1.9.2 rvm ruby'
   met? { shell('ruby --version')['ruby 1.9.2p0'] }
-  meet { shell('rvm use 1.9.2') }
+  meet { shell('rvm use 1.9.2 --default') }
 end
 
 dep '1.9.2 rvm ruby' do
