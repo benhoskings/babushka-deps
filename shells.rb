@@ -14,6 +14,12 @@ dep 'fish.src' do
   source "git://github.com/benhoskings/fish.git"
 end
 
+dep 'zsh' do
+  requires 'zsh.shell_setup'
+  met? { shell('echo $SHELL') == which('zsh') }
+  meet { sudo("chsh -s '#{which('zsh')}' #{var(:username)}") }
+end
+
 dep 'zsh.shell_setup' do
   requires 'zsh.managed'
 end
