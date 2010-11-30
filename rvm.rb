@@ -12,7 +12,7 @@ end
 
 dep 'rvm' do
   met? { which 'rvm' }
-  meet { shell 'bash -c "`curl http://rvm.beginrescueend.com/releases/rvm-install-head`"' }
+  meet { shell 'bash -c "`curl http://rvm.beginrescueend.com/releases/rvm-install-head`"', :log => true }
 end
 
 meta :rvm_mirror do
