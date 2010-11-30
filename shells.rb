@@ -1,7 +1,7 @@
 meta :shell_setup do
   template {
-    met? { grep which(name), '/etc/shells' }
-    meet { append_to_file which(name), '/etc/shells', :sudo => true }
+    met? { grep which(basename), '/etc/shells' }
+    meet { append_to_file which(basename), '/etc/shells', :sudo => true }
   }
 end
 
