@@ -16,6 +16,16 @@ dep 'dot files' do
   meet { shell %Q{curl -L "http://github.com/#{var :github_user, :default => 'benhoskings'}/#{var :dot_files_repo, :default => 'dot-files'}/raw/master/clone_and_link.sh" | bash} }
 end
 
+dep 'user exists with password' do
+  requires 'user exists'
+  on :linux do
+    met? { grep(/^#{var(:username)}:[^\*!]/, shell('sudo cat /etc/shadow')) }
+    meet {
+      sudo "echo -e '#{var(:password)}\n#{var(:password)}' | passwd #{var(:username)}"
+    }
+  end
+end
+
 dep 'user exists' do
   setup {
     define_var :home_dir_base, :default => L{
