@@ -42,7 +42,7 @@ dep 'user exists' do
         'PrimaryGroupID' => 'admin',
         'RealName' => var(:username),
         'NFSHomeDirectory' => homedir,
-        'UserShell' => '/dev/null'
+        'UserShell' => '/bin/bash'
       }.each_pair {|k,v|
         # /Users/... here is a dscl path, not a filesystem path.
         sudo "dscl . -create #{'/Users' / var(:username)} #{k} '#{v}'"
