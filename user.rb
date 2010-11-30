@@ -7,8 +7,8 @@ dep 'passwordless ssh logins' do
   }
   meet { append_to_file var(:your_ssh_public_key), (ssh_dir / 'authorized_keys'), :sudo => true }
   after {
-    shell "chown -R #{var(:username)}:#{var(:username)} '#{ssh_dir}'"
-    shell 'chmod 600 ~/.ssh/authorized_keys'
+    sudo "chown -R #{var(:username)}:#{var(:username)} '#{ssh_dir}'"
+    sudo "chmod 600 #{(ssh_dir / 'authorized_keys')}"
   }
 end
 
