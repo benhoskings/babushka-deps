@@ -3,7 +3,7 @@
 server {
   listen 80;
   include vhosts/<%= var :domain %>.common;
-  <% if var(:force_ssl, :default => 'no') %>
+  <% if var(:force_ssl, :default => 'no').starts_with?('y') %>
   rewrite ^(.*)$ https://$host$1 redirect;
   <% end %>
 }
