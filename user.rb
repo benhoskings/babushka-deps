@@ -1,9 +1,3 @@
-dep 'user shell setup' do
-  requires 'fish', 'dot files'
-  met? { File.basename(sudo('echo \$SHELL', :as => var(:username), :su => true)) == 'fish' }
-  meet { sudo "chsh -s #{shell('which fish')} #{var(:username)}" }
-end
-
 dep 'passwordless ssh logins' do
   met? { grep var(:your_ssh_public_key), '~/.ssh/authorized_keys' }
   before { shell 'mkdir -p ~/.ssh; chmod 700 ~/.ssh' }
