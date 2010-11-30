@@ -93,3 +93,8 @@ dep 'zlib headers.managed' do
   installs { via :apt, 'zlib1g-dev' }
   provides []
 end
+
+dep 'rack.gem' do
+ installs 'rack' => '1.0.1'
+ provides 'rackup'
+end

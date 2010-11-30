@@ -13,7 +13,6 @@ end
 dep 'rvm' do
   met? { which 'rvm' }
   meet { shell 'bash -c "`curl http://rvm.beginrescueend.com/releases/rvm-install-head`"' }
-  after { :fail }
 end
 
 meta :rvm_mirror do
