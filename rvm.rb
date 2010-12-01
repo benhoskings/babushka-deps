@@ -19,7 +19,7 @@ dep 'rvm' do
     end
     raw_which 'rvm', output
   }
-  meet { shell 'bash -c "`curl http://rvm.beginrescueend.com/releases/rvm-install-head`"', :log => true }
+  meet { log_shell "Installing rvm using rvm-install-head", 'bash -c "`curl http://rvm.beginrescueend.com/releases/rvm-install-head`"' }
 end
 
 meta :rvm_mirror do
