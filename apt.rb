@@ -3,7 +3,7 @@ meta :apt_repo do
   template {
     met? {
       adds[/^\w+\:\w+/]
-      Dir.glob("/etc/apt/sources.list.d").any? {|f|
+      Dir.glob("/etc/apt/sources.list.d/*").any? {|f|
         f.p.read[Regexp.new('https?\:\/\/' + adds.sub(':', '\.*\/ubuntu\ '))]
       }
     }
