@@ -8,7 +8,7 @@ end
 
 dep '1.9.2.rvm' do
   requires '1.9.2 installed.rvm'
-  met? { shell('ruby --version')['ruby 1.9.2p0'] }
+  met? { login_shell('ruby --version')['ruby 1.9.2p0'] }
   meet { rvm('use 1.9.2 --default') }
 end
 
