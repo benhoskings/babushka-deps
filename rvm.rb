@@ -1,13 +1,21 @@
-dep 'ruby 1.9.2' do
-  requires '1.9.2 rvm ruby'
-  met? { shell('ruby --version')['ruby 1.9.2p0'] }
-  meet { shell('rvm use 1.9.2 --default') }
+meta :rvm do
+  template {
+    helper :rvm do |args|
+      shell "~/.rvm/bin/rvm #{args}"
+    end
+  }
 end
 
-dep '1.9.2 rvm ruby' do
+dep '1.9.2.rvm' do
+  requires '1.9.2 installed.rvm'
+  met? { shell('ruby --version')['ruby 1.9.2p0'] }
+  meet { rvm('use 1.9.2 --default') }
+end
+
+dep '1.9.2 installed.rvm' do
   requires 'rvm'
-  met? { shell('rvm list')['ruby-1.9.2-p0'] }
-  meet { shell 'rvm install 1.9.2' }
+  met? { rvm('list')['ruby-1.9.2-p0'] }
+  meet { rvm 'install 1.9.2' }
 end
 
 dep 'rvm' do
