@@ -15,7 +15,7 @@ end
 dep '1.9.2 installed.rvm' do
   requires 'rvm'
   met? { rvm('list')['ruby-1.9.2-p0'] }
-  meet { rvm 'install 1.9.2' }
+  meet { log("rvm install 1.9.2") { rvm 'install 1.9.2', :log => true } }
 end
 
 dep 'rvm' do
