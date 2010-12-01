@@ -12,7 +12,7 @@ end
 
 dep 'rvm' do
   met? {
-    output = if shell('echo $SHELL') == 'zsh'
+    output = if shell('echo $SHELL').p.basename == 'zsh'
       shell "zsh -i -c 'which rvm'"
     else
       shell "bash -l -c 'which rvm'"
