@@ -1,7 +1,7 @@
 meta :rvm do
   template {
     helper :rvm do |args|
-      shell "~/.rvm/bin/rvm #{args}"
+      shell "~/.rvm/bin/rvm #{args}", :log => args['install']
     end
   }
 end
@@ -15,7 +15,7 @@ end
 dep '1.9.2 installed.rvm' do
   requires 'rvm'
   met? { rvm('list')['ruby-1.9.2-p0'] }
-  meet { log("rvm install 1.9.2") { rvm 'install 1.9.2', :log => true } }
+  meet { log("rvm install 1.9.2") { rvm 'install 1.9.2'} }
 end
 
 dep 'rvm' do
