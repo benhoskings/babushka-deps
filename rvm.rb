@@ -19,14 +19,7 @@ dep '1.9.2 installed.rvm' do
 end
 
 dep 'rvm' do
-  met? {
-    output = if shell('echo $SHELL').p.basename == 'zsh'
-      shell "zsh -i -c 'which rvm'"
-    else
-      shell "bash -l -c 'which rvm'"
-    end
-    raw_which 'rvm', output
-  }
+  met? { raw_which 'rvm', login_shell('which rvm') }
   meet { log_shell "Installing rvm using rvm-install-head", 'bash -c "`curl http://rvm.beginrescueend.com/releases/rvm-install-head`"' }
 end
 
