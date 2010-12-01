@@ -4,7 +4,7 @@ meta :apt_repo do
     met? {
       adds[/^\w+\:\w+/]
       Dir.glob("/etc/apt/sources.list.d/*").any? {|f|
-        f.p.read[Regexp.new('https?\:\/\/' + adds.sub(':', '\.*\/ubuntu\ '))]
+        f.p.read[Regexp.new('https?\:\/\/' + adds.sub(':', '.*\/ubuntu\ '))]
       }
     }
     meet {
