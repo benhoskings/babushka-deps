@@ -11,7 +11,14 @@ dep '1.9.2 rvm ruby' do
 end
 
 dep 'rvm' do
-  met? { which 'rvm' }
+  met? {
+    output = if shell('echo $SHELL') == 'zsh'
+      shell "zsh -i -c 'which rvm'"
+    else
+      shell "bash -l -c 'which rvm'"
+    end
+    raw_which 'rvm', output
+  }
   meet { shell 'bash -c "`curl http://rvm.beginrescueend.com/releases/rvm-install-head`"', :log => true }
 end
 
