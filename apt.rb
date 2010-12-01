@@ -2,9 +2,9 @@ meta :apt_repo do
   accepts_value_for :adds
   template {
     met? {
-      adds[/^\w+\:\w+/]
+      adds[/^\w+\:\w+/] &&
       Dir.glob("/etc/apt/sources.list.d/*").any? {|f|
-        f.p.read[Regexp.new('https?\:\/\/' + adds.sub(':', '.*\/ubuntu\ '))]
+        f.p.read[Regexp.new('https?://' + adds.gsub(':', '.*') + '/ubuntu ')]
       }
     }
     meet {
