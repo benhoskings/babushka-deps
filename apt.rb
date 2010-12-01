@@ -10,6 +10,9 @@ meta :apt_repo do
     meet {
       sudo "sudo add-apt-repository #{adds}"
     }
+    after {
+      pkg_helper.update_pkg_lists "Updating apt lists to load #{adds}."
+    }
   }
 end
 
