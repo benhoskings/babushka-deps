@@ -39,6 +39,12 @@ dep 'postgres backups' do
   }
 end
 
+dep 'postgres 9' do
+  requires {
+    on :apt, 'ppa postgres.apt_repo', 'postgres.managed'
+  }
+end
+
 dep 'postgres.managed' do
   installs {
     via :macports, 'postgresql83-server'
