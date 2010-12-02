@@ -12,7 +12,7 @@ meta :locale do
 end
 
 dep 'set.locale' do
-  requires 'locale exists'
+  requires 'exists.locale'
   met? {
     login_shell('locale').val_for('LANG')[locale_regex]
   }
