@@ -2,7 +2,7 @@ meta :locale do
   template {
     helper :locale_regex do
       /[\w]+\.utf8/
-    }
+    end
     helper :local_locale do
       shell('locale -a').split("\n").detect {|l|
         l[locale_regex]
