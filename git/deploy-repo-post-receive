@@ -45,6 +45,7 @@ else
         end
         log_shell "Updating to #{new_id[0...7]}", "#{env_git} reset --hard '#{new_id}'"
         log_shell "Updating submodules", "#{env_git} submodule update --init"
+        log_shell "Bundling", "bundle install --deployment --without 'development test'"
         log_shell "Removing cached JS and CSS", 'rm -f public/javascripts/all.js; rm -f public/stylesheets/all.css'
         shell 'mkdir -p tmp'
         log_shell "Flagging app for restart", 'touch tmp/restart.txt'
