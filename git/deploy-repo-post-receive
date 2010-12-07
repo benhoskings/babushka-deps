@@ -33,12 +33,12 @@ else
       say "I have local changes, not updating."
     else
       say {
-        if shell("#{env_git} branch").grep(/\b#{branch_name}\b/).empty?
+        if shell("#{env_git} branch").split("\n").grep(/\b#{branch_name}\b/).empty?
           log_shell "Creating the '#{branch_name}' branch", "#{env_git} checkout -b '#{branch_name}'"
         else
           puts "  Branch '#{branch_name}' already exists."
         end
-        if shell("#{env_git} branch").grep(/\* \b#{branch_name}\b/).empty?
+        if shell("#{env_git} branch").split("\n").grep(/\* \b#{branch_name}\b/).empty?
           log_shell "Switching to the '#{branch_name}' branch", "#{env_git} checkout '#{branch_name}'"
         else
           puts "  Already on the '#{branch_name}' branch."
