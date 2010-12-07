@@ -17,5 +17,6 @@ meta :apt_repo do
 end
 
 dep 'ppa postgres.apt_repo' do
+  requires dep('python-software-properties.managed')
   adds 'ppa:pitti/postgresql'
 end
