@@ -1,3 +1,4 @@
+dep 'bison.managed'
 dep 'bundler.gem' do
   installs 'bundler' => '>= 1.0.0'
   provides 'bundle'
