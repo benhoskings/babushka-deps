@@ -1,3 +1,7 @@
+dep 'python-software-properties.managed' do
+  provides 'add-apt-repository'
+end
+
 meta :apt_repo do
   accepts_value_for :adds
   template {
@@ -17,6 +21,6 @@ meta :apt_repo do
 end
 
 dep 'ppa postgres.apt_repo' do
-  requires dep('python-software-properties.managed')
+  requires 'python-software-properties.managed'
   adds 'ppa:pitti/postgresql'
 end
