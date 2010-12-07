@@ -11,7 +11,7 @@ meta :apt_repo do
       sudo "sudo add-apt-repository #{adds}"
     }
     after {
-      pkg_helper.update_pkg_lists "Updating apt lists to load #{adds}."
+      Babushka::Base.host.pkg_helper.update_pkg_lists "Updating apt lists to load #{adds}."
     }
   }
 end
