@@ -5,6 +5,7 @@ end
 meta :apt_repo do
   accepts_value_for :adds
   template {
+    requires 'python-software-properties.managed'
     met? {
       adds[/^\w+\:\w+/] &&
       Dir.glob("/etc/apt/sources.list.d/*").any? {|f|
@@ -21,6 +22,5 @@ meta :apt_repo do
 end
 
 dep 'ppa postgres.apt_repo' do
-  requires 'python-software-properties.managed'
   adds 'ppa:pitti/postgresql'
 end
