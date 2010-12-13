@@ -7,7 +7,7 @@ end
 
 dep 'ruby19.src' do
   source 'ftp://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.2-p0.tar.gz'
-  provides 'ruby19'
+  provides %w[ruby19 irb gem]
   configure_args '--program-suffix=19'
 end
 
