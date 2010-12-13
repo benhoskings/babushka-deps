@@ -35,7 +35,7 @@ dep 'jnettop.managed' do
 end
 dep 'readline headers.managed' do
   installs {
-    via :apt, 'libreadline6-dev'
+    via :apt, 'libreadline5-dev'
   }
   provides []
 end
