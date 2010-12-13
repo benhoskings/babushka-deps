@@ -9,6 +9,7 @@ dep 'ruby19.src' do
   source 'ftp://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.2-p0.tar.gz'
   provides %w[ruby19 irb gem]
   configure_args '--program-suffix=19'
+  after { in_dir(prefix) { sudo "ln -sf ruby19 ruby" } }
 end
 
 dep 'ruby18.src' do
