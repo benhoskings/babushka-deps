@@ -33,6 +33,12 @@ end
 dep 'jnettop.managed' do
   installs { via :apt, 'jnettop' }
 end
+dep 'readline headers.managed' do
+  installs {
+    via :apt, 'libreadline6-dev'
+  }
+  provides []
+end
 dep 'libssl headers.managed' do
   installs { via :apt, 'libssl-dev' }
   provides []
