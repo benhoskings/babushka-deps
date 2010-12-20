@@ -8,7 +8,7 @@ end
 dep 'ruby19.src' do
   requires 'readline headers.managed'
   source 'ftp://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.2-p0.tar.gz'
-  provides 'ruby 1.9.2p0', 'irb', 'gem'
+  provides 'ruby == 1.9.2p0', 'irb', 'gem'
 end
 
 dep 'ruby18.src' do
