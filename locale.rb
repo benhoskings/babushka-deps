@@ -1,6 +1,6 @@
 meta :locale do
   def locale_regex
-    /[\w]+\.utf8/
+    /[\w]+\.utf-?8/i
   end
   def local_locale
     shell('locale -a').split("\n").detect {|l|
