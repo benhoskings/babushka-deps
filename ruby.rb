@@ -1,5 +1,5 @@
 dep 'ruby19.trunk.src' do
-  requires 'bison.managed'
+  requires 'bison.managed', 'readline headers.managed'
   source 'git://github.com/ruby/ruby.git'
   configure_args '--program-suffix=19'
   provides %w[ruby19 gem19 irb19 rake19 rdoc19 ri19 testrb19]
