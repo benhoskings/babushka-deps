@@ -1,6 +1,7 @@
 meta :locale do
   def locale_regex
-    /[\w]+\.utf-?8/i
+    # TODO: would be nice to not hardcode to en_US.
+    /en_US\.utf-?8/i
   end
   def local_locale
     shell('locale -a').split("\n").detect {|l|
