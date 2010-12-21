@@ -3,7 +3,7 @@
 STDOUT.sync = true # fuck yeah @sj26
 
 def shell cmd
-  output = `#{cmd}`
+  output = `#{cmd} 2>&1`
   output.chomp if $? == 0
 end
 def say message = nil, &block
