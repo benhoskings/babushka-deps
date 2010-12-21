@@ -1,6 +1,6 @@
 dep 'bison.managed'
 dep 'bundler.gem' do
-  installs 'bundler' => '>= 1.0.0'
+  installs 'bundler >= 1.0.0'
   provides 'bundle'
 end
 dep 'coreutils.managed', :for => :osx do
@@ -66,7 +66,7 @@ end
 dep 'nmap.managed'
 dep 'oniguruma.managed'
 dep 'passenger.gem' do
-  installs 'passenger' => '~> 3.0'
+  installs 'passenger ~> 3.0'
   provides 'passenger-install-nginx-module'
 end
 dep 'pcre.managed' do
