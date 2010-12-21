@@ -1,20 +1,18 @@
 meta :bab_tarball do
-  template {
-    helper :uri do
-      'git://github.com/benhoskings/babushka.git'
+  def uri
+    'git://github.com/benhoskings/babushka.git'
+  end
+  def latest
+    var(:tarball_path) / 'LATEST'
+  end
+  def tarball_for commit_id
+    var(:tarball_path) / "babushka-#{commit_id}.tgz"
+  end
+  def current_head
+    in_build_dir 'babushka' do
+      `git rev-parse --short HEAD`.strip
     end
-    helper :latest do
-      var(:tarball_path) / 'LATEST'
-    end
-    helper :tarball_for do |commit_id|
-      var(:tarball_path) / "babushka-#{commit_id}.tgz"
-    end
-    helper :current_head do
-      in_build_dir 'babushka' do
-        `git rev-parse --short HEAD`.strip
-      end
-    end
-  }
+  end
 end
 
 dep 'babushka tarball' do
@@ -61,10 +59,10 @@ dep 'exists.bab_tarball' do
 end
 
 dep 'babushka.me db dump' do
-  helper :db_dump_path do
+  def db_dump_path
     './public/db'.p
   end
-  helper :db_dump do
+  def db_dump
     db_dump_path / 'babushka.me.psql'
   end
   met? {

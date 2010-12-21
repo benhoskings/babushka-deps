@@ -3,7 +3,7 @@ def ssh_conf_path file
 end
 
 dep 'hostname', :for => :linux do
-  helper :hostname do
+  def hostname
     shell 'hostname -f'
   end
   met? {

@@ -1,9 +1,7 @@
 meta :rvm do
-  template {
-    helper :rvm do |args|
-      shell "~/.rvm/bin/rvm #{args}", :log => args['install']
-    end
-  }
+  def rvm args
+    shell "~/.rvm/bin/rvm #{args}", :log => args['install']
+  end
 end
 
 dep '1.9.2.rvm' do
@@ -30,21 +28,21 @@ dep 'rvm' do
 end
 
 meta :rvm_mirror do
+  def urls
+    shell("grep '_url=' ~/.rvm/config/db").split("\n").reject {|l|
+      l['_repo_url']
+    }.map {|l|
+      l.sub(/^.*_url=/, '')
+    }
+  end
   template {
     requires 'rvm'
-    helper :urls do
-      shell("grep '_url=' ~/.rvm/config/db").split("\n").reject {|l|
-        l['_repo_url']
-      }.map {|l|
-        l.sub(/^.*_url=/, '')
-      }
-    end
   }
 end
 
 dep 'mirrored.rvm_mirror' do
   define_var :rvm_vhost_root, :default => '/srv/http/rvm'
-  helper :missing_urls do
+  def missing_urls
     urls.tap {|urls| log "#{urls.length} URLs in the rvm database." }.reject {|url|
       path = var(:rvm_vhost_root) / url.sub(/^[a-z]+:\/\/[^\/]+\//, '')
       path.exists? && !path.empty?

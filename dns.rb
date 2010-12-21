@@ -1,6 +1,8 @@
 dep 'dnsmasq' do
   requires 'dnsmasq.managed'
-  helper(:dnsmasq_conf) { "/etc/dnsmasq.conf".p }
+  def dnsmasq_conf
+    "/etc/dnsmasq.conf".p
+  end
   setup {
     define_var :dhcp_network,
       :type => :ip_range,

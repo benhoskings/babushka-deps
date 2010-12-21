@@ -1,21 +1,21 @@
 dep 'mirror has assets' do
   define_var :mirror_prefix, :default => '/srv/http' #L{ "http://#{var(:mirror_path).p.basename}" }
   define_var :local_path, :default => :mirror_domain
-  helper :scanned_urls do
+  def scanned_urls
     (var(:mirror_prefix) / var(:local_path)).glob("**/*").select {|f|
       f[/\.(html?|css)$/i]
     }.map {|f|
       f.p.read.scan(/url\(['"]?([^)'"]+)['"]?\)/).flatten
     }.flatten.uniq
   end
-  helper :asset_map do
+  def asset_map
     scanned_urls.group_by {|url|
       url[/^(http\:)?\/\//] ? url.scan(/^[http\:]*\/\/([^\/]+)/).flatten.first : var(:mirror_domain)
     }.map_values {|domain,urls|
       urls.map {|url| url.sub(/^(http\:)?\/\/[^\/]+\//, '') }
     }
   end
-  helper :nonexistent_asset_map do
+  def nonexistent_asset_map
     asset_map.map_values {|domain,assets|
       assets.reject {|asset|
         path = var(:mirror_prefix) / domain / asset
@@ -35,22 +35,20 @@ dep 'mirror has assets' do
 end
 
 meta :twitter do
-  template {
-    helper :users do
-      "~/Desktop/rc7/campers.txt".p.read.split(/\n+/).uniq.map {|name| name.sub(/^@/, '') }
-    end
-    helper :avatars do
-      users.map {|user|
-        path = "~/Desktop/rc7/avatars/".p.glob("#{user}.*").first
-        path.p unless path.nil?
-      }.compact
-    end
-    helper :missing_avatars do
-      avatars.reject {|avatar|
-        avatar.exists? && !avatar.empty?
-      }
-    end
-  }
+  def users
+    "~/Desktop/rc7/campers.txt".p.read.split(/\n+/).uniq.map {|name| name.sub(/^@/, '') }
+  end
+  def avatars
+    users.map {|user|
+      path = "~/Desktop/rc7/avatars/".p.glob("#{user}.*").first
+      path.p unless path.nil?
+    }.compact
+  end
+  def missing_avatars
+    avatars.reject {|avatar|
+      avatar.exists? && !avatar.empty?
+    }
+  end
 end
 
 dep 'avatars mirrored.twitter' do
@@ -96,10 +94,10 @@ dep 'avatars renamed.twitter' do
 end
 
 dep 'gravatars mirrored' do
-  helper :users do
+  def users
     "~/Desktop/rc7/emails.txt".p.read.split(/\n+/).uniq
   end
-  helper :missing_avatars do
+  def missing_avatars
     users.reject {|user| "~/Desktop/rc7/gravatars/#{user}.jpg".p.exists? }
   end
   met? { missing_avatars.empty? }
@@ -115,10 +113,10 @@ end
 
 dep 'google ajax libs mirrored' do
   define_var :mirror_root, :default => '/srv/http/ajax.googleapis.com'
-  helper :search_libstate do |doc,key|
+  def search_libstate doc, key
     doc.search("dd.al-libstate[text()*='#{key}:']").text.gsub("#{key}:", '').strip
   end
-  helper :urls do
+  def urls
     require 'rubygems'
     require 'hpricot'
     require 'net/http'
@@ -132,7 +130,7 @@ dep 'google ajax libs mirrored' do
       }
     }.flatten
   end
-  helper :missing_urls do
+  def missing_urls
     urls.tap {|urls|
       log "#{urls.length} items to consider."
     }.reject {|url| (var(:mirror_root) / url.path).exists? }.tap {|present|
