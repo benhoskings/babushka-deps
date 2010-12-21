@@ -5,17 +5,6 @@ dep 'ruby19.trunk.src' do
   provides %w[ruby19 gem19 irb19 rake19 rdoc19 ri19 testrb19]
 end
 
-dep 'ruby19.src' do
-  requires 'readline headers.managed'
-  source 'ftp://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.2-p0.tar.gz'
-  after {
-    process_sources {
-      log_shell "Manually installing #{Dir['bin/*'].to_list}", "cp bin/* '#{var(:prefix) / 'bin'}'"
-    }
-  }
-  provides 'ruby == 1.9.2p0', 'irb', 'gem'
-end
-
 dep 'ruby18.src' do
   source 'ftp://ftp.ruby-lang.org/pub/ruby/1.8/ruby-1.8.7-p302.tar.gz'
   provides 'ruby18'
