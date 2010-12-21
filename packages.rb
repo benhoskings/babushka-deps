@@ -11,7 +11,9 @@ dep 'coreutils.managed', :for => :osx do
     end
   end
 end
-dep 'erlang.managed'
+dep 'erlang.managed' do
+  provides 'erl', 'erlc'
+end
 dep 'freeimage.managed' do
   installs {
     via :apt, %w[libfreeimage3 libfreeimage-dev]
