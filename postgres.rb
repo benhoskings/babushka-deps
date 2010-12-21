@@ -41,7 +41,7 @@ end
 
 dep 'postgres 9' do
   requires {
-    on :apt, 'ppa postgres.apt_repo', 'postgres.managed'
+    on :apt, 'set.locale', 'ppa postgres.apt_repo', 'postgres.managed'
   }
 end
 
