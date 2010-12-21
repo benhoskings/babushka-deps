@@ -1,4 +1,4 @@
-dep 'ruby19.trunk.src' do
+dep 'ruby trunk.src' do
   requires 'bison.managed', 'readline headers.managed'
   source 'git://github.com/ruby/ruby.git'
   provides 'ruby == 1.9.3.dev', 'gem', 'irb', 'rake', 'rdoc', 'ri', 'testrb'
