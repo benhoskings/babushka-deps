@@ -53,7 +53,7 @@ dep 'libxml.managed' do
   provides []
 end
 dep 'libxslt.managed' do
-  installs { via :apt, 'libxslt-dev' }
+  installs { via :apt, 'libxslt1-dev' }
   provides []
 end
 dep 'mdns.managed' do
