@@ -20,7 +20,13 @@ end
 
 dep 'rvm' do
   met? { raw_which 'rvm', login_shell('which rvm') }
-  meet { log_shell "Installing rvm using rvm-install-head", 'bash -c "`curl http://rvm.beginrescueend.com/releases/rvm-install-head`"' }
+  meet {
+    if confirm(:install_rvm_system_wide, :default => 'n')
+      log_shell "Installing rvm using rvm-install-system-wide", 'bash < <( curl -L http://bit.ly/rvm-install-system-wide )'
+    else
+      log_shell "Installing rvm using rvm-install-head", 'bash -c "`curl http://rvm.beginrescueend.com/releases/rvm-install-head`"'
+    end
+  }
 end
 
 meta :rvm_mirror do
