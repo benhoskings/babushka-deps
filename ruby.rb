@@ -1,7 +1,7 @@
 dep 'ruby19.trunk.src' do
   requires 'bison.managed', 'readline headers.managed'
   source 'git://github.com/ruby/ruby.git'
-  provides %w[ruby gem irb rake rdoc ri testrb]
+  provides 'ruby == 1.9.3.dev', 'gem', 'irb', 'rake', 'rdoc', 'ri', 'testrb'
 end
 
 dep 'ruby18.src' do
