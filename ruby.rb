@@ -4,6 +4,12 @@ dep 'ruby trunk.src' do
   provides 'ruby == 1.9.3.dev', 'gem', 'irb', 'rake', 'rdoc', 'ri', 'testrb'
 end
 
+dep 'ruby19.src' do
+  requires 'readline headers.managed'
+  source 'ftp://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.2-p0.tar.gz'
+  provides 'ruby == 1.9.2p0', 'gem', 'irb', 'rake', 'rdoc', 'ri', 'testrb'
+end
+
 dep 'ruby18.src' do
   source 'ftp://ftp.ruby-lang.org/pub/ruby/1.8/ruby-1.8.7-p302.tar.gz'
   provides 'ruby18'
