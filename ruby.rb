@@ -8,6 +8,12 @@ dep 'ruby19.src' do
   requires 'readline headers.managed'
   source 'ftp://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.2-p0.tar.gz'
   provides 'ruby == 1.9.2p0', 'gem', 'irb', 'rake', 'rdoc', 'ri', 'testrb'
+  # TODO: hack for ruby bug where bin/* aren't installed when the build path
+  # contains a dot-dir.
+  install {
+    Babushka::SrcHelper.install_src! 'make install'
+    shell "cp bin/* #{var(:prefix) / 'bin'}", :sudo => should_sudo?
+  }
 end
 
 dep 'ruby18.src' do
