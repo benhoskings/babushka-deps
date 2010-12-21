@@ -43,6 +43,7 @@ dep 'postgres 9' do
   requires {
     on :apt, 'set.locale', 'ppa postgres.apt_repo', 'postgres.managed'
   }
+  met? { provided? 'psql ~> 9.0.0' }
 end
 
 dep 'postgres.managed' do
