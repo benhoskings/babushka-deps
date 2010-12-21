@@ -10,8 +10,7 @@ dep 'ruby19.src' do
   provides 'ruby == 1.9.2p0', 'gem', 'irb'
   # TODO: hack for ruby bug where bin/* aren't installed when the build path
   # contains a dot-dir.
-  install {
-    Babushka::SrcHelper.install_src! 'make install'
+  postinstall {
     shell "cp bin/* #{prefix / 'bin'}", :sudo => Babushka::SrcHelper.should_sudo?
   }
 end
