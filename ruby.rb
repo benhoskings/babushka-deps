@@ -12,7 +12,7 @@ dep 'ruby19.src' do
   # contains a dot-dir.
   install {
     Babushka::SrcHelper.install_src! 'make install'
-    shell "cp bin/* #{var(:prefix) / 'bin'}", :sudo => should_sudo?
+    shell "cp bin/* #{prefix / 'bin'}", :sudo => should_sudo?
   }
 end
 
