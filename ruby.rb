@@ -8,6 +8,11 @@ end
 dep 'ruby19.src' do
   requires 'readline headers.managed'
   source 'ftp://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.2-p0.tar.gz'
+  after {
+    process_sources {
+      log_shell "Manually installing #{Dir['bin/*'].to_list}", "cp bin/* '#{var(:prefix) / 'bin'}'"
+    }
+  }
   provides 'ruby == 1.9.2p0', 'irb', 'gem'
 end
 
