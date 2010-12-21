@@ -52,6 +52,10 @@ dep 'libxml.managed' do
   installs { via :apt, 'libxml2-dev' }
   provides []
 end
+dep 'libxslt.managed' do
+  installs { via :apt, 'libxslt-dev' }
+  provides []
+end
 dep 'mdns.managed' do
   installs {
     via :apt, 'avahi-daemon'
