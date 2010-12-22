@@ -20,10 +20,10 @@ dep 'deploy repo up to date' do
     'branch exists.repo',
     'branch checked out.repo',
     'HEAD up to date.repo',
-    'submodules up to date',
+    'submodules up to date.task',
     'cached JS and CSS removed',
     'app bundled',
-    'app flagged for restart'
+    'app flagged for restart.task'
   ]
 end
 
