@@ -11,12 +11,15 @@ meta :task do
 end
 
 dep 'deploy repo up to date' do
+  setup {
+    set :repo_path, '.'
+  }
   requires [
     'branch name',
-    'repo clean',
-    'branch exists',
-    'branch checked out',
-    'HEAD up to date',
+    'clean.repo',
+    'branch exists.repo',
+    'branch checked out.repo',
+    'HEAD up to date.repo',
     'submodules up to date',
     'cached JS and CSS removed',
     'app bundled',
@@ -28,23 +31,29 @@ dep 'branch name' do
   
 end
 
-dep 'repo clean' do
-  met? { GitRepo.new('.').clean? }
+meta :repo do
+  def repo
+    @repo ||= Babushka::GitRepo.new(var(:repo_path))
+  end
 end
 
-dep 'branch exists' do
-  met? { GitRepo.new('.').branches.include? var(:branch) }
-  meet { GitRepo.new('.').branch! var(:branch) }
+dep 'clean.repo' do
+  met? { repo.clean? }
 end
 
-dep 'branch checked out' do
-  met? { GitRepo.new('.').current_branch == var(:branch) }
-  meet { GitRepo.new('.').checkout! var(:branch) }
+dep 'branch exists.repo' do
+  met? { repo.branches.include? var(:branch) }
+  meet { repo.branch! var(:branch) }
 end
 
-dep 'HEAD up to date' do
-  met? { GitRepo.new('.').current_head == var(:new_id) }
-  meet { GitRepo.new('.').reset_hard! var(:new_id) }
+dep 'branch checked out.repo' do
+  met? { repo.current_branch == var(:branch) }
+  meet { repo.checkout! var(:branch) }
+end
+
+dep 'HEAD up to date.repo' do
+  met? { repo.current_head == var(:new_id) }
+  meet { repo.reset_hard! var(:new_id) }
 end
 
 dep 'submodules up to date.task' do
