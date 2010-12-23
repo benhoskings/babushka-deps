@@ -1,68 +1,34 @@
-dep 'tomcat.managed' do
-  provides %w[catalina.sh startup.sh shutdown.sh]
-end
-
 dep 'hudson' do
-  requires 'tomcat.managed'
-  met? {
-    result = shell('dpkg -s hudson')
-    result && result['Status: install ok installed']
-  }
-  meet {
-    shell 'wget -O /tmp/hudson-apt-key http://hudson-ci.org/debian/hudson-ci.org.key'
-    sudo 'apt-key add /tmp/hudson-apt-key'
-    shell 'wget -O /tmp/hudson.dep http://hudson-ci.org/latest/debian/hudson.deb'
-    sudo 'dpkg --install /tmp/hudson.dep'
-  }
-end
-
-dep 'hudson plugins for rails' do
   requires [
-    'hudson',
-    'hudson cli',
-    'git.hpi', 'github.hpi', 'ruby.hpi', 'rake.hpi',
-    'restart hudson'
+    'installed.hudson',
+    'cli.hudson',
+    'git.hpi', 'github.hpi', 'ruby.hpi', 'rake.hpi'
   ]
 end
 
-dep 'restart hudson' do
-  met? { @restarted }
+dep 'installed.hudson' do
+  def path
+    '~/hudson'.p
+  end
+  requires 'tomcat.managed'
+  met? { (path / 'hudson.war').exists? }
   meet {
-    sudo '/etc/init.d/hudson stop'
-    30.times {
-      response = sudo('/etc/init.d/hudson start')
-      if response && !response.include?("The selected http port (8080) seems to be in use by another program")
-        @restarted = true
-        break
-      else
-        sleep 1
-      end
-    }
-  }
-end
-
-dep 'hudson cli' do
-  met? {
-    "/usr/share/hudson/hudson-cli.jar".p.exists?
-  }
-  meet {
-    in_dir '/usr/share/hudson' do
-      sudo 'jar -xf hudson.war WEB-INF/hudson-cli.jar'
-      sudo 'mv WEB-INF/hudson-cli.jar .'
-      sudo 'rmdir WEB-INF'
-    end
-  }
-  after {
-    in_dir '/usr/share/hudson' do
-      30.times {
-        response = shell 'java -jar hudson-cli.jar -s http://localhost:8080/ version'
-        break if response && response =~ /^\d+(\.\d+)*$/
-        sleep 1
-      }
+    in_dir path, :create => true do
+      shell 'wget http://hudson-ci.org/latest/hudson.war'
     end
   }
 end
 
+dep 'cli.hudson' do
+  met? { (path / 'hudson-cli.jar').exists? }
+  meet {
+    in_dir path :create => true do
+      shell 'jar -xf hudson.war WEB-INF/hudson-cli.jar'
+      shell 'mv WEB-INF/hudson-cli.jar .'
+      shell 'rmdir WEB-INF'
+    end
+  }
+end
 
 meta :hpi do
   accepts_value_for :name
@@ -76,6 +42,10 @@ meta :hpi do
       end
     }
   }
+end
+
+dep 'tomcat.managed' do
+  provides %w[catalina.sh startup.sh shutdown.sh]
 end
 
 dep 'git.hpi'
