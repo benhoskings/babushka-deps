@@ -25,7 +25,7 @@ end
 dep 'cli.hudson' do
   met? { (path / 'hudson-cli.jar').exists? }
   meet {
-    in_dir path :create => true do
+    in_dir path, :create => true do
       shell 'jar -xf hudson.war WEB-INF/hudson-cli.jar'
       shell 'mv WEB-INF/hudson-cli.jar .'
       shell 'rmdir WEB-INF'
