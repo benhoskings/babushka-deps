@@ -1,4 +1,6 @@
-dep 'tomcat.managed'
+dep 'tomcat.managed' do
+  provides %w[catalina.sh startup.sh shutdown.sh]
+end
 
 dep 'hudson' do
   requires 'tomcat.managed'
