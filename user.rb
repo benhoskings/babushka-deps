@@ -2,6 +2,9 @@ dep 'passwordless ssh logins' do
   def ssh_dir
     "~#{var(:username)}" / '.ssh'
   end
+  def group
+    shell "id -gn #{var(:username)}"
+  end
   met? {
     sudo "grep '#{var(:your_ssh_public_key)}' '#{ssh_dir / 'authorized_keys'}'"
   }
@@ -13,7 +16,7 @@ dep 'passwordless ssh logins' do
     append_to_file var(:your_ssh_public_key), (ssh_dir / 'authorized_keys'), :sudo => true
   }
   after {
-    sudo "chown -R #{var(:username)}:#{var(:username)} '#{ssh_dir}'"
+    sudo "chown -R #{var(:username)}:#{group} '#{ssh_dir}'"
     sudo "chmod 600 #{(ssh_dir / 'authorized_keys')}"
   }
 end
