@@ -1,6 +1,6 @@
 dep 'passwordless ssh logins' do
   def ssh_dir
-    var(:home_dir_base) / var(:username) / '.ssh'
+    "~#{var(:username)}" / '.ssh'
   end
   met? {
     sudo "grep '#{var(:your_ssh_public_key)}' '#{ssh_dir / 'authorized_keys'}'"
