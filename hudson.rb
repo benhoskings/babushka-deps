@@ -40,7 +40,7 @@ meta :hpi do
       "~/.hudson/plugins/#{source}".p.exists?
     }
     meet {
-      Resource.get "http://hudson-ci.org/latest/#{source}" do |hpi|
+      Babushka::Resource.get "http://hudson-ci.org/latest/#{source}" do |hpi|
         shell "java -jar ~/hudson/hudson-cli.jar -s http://localhost:8080/ install-plugin #{hpi}"
       end
     }
