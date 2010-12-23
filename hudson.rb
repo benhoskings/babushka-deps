@@ -34,13 +34,13 @@ dep 'cli.hudson' do
 end
 
 meta :hpi do
-  accepts_value_for :name
+  accepts_value_for :source, :name
   template {
     met? {
-      "~/.hudson/plugins/#{name}".p.exists?
+      "~/.hudson/plugins/#{source}".p.exists?
     }
     meet {
-      Resource.get "http://hudson-ci.org/latest/#{name}" do |hpi|
+      Resource.get "http://hudson-ci.org/latest/#{source}" do |hpi|
         shell "java -jar ~/hudson/hudson-cli.jar -s http://localhost:8080/ install-plugin #{hpi}"
       end
     }
