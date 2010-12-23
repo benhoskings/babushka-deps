@@ -68,12 +68,11 @@ meta :hpi do
   accepts_value_for :name
   template {
     met? {
-      "/var/lib/hudson/plugins/#{name}".p.exists?
+      "~/.hudson/plugins/#{name}".p.exists?
     }
     meet {
-      in_dir '/usr/share/hudson' do
-        shell "wget -O /tmp/#{name} http://hudson-ci.org/latest/#{name}"
-        shell "java -jar hudson-cli.jar -s http://localhost:8080/ install-plugin /tmp/#{name}"
+      Resource.get "http://hudson-ci.org/latest/#{name}" do |hpi|
+        shell "java -jar ~/hudson/hudson-cli.jar -s http://localhost:8080/ install-plugin #{hpi}"
       end
     }
   }
