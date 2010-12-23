@@ -6,10 +6,13 @@ dep 'hudson' do
   ]
 end
 
-dep 'installed.hudson' do
+meta :hudson do
   def path
     '~/hudson'.p
   end
+end
+
+dep 'installed.hudson' do
   requires 'tomcat.managed'
   met? { (path / 'hudson.war').exists? }
   meet {
