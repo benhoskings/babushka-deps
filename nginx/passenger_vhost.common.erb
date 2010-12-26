@@ -1,5 +1,3 @@
-# <%= generated_by_babushka %>
-
 server_name <%= var :domain %> <%= var :extra_domains, :default => '' %> <%= var :www_aliases %>;
 root <%= var(:rails_root) / 'public' %>;
 passenger_enabled on;
