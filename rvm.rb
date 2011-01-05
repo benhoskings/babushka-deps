@@ -19,7 +19,7 @@ end
 dep 'rvm' do
   met? { raw_which 'rvm', login_shell('which rvm') }
   meet {
-    if confirm(:install_rvm_system_wide, :default => 'n')
+    if confirm("Install rvm system-wide?", :default => 'n')
       log_shell "Installing rvm using rvm-install-system-wide", 'bash < <( curl -L http://bit.ly/rvm-install-system-wide )'
     else
       log_shell "Installing rvm using rvm-install-head", 'bash -c "`curl http://rvm.beginrescueend.com/releases/rvm-install-head`"'
