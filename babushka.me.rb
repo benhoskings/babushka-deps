@@ -6,7 +6,7 @@ meta :bab_tarball do
     var(:tarball_path) / 'LATEST'
   end
   def repo
-    GitRepo.new(Babushka::BuildPrefix / 'babushka')
+    Babushka::GitRepo.new(Babushka::BuildPrefix / 'babushka')
   end
   def tarball
     var(:tarball_path) / "babushka-#{repo.current_head}.tgz"
