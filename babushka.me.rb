@@ -34,7 +34,7 @@ end
 dep 'linked.bab_tarball' do
   requires 'exists.bab_tarball'
   setup {
-    git uri, :dir => 'babushka'
+    git uri, :path => 'babushka'
   }
   met? {
     (var(:tarball_path) / 'babushka.tgz').readlink == tarball_for(current_head)
