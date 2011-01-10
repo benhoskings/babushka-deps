@@ -10,4 +10,9 @@ dep 'ruby19.src' do
   source 'ftp://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.2-p136.tar.gz'
   provides 'ruby == 1.9.2p136', 'gem', 'irb'
   configure_args '--disable-install-doc', '--with-readline-dir=/usr'
+  # TODO: hack for ruby bug where bin/* aren't installed when the build path
+  # contains a dot-dir.
+  postinstall {
+    shell "cp bin/* #{prefix / 'bin'}", :sudo => Babushka::SrcHelper.should_sudo?
+  }
 end
