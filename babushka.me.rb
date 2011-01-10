@@ -31,9 +31,7 @@ end
 
 dep 'linked.bab_tarball' do
   requires 'exists.bab_tarball'
-  setup {
-    git uri, :path => 'babushka'
-  }
+  setup { git uri }
   met? {
     (var(:tarball_path) / 'babushka.tgz').readlink == tarball
   }
