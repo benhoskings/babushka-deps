@@ -5,13 +5,11 @@ meta :bab_tarball do
   def latest
     var(:tarball_path) / 'LATEST'
   end
-  def tarball_for commit_id
-    var(:tarball_path) / "babushka-#{commit_id}.tgz"
+  def repo
+    GitRepo.new(Babushka::BuildPrefix / 'babushka')
   end
-  def current_head
-    in_build_dir 'babushka' do
-      `git rev-parse --short HEAD`.strip
-    end
+  def tarball
+    var(:tarball_path) / "babushka-#{repo.current_head}.tgz"
   end
 end
 
@@ -24,10 +22,10 @@ end
 
 dep 'LATEST.bab_tarball' do
   met? {
-    latest.exists? && (latest.read.strip == current_head)
+    latest.exists? && (latest.read.strip == repo.current_head)
   }
   meet {
-    shell "echo #{current_head} > '#{latest}'"
+    shell "echo #{repo.current_head} > '#{latest}'"
   }
 end
 
@@ -37,23 +35,23 @@ dep 'linked.bab_tarball' do
     git uri, :path => 'babushka'
   }
   met? {
-    (var(:tarball_path) / 'babushka.tgz').readlink == tarball_for(current_head)
+    (var(:tarball_path) / 'babushka.tgz').readlink == tarball
   }
   meet {
     in_dir var(:tarball_path), :create => true do
-      shell "ln -sf #{tarball_for(current_head)} babushka.tgz"
+      shell "ln -sf #{tarball} babushka.tgz"
     end
   }
 end
 
 dep 'exists.bab_tarball' do
   met? {
-    shell "tar -t -f #{tarball_for(current_head)}"
+    shell "tar -t -f #{tarball}"
   }
-  before { shell "mkdir -p #{tarball_for(current_head).parent}" }
+  before { shell "mkdir -p #{tarball.parent}" }
   meet {
     in_build_dir do
-      shell "tar -zcv --exclude .git -f '#{tarball_for(current_head)}' babushka/"
+      shell "tar -zcv --exclude .git -f '#{tarball}' babushka/"
     end
   }
 end
