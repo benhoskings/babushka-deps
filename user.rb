@@ -23,7 +23,7 @@ end
 
 dep 'public key' do
   met? { grep /^ssh-dss/, '~/.ssh/id_dsa.pub' }
-  meet { shell("ssh-keygen -t dsa -f ~/.ssh/id_dsa -N ''").tap_log }
+  meet { log shell("ssh-keygen -t dsa -f ~/.ssh/id_dsa -N ''") }
 end
 
 dep 'dot files' do
