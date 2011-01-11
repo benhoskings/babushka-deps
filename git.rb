@@ -27,7 +27,7 @@ end
 
 dep 'passenger deploy repo exists' do
   requires 'git'
-  define_var :passenger_repo_root, :default => :rails_root
+  define_var :passenger_repo_root, :default => "~/current"
   met? { (var(:passenger_repo_root) / '.git').dir? }
   meet {
     in_dir var(:passenger_repo_root), :create => true do
