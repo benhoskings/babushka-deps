@@ -15,6 +15,7 @@ dep 'rails app' do
   define_var :rails_env, :default => 'production'
   define_var :rails_root, :default => '~/current', :type => :path
   setup {
+    set :username, shell('whoami')
     set :vhost_type, 'passenger'
   }
 end
