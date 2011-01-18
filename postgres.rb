@@ -39,20 +39,17 @@ dep 'postgres backups' do
   }
 end
 
-dep 'postgres 9' do
-  requires {
-    on :apt, 'set.locale', 'ppa postgres.apt_repo', 'postgres.managed'
-  }
-  met? { provided? 'psql ~> 9.0.0' }
-end
-
 dep 'postgres.managed' do
+  requires {
+    on :apt, 'set.locale', 'ppa postgres.apt_repo'
+    on :brew, 'set.locale'
+  }
   installs {
     via :macports, 'postgresql83-server'
     via :apt, %w[postgresql postgresql-client libpq-dev]
     via :brew, 'postgresql'
   }
-  provides 'psql'
+  provides 'psql ~> 9.0.0'
   after :on => :osx do
     sudo "mkdir -p /opt/local/var/db/postgresql83/defaultdb" and
     sudo "chown postgres:postgres /opt/local/var/db/postgresql83/defaultdb" and
