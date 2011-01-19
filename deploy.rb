@@ -7,6 +7,10 @@ dep 'deploy repo up to date' do
     ).flatten
     if [old_id, new_id, branch].any?(&:nil?)
       raise UnmeetableDep, "Invalid value '#{var(:git_ref_data)}' for :git_ref_data."
+    else
+      set :old_id, old_id
+      set :new_id, new_id
+      set :branch, branch
     end
   }
   requires [
