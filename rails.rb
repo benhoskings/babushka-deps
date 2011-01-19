@@ -1,17 +1,16 @@
 dep 'migrated db' do
   requires 'deployed app', 'existing db', 'db gem'
-  setup {
-    if (db_config = yaml(var(:rails_root) / 'config/database.yml')[var(:rails_env)]).nil?
-      log_error "There's no database.yml entry for the #{var(:rails_env)} environment."
-    else
-      set :db_name, db_config['database']
-    end
-  }
   def orm
     grep('dm-rails', var(:rails_root)/'Gemfile') ? :datamapper : :activerecord
   end
   setup {
     requires "migrated #{orm} db"
+
+    if (db_config = yaml(var(:rails_root) / 'config/database.yml')[var(:rails_env)]).nil?
+      log_error "There's no database.yml entry for the #{var(:rails_env)} environment."
+    else
+      set :db_name, db_config['database']
+    end
   }
 end
 
