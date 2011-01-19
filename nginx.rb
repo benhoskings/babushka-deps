@@ -207,6 +207,6 @@ dep 'lamp stack removed', :for => :apt do
     }
   }
   after {
-    sudo "apt-get -y autoremove"
+    log_shell "Autoremoving packages", "apt-get -y autoremove", :sudo => true
   }
 end
