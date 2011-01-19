@@ -17,13 +17,13 @@ Dir[File.join(prefix, 'Library/Formula/*')].each {|f| load f }
 classes_to_skip = %w[AspellLang COREUTILS_ALIASES DICT_CONF Rational SOLR_START_SCRIPT]
 
 urls = (Class.constants - before - classes_to_skip).reject {|k|
-k =~ /DownloadStrategy$/
+  k =~ /DownloadStrategy$/
 }.map {|k|
-eval(k.to_s)
+  eval(k.to_s)
 }.select {|k|
-k.respond_to? :url
+  k.respond_to? :url
 }.map {|k|
-k.url
+  k.url
 }
 puts urls * "\n"
     }
