@@ -1,18 +1,13 @@
-
-meta :task do
-  accepts_block_for :run
-  template {
-    met? { @run_called }
-    meet {
-      call_task(:run)
-      @run_called = true
-    }
-  }
-end
-
 dep 'deploy repo up to date' do
   setup {
-    set :repo_path, '.'
+    # Should look like this:
+    # 83a90415670ec7ae4690d58563be628c73900716 e817f54d3e9a2d982b16328f8d7f0fbfcd7433f7 refs/heads/master
+    old_id, new_id, branch = var(:git_ref_data).scan(
+      /^([\da-f]{40}) ([\da-f]{40}) refs\/heads\/(.+)$/
+    ).flatten
+    if [old_id, new_id, branch].any?(&:nil?)
+      raise UnmeetableDep, "Invalid value '#{var(:git_ref_data)}' for :git_ref_data."
+    end
   }
   requires [
     'branch name',
