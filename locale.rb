@@ -13,7 +13,7 @@ end
 dep 'set.locale' do
   requires 'exists.locale'
   met? {
-    login_shell('locale').val_for('LANG')[locale_regex]
+    shell('locale').val_for('LANG')[locale_regex]
   }
   on :apt do
     meet {
