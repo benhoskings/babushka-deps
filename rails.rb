@@ -1,5 +1,20 @@
 dep 'migrated db' do
   requires 'deployed app', 'existing db', 'db gem'
+  def orm
+    grep('dm-rails', var(:rails_root)/'Gemfile') ? :datamapper : :activerecord
+  end
+  setup {
+    requires "migrated #{orm} db"
+  }
+end
+
+dep 'migrated datamapper db', :template => 'task' do
+  run {
+    bundle_rake "db:autoupgrade db:seed"
+  }
+end
+
+dep 'migrated activerecord db' do
   setup {
     if (db_config = yaml(var(:rails_root) / 'config/database.yml')[var(:rails_env)]).nil?
       log_error "There's no database.yml entry for the #{var(:rails_env)} environment."
