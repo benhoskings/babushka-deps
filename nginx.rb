@@ -192,8 +192,10 @@ end
 
 dep 'lamp stack removed', :for => :apt do
   def packages
-    shell("dpkg --get-selections | egrep 'apache|mysql|php'").split("\n").map {|l|
+    shell("dpkg --get-selections").split("\n").map {|l|
       l.split(/\s+/, 2).first
+    }.select {|l|
+      l[/apache|mysql|php/]
     }
   end
   met? {
