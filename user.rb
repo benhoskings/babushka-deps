@@ -27,7 +27,7 @@ dep 'public key' do
 end
 
 dep 'dot files' do
-  requires 'user exists', 'git', 'curl.managed'
+  requires 'user exists', 'git', 'curl.managed', 'git-smart.gem'
   met? { File.exists?(ENV['HOME'] / ".dot-files/.git") }
   meet { shell %Q{curl -L "http://github.com/#{var :github_user, :default => 'benhoskings'}/#{var :dot_files_repo, :default => 'dot-files'}/raw/master/clone_and_link.sh" | bash} }
 end
