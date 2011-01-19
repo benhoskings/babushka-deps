@@ -2,6 +2,10 @@ dep 'Ruby on Rails.tmbundle' do
   source 'git://github.com/drnic/ruby-on-rails-tmbundle.git'
 end
 
+dep 'Sinatra.tmbundle' do
+  source 'git://github.com/foca/sinatra-tmbundle.git'
+end
+
 dep 'Tcl.tmbundle' do
   source 'git://github.com/textmate/tcl.tmbundle.git'
 end
