@@ -157,7 +157,7 @@ dep 'passenger built' do
 end
 
 dep 'webserver installed.src' do
-  requires 'lamp stack removed', 'passenger built', 'pcre.managed', 'libssl headers.managed', 'zlib headers.managed'
+  requires 'passenger built', 'pcre.managed', 'libssl headers.managed', 'zlib headers.managed'
   merge :versions, {:nginx => '0.8.54', :nginx_upload_module => '2.2.0'}
   source "http://nginx.org/download/nginx-#{var(:versions)[:nginx]}.tar.gz"
   extra_source "http://www.grid.net.ru/nginx/download/nginx_upload_module-#{var(:versions)[:nginx_upload_module]}.tar.gz"
@@ -187,26 +187,5 @@ dep 'webserver installed.src' do
         met "nginx-#{installed_version} is installed"
       end
     end
-  }
-end
-
-dep 'lamp stack removed', :for => :apt do
-  def packages
-    shell("dpkg --get-selections").split("\n").map {|l|
-      l.split(/\s+/, 2).first
-    }.select {|l|
-      l[/apache|mysql|php/]
-    }
-  end
-  met? {
-    packages.empty?
-  }
-  meet {
-    packages.each {|pkg|
-      log_shell "Removing #{pkg}", "apt-get -y remove --purge '#{pkg}'", :sudo => true
-    }
-  }
-  after {
-    log_shell "Autoremoving packages", "apt-get -y autoremove", :sudo => true
   }
 end
