@@ -1,55 +1,6 @@
-#!/usr/bin/env ruby
+#!/bin/sh
 
-STDOUT.sync = true # fuck yeah @sj26
-
-def shell cmd
-  output = `#{cmd} 2>&1`
-  output.chomp if $? == 0
-end
-def say message = nil, &block
-  puts "\nremote says:\n"
-  if message.nil?
-    yield
-    puts "\n"
-  else
-    puts "#{message.split("\n").map {|l| "  #{l}"}.join("\n")}\n\n"
-  end
-end
-def log_shell message, cmd
-  print "  #{message}..."
-  shell(cmd) ? puts(' done.') : puts(' failed!')
-end
-
-refspecs = STDIN.read.chomp.split("\n")
-old_id, new_id, ref_name = refspecs.first.split(/\s+/)
-branch_name = ref_name.scan(/^refs\/heads\/(.*)$/).flatten.first
-
-if branch_name.nil?
-  say "Couldn't figure out what branch '#{ref_name}' refers to, not updating."
-else
-  env_git = "env -i #{`which git`.chomp}"
-  Dir.chdir('..') { # change dir to .git/..
-    unless shell("#{env_git} ls-files -m").empty?
-      say "I have local changes, not updating."
-    else
-      say {
-        if shell("#{env_git} branch").split("\n").grep(/\b#{branch_name}\b/).empty?
-          log_shell "Creating the '#{branch_name}' branch", "#{env_git} checkout -b '#{branch_name}'"
-        else
-          puts "  Branch '#{branch_name}' already exists."
-        end
-        if shell("#{env_git} branch").split("\n").grep(/\* \b#{branch_name}\b/).empty?
-          log_shell "Switching to the '#{branch_name}' branch", "#{env_git} checkout '#{branch_name}'"
-        else
-          puts "  Already on the '#{branch_name}' branch."
-        end
-        log_shell "Updating to #{new_id[0...7]}", "#{env_git} reset --hard '#{new_id}'"
-        log_shell "Updating submodules", "#{env_git} submodule update --init"
-        log_shell "Bundling", "bundle install --deployment --without 'development test'"
-        log_shell "Removing cached JS and CSS", 'rm -f public/javascripts/all.js; rm -f public/stylesheets/all.css'
-        shell 'mkdir -p tmp'
-        log_shell "Flagging app for restart", 'touch tmp/restart.txt'
-      }
-    end
-  }
-end
+cd .. # up from .git/
+unset GIT_DIR # otherwise `git` commands can't see other repos
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # so we run against the right ruby
+babushka 'benhoskings:up to date.deploy_repo' repo_path='.' git_ref_data="$(cat /dev/stdin)"

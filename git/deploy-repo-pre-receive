@@ -1,16 +1,6 @@
-#!/usr/bin/env ruby
+#!/bin/sh
 
-refspecs = STDIN.read.chomp.split("\n")
-
-if refspecs.length != 1
-  puts %Q{
-remote says:
-  Hi there, you just pushed #{refspecs.length} branches, but I only accept one branch
-  at a time, because I use it to update the working copy.
-
-  The best way to push just a single branch is like this:
-    $ git push <remote-name> <branch-name>
-
-}
-  exit 1
-end
+cd .. # up from .git/
+unset GIT_DIR # otherwise `git` commands can't see other repos
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # so we run against the right ruby
+babushka 'benhoskings:ready for update.deploy_repo' repo_path='.' git_ref_data="$(cat /dev/stdin)"
