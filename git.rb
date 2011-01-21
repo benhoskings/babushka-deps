@@ -12,7 +12,8 @@ dep 'passenger deploy repo hooks' do
   requires 'passenger deploy repo exists'
   met? {
     %w[pre-receive post-receive].all? {|hook_name|
-      (var(:passenger_repo_root) / ".git/hooks/#{hook_name}").executable?
+      (var(:passenger_repo_root) / ".git/hooks/#{hook_name}").executable? &&
+      Babushka::Renderable.new(var(:passenger_repo_root) / ".git/hooks/#{hook_name}").from?(dependency.load_path.parent / "git/deploy-repo-#{hook_name}")
     }
   }
   meet {
