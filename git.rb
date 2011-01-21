@@ -1,5 +1,9 @@
 dep 'passenger deploy repo' do
-  requires 'passenger deploy repo exists', 'passenger deploy repo hooks', 'passenger deploy repo always receives'
+  requires [
+    'passenger deploy repo exists',
+    'passenger deploy repo hooks',
+    'passenger deploy repo always receives'
+  ]
 end
 
 dep 'passenger deploy repo always receives' do
