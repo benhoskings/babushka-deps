@@ -4,6 +4,10 @@ passenger_enabled on;
 passenger_use_global_queue on;
 rails_env <%= var :rails_env, :default => 'production' %>;
 
+if ($host ~ ^<%= var(:domain).gsub('.', '\.') %>$) {
+  rewrite ^(.*)$ http://<%= var(:domain) %>$1 permanent;
+}
+
 if (-f $document_root/system/maintenance.html) {
   rewrite ^(.*)$ /system/maintenance.html break;
 }

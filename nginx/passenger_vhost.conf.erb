@@ -6,10 +6,6 @@ server {
   <% end %>
 }
 
-if ($host ~ ^<%= var(:domain).gsub('.', '\.') %>$) {
-  rewrite ^(.*)$ http://<%= var(:domain) %>$1 permanent;
-}
-
 <% if var(:enable_ssl, :default => 'no').starts_with?('y') %>
 server {
   listen 443;
