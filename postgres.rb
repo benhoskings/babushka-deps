@@ -45,15 +45,8 @@ dep 'postgres.managed' do
     on :brew, 'set.locale'
   }
   installs {
-    via :macports, 'postgresql83-server'
     via :apt, %w[postgresql postgresql-client libpq-dev]
     via :brew, 'postgresql'
   }
   provides 'psql ~> 9.0.0'
-  after :via => :macports do
-    sudo "mkdir -p /opt/local/var/db/postgresql83/defaultdb" and
-    sudo "chown postgres:postgres /opt/local/var/db/postgresql83/defaultdb" and
-    sudo "su postgres -c '/opt/local/lib/postgresql83/bin/initdb -D /opt/local/var/db/postgresql83/defaultdb'" and
-    sudo "launchctl load -w /Library/LaunchDaemons/org.macports.postgresql83-server.plist"
-  end
 end
