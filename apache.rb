@@ -1,6 +1,6 @@
 dep 'lamp stack removed', :for => :apt do
   def packages
-    shell("dpkg --get-selections").select {|l|
+    shell("dpkg --get-selections").split("\n").select {|l|
       l[/\binstall$/]
     }.split("\n").map {|l|
       l.split(/\s+/, 2).first
