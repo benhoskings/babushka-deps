@@ -1,19 +1,23 @@
 dep 'passenger deploy repo' do
+  met? { raise UnmeetableDep, "This dep was renamed to 'web repo'." }
+end
+
+dep 'web repo' do
   requires [
-    'passenger deploy repo exists',
-    'passenger deploy repo hooks',
-    'passenger deploy repo always receives'
+    'web repo exists',
+    'web repo hooks',
+    'web repo always receives'
   ]
 end
 
-dep 'passenger deploy repo always receives' do
-  requires 'passenger deploy repo exists'
+dep 'web repo always receives' do
+  requires 'web repo exists'
   met? { in_dir(var(:passenger_repo_root)) { shell("git config receive.denyCurrentBranch") == 'ignore' } }
   meet { in_dir(var(:passenger_repo_root)) { shell("git config receive.denyCurrentBranch ignore") } }
 end
 
-dep 'passenger deploy repo hooks' do
-  requires 'passenger deploy repo exists'
+dep 'web repo hooks' do
+  requires 'web repo exists'
   met? {
     %w[pre-receive post-receive].all? {|hook_name|
       (var(:passenger_repo_root) / ".git/hooks/#{hook_name}").executable? &&
@@ -30,7 +34,7 @@ dep 'passenger deploy repo hooks' do
   }
 end
 
-dep 'passenger deploy repo exists' do
+dep 'web repo exists' do
   requires 'git'
   define_var :passenger_repo_root, :default => "~/current"
   met? { (var(:passenger_repo_root) / '.git').dir? }
