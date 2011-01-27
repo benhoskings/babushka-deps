@@ -1,4 +1,4 @@
-meta :deploy_repo do
+meta :repo do
   def repo
     @repo ||= Babushka::GitRepo.new(var(:repo_path))
   end
@@ -9,14 +9,14 @@ meta :deploy_repo do
   end
 end
 
-dep 'ready for update.deploy_repo' do
+dep 'ready for update.repo' do
   requires [
-    'valid git_ref_data.deploy_repo',
-    'clean.deploy_repo'
+    'valid git_ref_data.repo',
+    'clean.repo'
   ]
 end
 
-dep 'up to date.deploy_repo' do
+dep 'up to date.repo' do
   setup {
     set :rails_root, var(:repo_path)
     set :rails_env, 'production'
@@ -25,10 +25,10 @@ dep 'up to date.deploy_repo' do
     requires Dep('current dir:deployed') # app-specific deps
   }
   requires [
-    'ref info extracted.deploy_repo',
-    'branch exists.deploy_repo',
-    'branch checked out.deploy_repo',
-    'HEAD up to date.deploy_repo',
+    'ref info extracted.repo',
+    'branch exists.repo',
+    'branch checked out.repo',
+    'HEAD up to date.repo',
     'submodules up to date.task',
     'cached JS and CSS removed',
     'app bundled',
@@ -36,8 +36,8 @@ dep 'up to date.deploy_repo' do
   ]
 end
 
-dep 'ref info extracted.deploy_repo' do
-  requires 'valid git_ref_data.deploy_repo'
+dep 'ref info extracted.repo' do
+  requires 'valid git_ref_data.repo'
   met? {
     %w[old_id new_id branch].all? {|name|
       !Babushka::Base.task.vars.vars[name][:value].nil?
@@ -51,28 +51,28 @@ dep 'ref info extracted.deploy_repo' do
   }
 end
 
-dep 'valid git_ref_data.deploy_repo' do
+dep 'valid git_ref_data.repo' do
   met? {
     var(:git_ref_data)[ref_data_regexp] ||
       raise(UnmeetableDep, "Invalid value '#{var(:git_ref_data)}' for :git_ref_data.")
   }
 end
 
-dep 'clean.deploy_repo' do
+dep 'clean.repo' do
   met? { repo.clean? || raise(UnmeetableDep, "The remote repo has local changes.") }
 end
 
-dep 'branch exists.deploy_repo' do
+dep 'branch exists.repo' do
   met? { repo.branches.include? var(:branch) }
   meet { repo.branch! var(:branch) }
 end
 
-dep 'branch checked out.deploy_repo' do
+dep 'branch checked out.repo' do
   met? { repo.current_branch == var(:branch) }
   meet { repo.checkout! var(:branch) }
 end
 
-dep 'HEAD up to date.deploy_repo' do
+dep 'HEAD up to date.repo' do
   met? { repo.current_full_head == var(:new_id) && repo.clean? }
   meet { repo.reset_hard! var(:new_id) }
 end
