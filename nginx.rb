@@ -25,6 +25,7 @@ meta :nginx do
   def restart_nginx
     if nginx_running?
       log_shell "Restarting nginx", "#{nginx_bin} -s reload", :sudo => true
+      sleep 1 # The reload just sends the signal, and doesn't wait.
     end
   end
 end
