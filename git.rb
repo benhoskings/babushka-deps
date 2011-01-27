@@ -49,3 +49,23 @@ dep 'github token set' do
   met? { !shell('git config --global github.token').blank? }
   meet { shell("git config --global github.token '#{var(:github_token)}'")}
 end
+
+dep 'web repo pushed.repo' do
+  requires 'remote exists.repo'
+  met? { repo.current_head == repo.repo_shell("git rev-parse --short #{var(:remote_name)}/#{var(:deploy_branch)}") }
+  meet { repo.repo_shell "git push #{var(:remote_name)} #{var(:deploy_branch)}", :log => true }
+end
+
+dep 'remote exists.repo' do
+  def remote_url
+    repo.repo_shell("git config remote.#{var(:remote_name)}.url")
+  end
+  met? { remote_url == var(:remote_url) }
+  meet {
+    if remote_url.blank?
+      repo.repo_shell("git remote add #{var(:remote_name)} '#{var(:remote_url)}'")
+    elsif remote_url != var(:remote_url)
+      repo.repo_shell("git remote set-url #{var(:remote_name)} '#{var(:remote_url)}'")
+    end
+  }
+end
