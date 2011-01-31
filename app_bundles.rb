@@ -1,3 +1,10 @@
+dep 'Twitter.app' do
+  source "http://files.droplr.com/files/8046732/4T4e.Twitter.zip"
+  after {
+    shell 'defaults write com.twitter.twitter-mac ESCClosesComposeWindow -bool true'
+  }
+end
+
 dep 'LaunchBar.app' do
   source 'http://www.obdev.at/downloads/launchbar/LaunchBar-5.0.3.dmg'
 end

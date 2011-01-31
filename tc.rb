@@ -3,6 +3,7 @@ dep 'tc' do
     'Dropbox.app',
     'xaviershay:Skype.app',
     'Google Chrome.app',
+    'Twitter.app',
     'SizeUp.app',
     'Cinch.app'
   ]
