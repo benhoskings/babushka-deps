@@ -5,6 +5,7 @@ dep 'tc' do
     'Google Chrome.app',
     'Twitter.app',
     'SizeUp.app',
-    'Cinch.app'
+    'Cinch.app',
+    'Xerox C3290.installer'
   ]
 end
