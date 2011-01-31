@@ -85,5 +85,5 @@ end
 dep 'Microsoft Office', :template => 'installer' do
   source 'http://ci.local/Office Installer.zip'
   prefix '/Applications/Microsoft Office 2011'
-  provides %w[Excel Word PowerPoint Outlook].map {|i| "Microsoft #{i}" }
+  provides %w[Excel Word PowerPoint Outlook].map {|i| "Microsoft #{i}.app" }
 end
