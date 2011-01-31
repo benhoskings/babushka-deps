@@ -2,12 +2,24 @@ dep 'LaunchBar.app' do
   source 'http://www.obdev.at/downloads/launchbar/LaunchBar-5.0.3.dmg'
 end
 
+dep 'SizeUp.app' do
+  source 'http://irradiatedsoftware.com/download/SizeUp.zip'
+end
+
+dep 'Cinch.app' do
+  source 'http://irradiatedsoftware.com/download/Cinch.zip'
+end
+
 dep 'Fluid.app' do
   source 'http://fluidapp.com/dist/Fluid_0.9.6.zip'
 end
 
 dep 'RubyMine.app' do
   source 'http://download-ln.jetbrains.com/ruby/rubymine-2.0.2.dmg'
+end
+
+dep 'Google Chrome.app' do
+  source 'https://dl-ssl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg'
 end
 
 dep 'Chromium.app' do
