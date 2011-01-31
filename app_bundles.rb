@@ -82,6 +82,7 @@ dep 'Airfoil.app' do
   source 'http://www.rogueamoeba.com/airfoil/download/Airfoil.zip'
 end
 
-dep 'Microsoft Office.app' do
+dep 'Microsoft Office', :template => 'app' do
   source 'http://ci.local/Office Installer.zip'
+  name 'Office Installer.mpkg'
 end
