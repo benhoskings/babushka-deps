@@ -2,6 +2,10 @@ dep 'LaunchBar.app' do
   source 'http://www.obdev.at/downloads/launchbar/LaunchBar-5.0.3.dmg'
 end
 
+dep 'Dropbox.app' do
+  source 'http://cdn.dropbox.com/Dropbox%201.0.20.dmg'
+end
+
 dep 'SizeUp.app' do
   source 'http://irradiatedsoftware.com/download/SizeUp.zip'
 end
