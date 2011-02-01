@@ -52,6 +52,10 @@ dep "Chromium.app download cleared" do
   meet { in_download_dir { 'chrome-mac.zip'.p.rm } }
 end
 
+dep 'Skitch.app' do
+  source 'http://get.skitch.com/skitch.zip'
+end
+
 dep 'Skype.app' do
   source 'http://download.skype.com/macosx/Skype_2.8.0.851.dmg'
 end
