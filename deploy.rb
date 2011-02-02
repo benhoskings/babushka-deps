@@ -17,11 +17,13 @@ dep 'up to date.repo' do
   requires [
     'ref info extracted.repo',
     'branch exists.repo',
+    'maintenance page up',
     'branch checked out.repo',
     'HEAD up to date.repo',
     'submodules up to date.task',
     'cached JS and CSS removed',
-    'app bundled'
+    'app bundled',
+    'maintenance page down',
   ]
 end
 
@@ -82,4 +84,17 @@ end
 dep 'app flagged for restart.task' do
   before { shell 'mkdir -p tmp' }
   run { shell 'touch tmp/restart.txt' }
+end
+
+dep 'maintenance page up' do
+  met? {
+    !'public/system/maintenance.html.off'.p.exists? or
+    'public/system/maintenance.html'.p.exists?
+  }
+  meet { shell 'cp public/system/maintenance.html{.off,}' }
+end
+
+dep 'maintenance page down' do
+  met? { !'public/system/maintenance.html'.p.exists? }
+  meet { shell 'rm public/system/maintenance.html' }
 end
