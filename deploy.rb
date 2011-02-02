@@ -12,7 +12,10 @@ dep 'up to date.repo' do
     set :username, shell('whoami')
 
     requires Dep('current dir:deployed') # app-specific deps
-    requires 'app flagged for restart.task' # last of all
+    requires [
+      'app flagged for restart.task', # and finally,
+      'maintenance page down' # only let in requests post-restart-flag
+    ]
   }
   requires [
     'ref info extracted.repo',
@@ -22,8 +25,7 @@ dep 'up to date.repo' do
     'HEAD up to date.repo',
     'submodules up to date.task',
     'cached JS and CSS removed',
-    'app bundled',
-    'maintenance page down',
+    'app bundled'
   ]
 end
 
