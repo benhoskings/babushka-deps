@@ -91,10 +91,10 @@ dep 'maintenance page up' do
     !'public/system/maintenance.html.off'.p.exists? or
     'public/system/maintenance.html'.p.exists?
   }
-  meet { shell 'cp public/system/maintenance.html{.off,}' }
+  meet { 'public/system/maintenance.html.off'.p.copy 'public/system/maintenance.html' }
 end
 
 dep 'maintenance page down' do
   met? { !'public/system/maintenance.html'.p.exists? }
-  meet { shell 'rm public/system/maintenance.html' }
+  meet { 'public/system/maintenance.html'.p.rm }
 end
