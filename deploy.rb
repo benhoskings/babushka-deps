@@ -24,7 +24,7 @@ dep 'up to date.repo' do
     'branch checked out.repo',
     'HEAD up to date.repo',
     'submodules up to date.task',
-    'cached JS and CSS removed',
+    'remove cached JS and CSS.task',
     'app bundled'
   ]
 end
@@ -76,8 +76,8 @@ dep 'submodules up to date.task' do
   }
 end
 
-dep 'cached JS and CSS removed' do
-  meet {
+dep 'remove cached JS and CSS.task' do
+  run {
     shell "rm -f public/javascripts/all.js"
     shell "rm -f public/stylesheets/all.css"
   }
