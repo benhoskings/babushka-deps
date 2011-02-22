@@ -7,8 +7,8 @@ end
 
 dep 'ruby19.src' do
   requires 'readline headers.managed'
-  source 'ftp://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.2-p136.tar.gz'
-  provides 'ruby == 1.9.2p136', 'gem', 'irb'
+  source 'ftp://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.2-p180.tar.gz'
+  provides 'ruby == 1.9.2p180', 'gem', 'irb'
   configure_args '--disable-install-doc', '--with-readline-dir=/usr'
   # TODO: hack for ruby bug where bin/* aren't installed when the build path
   # contains a dot-dir.
