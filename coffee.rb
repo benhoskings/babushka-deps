@@ -9,6 +9,6 @@ dep 'coffeescript.src' do
 end
 
 dep 'nodejs.src' do
-  source 'git://github.com/ry/node.git'
+  source 'git://github.com/joyent/node.git'
   provides 'node', 'node-waf'
 end
