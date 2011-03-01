@@ -53,6 +53,10 @@ dep 'valid git_ref_data.repo' do
 end
 
 dep 'clean.repo' do
+  setup {
+    # Clear git's internal cache, which sometimes says the repo is dirty when it isn't.
+    repo.repo_shell "git diff"
+  }
   met? { repo.clean? || raise(UnmeetableDep, "The remote repo has local changes.") }
 end
 
