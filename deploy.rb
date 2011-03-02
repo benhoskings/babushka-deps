@@ -24,7 +24,6 @@ dep 'up to date.repo' do
     'branch checked out.repo',
     'HEAD up to date.repo',
     'submodules up to date.task',
-    'clean.repo', # only check this after the submodule update
     'remove cached JS and CSS.task',
     'app bundled'
   ]
@@ -71,7 +70,7 @@ dep 'branch checked out.repo' do
 end
 
 dep 'HEAD up to date.repo' do
-  met? { repo.current_full_head == var(:new_id) }
+  met? { repo.current_full_head == var(:new_id) && repo.clean? }
   meet { repo.reset_hard! var(:new_id) }
 end
 
