@@ -41,7 +41,7 @@ end
 
 dep 'postgres.managed' do
   requires {
-    on :apt, 'set.locale', 'ppa postgres.apt_repo'
+    on :apt, 'set.locale', 'postgres.ppa'
     on :brew, 'set.locale'
   }
   installs {
@@ -49,4 +49,8 @@ dep 'postgres.managed' do
     via :brew, 'postgresql'
   }
   provides 'psql ~> 9.0.0'
+end
+
+dep 'postgres.ppa' do
+  adds 'ppa:pitti/postgresql'
 end

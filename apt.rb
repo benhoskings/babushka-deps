@@ -2,7 +2,7 @@ dep 'python-software-properties.managed' do
   provides 'add-apt-repository'
 end
 
-meta :apt_repo do
+meta :ppa do
   accepts_value_for :adds
   template {
     requires 'python-software-properties.managed'
@@ -19,8 +19,4 @@ meta :apt_repo do
       Babushka::Base.host.pkg_helper.update_pkg_lists "Updating apt lists to load #{adds}."
     }
   }
-end
-
-dep 'ppa postgres.apt_repo' do
-  adds 'ppa:pitti/postgresql'
 end
