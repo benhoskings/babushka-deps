@@ -7,10 +7,12 @@ meta :ppa do
   template {
     requires 'python-software-properties.managed'
     met? {
-      adds[/^\w+\:\w+/] &&
       Dir.glob("/etc/apt/sources.list.d/*").any? {|f|
         f.p.read[Regexp.new('https?://' + adds.gsub(':', '.*') + '/ubuntu ')]
       }
+    }
+    before {
+      adds[/^\w+\:\w+/] or log_error("'#{adds}' doesn't look like 'ppa:something'.")
     }
     meet {
       sudo "sudo add-apt-repository #{adds}"
