@@ -1,5 +1,5 @@
 dep 'app bundled' do
-  requires 'deployed app', 'bundler.gem'
+  requires 'Gemfile', 'bundler.gem'
   met? { in_dir(var(:rails_root)) { shell 'bundle check', :log => true } }
   meet { in_dir(var(:rails_root)) {
     install_args = var(:rails_env) != 'production' ? '' : "--deployment --without 'development test'"
@@ -11,6 +11,6 @@ dep 'app bundled' do
   } }
 end
 
-dep 'deployed app' do
-  met? { File.directory? var(:rails_root) / 'app' }
+dep 'Gemfile' do
+  met? { (var(:rails_root) / 'Gemfile').exists? }
 end
