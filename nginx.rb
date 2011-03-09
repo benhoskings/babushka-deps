@@ -50,6 +50,7 @@ dep 'vhost configured.nginx' do
   requires 'webserver configured.nginx'
   define_var :vhost_type, :default => 'passenger', :choices => %w[passenger proxy static]
   define_var :document_root, :default => L{ '/srv/http' / var(:domain) }
+  set :passenger_pool_size, 16
   met? { nginx_conf_for(var(:domain), 'conf').exists? }
   meet {
     render_erb "nginx/#{var :vhost_type}_vhost.conf.erb",   :to => nginx_conf_for(var(:domain), 'conf'), :sudo => true
