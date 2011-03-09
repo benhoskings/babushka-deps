@@ -50,7 +50,7 @@ dep 'github token set' do
   meet { shell("git config --global github.token '#{var(:github_token)}'")}
 end
 
-dep 'web repo pushed.repo' do
+dep 'pushed.repo' do
   requires 'remote exists.repo'
   met? { repo.current_head == repo.repo_shell("git rev-parse --short #{var(:remote_name)}/#{var(:deploy_branch)}") }
   meet { repo.repo_shell "git push #{var(:remote_name)} #{var(:deploy_branch)}", :log => true }
