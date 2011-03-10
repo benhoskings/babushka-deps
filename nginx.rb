@@ -50,7 +50,6 @@ dep 'vhost configured.nginx' do
   requires 'webserver configured.nginx'
   define_var :vhost_type, :default => 'passenger', :choices => %w[passenger proxy static]
   define_var :document_root, :default => L{ '/srv/http' / var(:domain) }
-  set :passenger_pool_size, 8
   met? { nginx_conf_for(var(:domain), 'conf').exists? }
   meet {
     render_erb "nginx/#{var :vhost_type}_vhost.conf.erb",   :to => nginx_conf_for(var(:domain), 'conf'), :sudo => true
@@ -121,6 +120,7 @@ end
 dep 'webserver configured.nginx' do
   requires 'webserver installed.src', 'www user and group'
   define_var :nginx_prefix, :default => '/opt/nginx'
+  set :passenger_pool_size, 8
   met? {
     if babushka_config? nginx_conf
       configured_root = nginx_conf.read.val_for('passenger_root')
