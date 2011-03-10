@@ -1,5 +1,5 @@
 dep 'migrated db' do
-  requires 'deployed app', 'existing db', 'db gem'
+  requires 'app bundled', 'existing db', 'db gem'
   def orm
     grep('dm-rails', var(:rails_root)/'Gemfile') ? :datamapper : :activerecord
   end
