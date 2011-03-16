@@ -32,6 +32,10 @@ dep 'dot files' do
   meet { shell %Q{curl -L "http://github.com/#{var :github_user, :default => 'benhoskings'}/#{var :dot_files_repo, :default => 'dot-files'}/raw/master/clone_and_link.sh" | bash} }
 end
 
+dep 'user auth setup' do
+  requires 'user exists with password', 'passwordless ssh logins'
+end
+
 dep 'user exists with password' do
   requires 'user exists'
   on :linux do
