@@ -43,6 +43,7 @@ http {
   passenger_ruby <%= Babushka::GemHelper.ruby_wrapper_path %>;
   passenger_max_pool_size <%= var(:passenger_pool_size) %>;
   passenger_pool_idle_time 1800;
+  rails_app_spawner_idle_time 0;
 
   # Pull in all enabled vhosts
   include vhosts/on/*.conf;
