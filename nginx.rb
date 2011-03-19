@@ -191,3 +191,21 @@ dep 'webserver installed.src' do
     end
   }
 end
+
+dep 'http basic logins.nginx' do
+  requires 'http basic auth enabled.nginx'
+  met? { shell("curl -I -u #{var(:http_user)}:#{var(:http_pass)} #{var(:domain)}").val_for('HTTP/1.1')[/^[25]00\b/] }
+  meet { append_to_file "#{var(:http_user)}:#{var(:http_pass).crypt(var(:http_pass))}", (var(:nginx_prefix) / 'conf/htpasswd'), :sudo => true }
+  after { restart_nginx }
+end
+
+dep 'http basic auth enabled.nginx' do
+  met? { shell("curl -I #{var(:domain)}").val_for('HTTP/1.1')[/^401\b/] }
+  meet {
+    append_to_file %Q{auth_basic 'Restricted';\nauth_basic_user_file htpasswd;}, nginx_conf_for(var(:domain), 'common'), :sudo => true
+  }
+  after {
+    sudo "touch #{var(:nginx_prefix) / 'conf/htpasswd'}"
+    restart_nginx
+  }
+end
