@@ -18,6 +18,9 @@ dep 'set.locale' do
     meet {
       sudo("echo 'LANG=#{local_locale}' > /etc/default/locale")
     }
+    after {
+      log "Setting the locale doesn't take effect until you log out and back in."
+    }
   end
 end
 
