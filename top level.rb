@@ -1,5 +1,8 @@
 dep 'system' do
   requires 'set.locale', 'hostname', 'secured ssh logins', 'lax host key checking', 'admins can sudo', 'tmp cleaning grace period', 'core software'
+  setup {
+    unmeetable "This dep has to be run as root." unless shell('whoami') == 'root'
+  }
 end
 
 dep 'user setup' do
