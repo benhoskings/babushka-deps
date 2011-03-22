@@ -153,7 +153,7 @@ dep 'passenger built' do
   }
   meet {
     in_dir Babushka::GemHelper.gem_path_for('passenger') do
-      log_shell "Buildling passenger", "rake clean nginx", :sudo => Babushka::GemHelper.should_sudo?
+      log_shell "Building passenger", "rake clean nginx", :sudo => Babushka::GemHelper.should_sudo?
     end
   }
 end
