@@ -17,8 +17,10 @@ dep 'existing data' do
       if rows && rows.to_i > 0
         log "There are already #{rows} tables."
       else
-        log_error "That database is empty. Load a database dump with:"
-        log "$ cat #{var(:db_name)} | ssh #{var(:username)}@#{var(:domain)} 'psql #{var(:db_name)}'"
+        unmeetable <<-MSG
+That database is empty. Load a database dump with:
+$ cat #{var(:db_name)} | ssh #{var(:username)}@#{var(:domain)} 'psql #{var(:db_name)}'
+        MSG
       end
     }
   }
