@@ -17,7 +17,7 @@ end
 
 dep 'migrated datamapper db', :template => 'task' do
   run {
-    bundle_rake "db:autoupgrade db:seed"
+    bundle_rake "db:migrate db:autoupgrade db:seed"
   }
 end
 
