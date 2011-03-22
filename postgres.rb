@@ -13,7 +13,7 @@ end
 dep 'existing data' do
   requires 'existing db'
   met? {
-    shell("psql #{var(:db_name)} -c '\d'").scan(/\((\d+) rows?\)/).flatten.first.tap {|rows|
+    shell("psql #{var(:db_name)} -c '\\d'").scan(/\((\d+) rows?\)/).flatten.first.tap {|rows|
       if rows && rows.to_i > 0
         log "There are already #{rows} tables."
       else
