@@ -7,10 +7,10 @@ meta :logrotate do
     end
     requires 'logrotate.managed'
     met? {
-      Babushka::Renderable.new(conf_dest).from?("logrotate/#{renders}")
+      Babushka::Renderable.new(conf_dest).from?(dependency.load_path.parent / renders)
     }
     meet {
-      render_erb "logrotate/#{renders}", :to => conf_dest, :sudo => true
+      render_erb renders, :to => conf_dest, :sudo => true
     }
   }
 end
