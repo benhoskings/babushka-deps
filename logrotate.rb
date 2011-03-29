@@ -22,5 +22,5 @@ end
 
 dep 'rails.logrotate' do
   renders "logrotate/rails.conf"
-  as var(:domain)
+  as var(:username)
 end
