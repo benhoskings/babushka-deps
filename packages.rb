@@ -59,6 +59,7 @@ dep 'libxslt.managed' do
   installs { via :apt, 'libxslt1-dev' }
   provides []
 end
+dep 'logrotate.managed'
 dep 'mdns.managed' do
   installs {
     via :apt, 'avahi-daemon'
