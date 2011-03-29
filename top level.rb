@@ -14,7 +14,7 @@ dep 'user setup' do
 end
 
 dep 'rails app' do
-  requires 'webapp', 'web repo', 'app bundled', 'migrated db'
+  requires 'webapp', 'web repo', 'app bundled', 'migrated db', 'rails.logrotate'
   define_var :rails_env, :default => 'production'
   define_var :rails_root, :default => '~/current', :type => :path
   setup {

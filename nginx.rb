@@ -118,7 +118,7 @@ dep 'webserver startup script.nginx' do
 end
 
 dep 'webserver configured.nginx' do
-  requires 'webserver installed.src', 'www user and group'
+  requires 'webserver installed.src', 'www user and group', 'nginx.logrotate'
   define_var :nginx_prefix, :default => '/opt/nginx'
   set :passenger_pool_size, 8
   met? {
