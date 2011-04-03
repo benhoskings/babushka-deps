@@ -36,7 +36,7 @@ dep 'linked.bab_tarball' do
     (var(:tarball_path) / 'babushka.tgz').readlink == tarball
   }
   meet {
-    shell "ln -sf #{tarball} babushka.tgz", :dir => var(:tarball_path), :create => true
+    shell "ln -sf #{tarball} babushka.tgz", :cd => var(:tarball_path), :create => true
   }
 end
 
@@ -46,7 +46,7 @@ dep 'exists.bab_tarball' do
   }
   before { shell "mkdir -p #{tarball.parent}" }
   meet {
-    shell "tar -zcv --exclude .git -f '#{tarball}' babushka/", :dir => Babushka::BuildPrefix
+    shell "tar -zcv --exclude .git -f '#{tarball}' babushka/", :cd => Babushka::BuildPrefix
   }
 end
 
