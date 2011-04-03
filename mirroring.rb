@@ -58,7 +58,7 @@ dep 'avatars mirrored.twitter' do
     require 'rubygems'
     require 'twitter'
     client = Twitter::Base.new(Twitter::HTTPAuth.new(var(:twitter_username), var(:twitter_pass)))
-    in_dir "~/Desktop/rc7/avatars", :create => true do
+    cd "~/Desktop/rc7/avatars", :create => true do
       missing_avatars.each {|name|
         begin
           url = client.user(name)['profile_image_url'].sub(/_normal(\.[a-zA-Z]+)$/) { $1 }
@@ -103,7 +103,7 @@ dep 'gravatars mirrored' do
   met? { missing_avatars.empty? }
   meet {
     require 'digest/md5'
-    in_dir "~/Desktop/rc7/gravatars", :create => true do
+    cd "~/Desktop/rc7/gravatars", :create => true do
       missing_avatars.each {|email|
         Babushka::Archive.download "http://gravatar.com/avatar/#{Digest::MD5.hexdigest(email)}.jpg?s=512&d=404", "#{email}.jpg"
       }
@@ -140,7 +140,7 @@ dep 'google ajax libs mirrored' do
   met? { missing_urls.empty? }
   meet {
     missing_urls.each {|url|
-      in_dir var(:mirror_root) / url.path.p.dirname, :create => true do
+      cd var(:mirror_root) / url.path.p.dirname, :create => true do
         Babushka::Archive.download url
       end
     }

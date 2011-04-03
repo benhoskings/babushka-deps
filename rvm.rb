@@ -51,7 +51,7 @@ dep 'mirrored.rvm_mirror' do
   met? { missing_urls.empty? }
   meet {
     missing_urls.each {|url|
-      in_dir(var(:rvm_vhost_root) / File.dirname(url.sub(/^[a-z]+:\/\/[^\/]+\//, '')), :create => true) do
+      cd(var(:rvm_vhost_root) / File.dirname(url.sub(/^[a-z]+:\/\/[^\/]+\//, '')), :create => true) do
         # begin
           Babushka::Resource.download url
         # rescue StandardError => ex

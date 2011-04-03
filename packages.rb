@@ -6,7 +6,7 @@ end
 dep 'coreutils.managed', :for => :osx do
   provides 'gecho'
   after :on => :osx do
-    in_dir pkg_manager.bin_path do
+    cd pkg_manager.bin_path do
       sudo "ln -s gecho echo"
     end
   end
@@ -96,7 +96,7 @@ dep 'sed.managed' do
   installs { via :macports, 'gsed' }
   provides 'sed'
   after {
-    in_dir '/opt/local/bin' do
+    cd '/opt/local/bin' do
       sudo "ln -s gsed sed"
     end
   }

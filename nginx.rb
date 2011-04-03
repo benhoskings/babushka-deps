@@ -62,7 +62,7 @@ dep 'self signed cert.nginx' do
   requires 'webserver installed.src'
   met? { %w[key csr crt].all? {|ext| (nginx_cert_path / "#{var :domain}.#{ext}").exists? } }
   meet {
-    in_dir nginx_cert_path, :create => "700", :sudo => true do
+    cd nginx_cert_path, :create => "700", :sudo => true do
       log_shell("generating private key", "openssl genrsa -out #{var :domain}.key 2048", :sudo => true) and
       log_shell("generating certificate", "openssl req -new -key #{var :domain}.key -out #{var :domain}.csr",
         :sudo => true, :input => [
@@ -152,7 +152,7 @@ dep 'passenger built' do
     }
   }
   meet {
-    in_dir Babushka::GemHelper.gem_path_for('passenger') do
+    cd Babushka::GemHelper.gem_path_for('passenger') do
       log_shell "Building passenger", "rake clean nginx", :sudo => Babushka::GemHelper.should_sudo?
     end
   }

@@ -16,7 +16,7 @@ dep 'installed.hudson' do
   requires 'tomcat.managed'
   met? { (path / 'hudson.war').exists? }
   meet {
-    in_dir path, :create => true do
+    cd path, :create => true do
       shell 'wget http://hudson-ci.org/latest/hudson.war'
     end
   }
@@ -25,7 +25,7 @@ end
 dep 'cli.hudson' do
   met? { (path / 'hudson-cli.jar').exists? }
   meet {
-    in_dir path, :create => true do
+    cd path, :create => true do
       shell 'jar -xf hudson.war WEB-INF/hudson-cli.jar'
       shell 'mv WEB-INF/hudson-cli.jar .'
       shell 'rmdir WEB-INF'

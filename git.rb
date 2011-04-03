@@ -23,8 +23,8 @@ end
 
 dep 'web repo always receives' do
   requires 'web repo exists'
-  met? { in_dir(var(:web_repo_root)) { shell("git config receive.denyCurrentBranch") == 'ignore' } }
-  meet { in_dir(var(:web_repo_root)) { shell("git config receive.denyCurrentBranch ignore") } }
+  met? { cd(var(:web_repo_root)) { shell("git config receive.denyCurrentBranch") == 'ignore' } }
+  meet { cd(var(:web_repo_root)) { shell("git config receive.denyCurrentBranch ignore") } }
 end
 
 dep 'web repo hooks' do
@@ -36,7 +36,7 @@ dep 'web repo hooks' do
     }
   }
   meet {
-    in_dir var(:web_repo_root), :create => true do
+    cd var(:web_repo_root), :create => true do
       %w[pre-receive post-receive].each {|hook_name|
         render_erb "git/deploy-repo-#{hook_name}", :to => ".git/hooks/#{hook_name}"
         shell "chmod +x .git/hooks/#{hook_name}"
@@ -50,7 +50,7 @@ dep 'web repo exists' do
   define_var :web_repo_root, :default => "~/current"
   met? { (var(:web_repo_root) / '.git').dir? }
   meet {
-    in_dir var(:web_repo_root), :create => true do
+    cd var(:web_repo_root), :create => true do
       shell "git init"
     end
   }
