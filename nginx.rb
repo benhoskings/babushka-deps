@@ -183,7 +183,7 @@ dep 'webserver installed.src' do
     if !File.executable?(var(:nginx_prefix) / 'sbin/nginx')
       unmet "nginx isn't installed"
     else
-      installed_version = shell(var(:nginx_prefix) / 'sbin/nginx -V') {|shell| shell.stderr }.val_for('nginx version').sub('nginx/', '')
+      installed_version = shell(var(:nginx_prefix) / 'sbin/nginx -V') {|shell| shell.stderr }.val_for(/(nginx: )?nginx version:/).sub('nginx/', '')
       if installed_version != var(:versions)[:nginx]
         unmet "an outdated version of nginx is installed (#{installed_version})"
       elsif !shell(var(:nginx_prefix) / 'sbin/nginx -V') {|shell| shell.stderr }[Babushka::GemHelper.gem_path_for('passenger').to_s + '/']
