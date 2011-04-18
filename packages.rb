@@ -1,6 +1,6 @@
 dep 'bison.managed'
 dep 'bundler.gem' do
-  installs 'bundler 1.0.9'
+  installs 'bundler >= 1.0.12'
   provides 'bundle'
 end
 dep 'coreutils.managed', :for => :osx do
