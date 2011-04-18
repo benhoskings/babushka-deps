@@ -1,5 +1,5 @@
 dep 'app bundled' do
-  requires 'Gemfile', 'bundler.gem'
+  requires 'Gemfile'
   requires_when_unmet Dep('current dir:packages')
   met? { cd(var(:rails_root)) { shell 'bundle check', :log => true } }
   meet { cd(var(:rails_root)) {
