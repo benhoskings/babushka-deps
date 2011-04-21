@@ -20,7 +20,7 @@ meta :logrotate do
   }
 end
 
-dep 'nginx.logrotate' do
+dep 'nginx.logrotate', :for => :linux do
   renders "logrotate/nginx.conf"
   as "nginx"
 end
