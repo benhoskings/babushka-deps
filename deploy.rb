@@ -30,11 +30,12 @@ dep 'up to date.repo' do
   ]
 end
 
+# These are looked up with Dep() so they're just skipped if they don't exist.
 dep 'on deploy, live' do
-  requires 'current dir:on deploy, live'
+  requires Dep('current dir:on deploy, live')
 end
 dep 'on deploy, maintenance' do
-  requires 'current dir:on deploy, maintenance'
+  requires Dep('current dir:on deploy, maintenance')
 end
 
 dep 'ref info extracted.repo' do
