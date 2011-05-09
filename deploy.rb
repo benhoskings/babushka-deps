@@ -25,7 +25,7 @@ dep 'up to date.repo' do
     'on deploy, maintenance',
 
     'app flagged for restart.task',
-    'cached JS and CSS removed',
+    'untracked styles & scripts removed',
     'maintenance page down'
   ]
 end
@@ -83,22 +83,16 @@ dep 'HEAD up to date.repo' do
   meet { repo.reset_hard! var(:new_id) }
 end
 
-dep 'cached JS and CSS removed' do
-  def paths
-    %w[
-      public/javascripts/all.js
-      public/stylesheets/all.css
-    ]
-  end
+dep 'untracked styles & scripts removed' do
   def to_remove
-    paths.select {|f| f.p.exists? }
+    shell(
+      "git clean -dxn -- public/*style*/* public/*script*/*"
+    ).split("\n").collapse(/^Would remove /).select {|path|
+      path.p.exists?
+    }
   end
-  met? {
-    to_remove.empty?
-  }
-  meet {
-    to_remove.each {|path| log_shell "Removing #{path}", "rm #{path}" }
-  }
+  met? { to_remove.empty? }
+  meet { to_remove.each {|path| log_shell "Removing #{path}", "rm '#{path}'" } }
 end
 
 dep 'app flagged for restart.task' do
