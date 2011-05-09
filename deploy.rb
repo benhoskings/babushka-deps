@@ -10,23 +10,31 @@ dep 'up to date.repo' do
     set :rails_root, var(:repo_path)
     set :rails_env, 'production'
     set :username, shell('whoami')
-
-    requires Dep('current dir:deployed') # app-specific deps
-    requires [
-      'app flagged for restart.task', # and finally,
-      'maintenance page down' # only let in requests post-restart-flag
-    ]
   }
   requires [
     'ref info extracted.repo',
     'branch exists.repo',
-    'maintenance page up',
     'branch checked out.repo',
     'HEAD up to date.repo',
-    'submodules up to date.task',
-    'remove cached JS and CSS.task',
-    'app bundled'
+    'app bundled',
+
+    # This and the 'maintenace' one below are separate so the 'current dir'
+    # deps load lazily from the new code checked out by 'HEAD up to date.repo'.
+    'on deploy, live',
+    'maintenance page up',
+    'on deploy, maintenance',
+
+    'app flagged for restart.task',
+    'cached JS and CSS removed',
+    'maintenance page down'
   ]
+end
+
+dep 'on deploy, live' do
+  requires 'current dir:on deploy, live'
+end
+dep 'on deploy, maintenance' do
+  requires 'current dir:on deploy, maintenance'
 end
 
 dep 'ref info extracted.repo' do
@@ -74,16 +82,21 @@ dep 'HEAD up to date.repo' do
   meet { repo.reset_hard! var(:new_id) }
 end
 
-dep 'submodules up to date.task' do
-  run {
-    shell "git submodule update --init"
+dep 'cached JS and CSS removed' do
+  def paths
+    %w[
+      public/javascripts/all.js
+      public/stylesheets/all.css
+    ]
+  end
+  def to_remove
+    paths.select {|f| f.p.exists? }
+  end
+  met? {
+    to_remove.empty?
   }
-end
-
-dep 'remove cached JS and CSS.task' do
-  run {
-    shell "rm -f public/javascripts/all.js"
-    shell "rm -f public/stylesheets/all.css"
+  meet {
+    to_remove.each {|path| log_shell "Removing #{path}", "rm #{path}" }
   }
 end
 
