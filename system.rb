@@ -28,7 +28,7 @@ dep 'secured ssh logins' do
       log_error "sshd returned unexpected output."
     else
       (auth_methods == %w[publickey]).tap {|result|
-        log_verbose "sshd #{'only ' if result}accepts #{auth_methods.to_list} logins.", :as => (result ? :ok : :error)
+        log "sshd #{'only ' if result}accepts #{auth_methods.to_list} logins.", :as => (result ? :ok : :error)
       }
     end
   }

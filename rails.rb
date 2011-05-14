@@ -31,7 +31,7 @@ dep 'migrated activerecord db' do
     (current_version.gsub(/^0+/, '') == latest_version.gsub(/^0+/, '')).tap {|result|
       unless current_version.blank?
         if latest_version == '0'
-          log_verbose "This app doesn't have any migrations yet."
+          log "This app doesn't have any migrations yet."
         elsif result
           log_ok "DB is up to date at migration #{current_version}"
         else
