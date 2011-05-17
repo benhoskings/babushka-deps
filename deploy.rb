@@ -87,11 +87,18 @@ dep 'branch checked out.repo' do
 end
 
 dep 'HEAD up to date.repo' do
-  met? { repo.current_full_head == var(:new_id) && repo.clean? }
+  met? {
+    (repo.current_full_head == var(:new_id) && repo.clean?).tap {|result|
+      if result
+        log_ok "#{var(:branch)} is up to date at #{repo.current_head}."
+      else
+        log "#{var(:branch)} needs updating: #{var(:old_id)[0...7]}..#{var(:new_id)[0...7]}"
+      end
+    }
+  }
   meet {
-    log_block "Updating #{var(:branch)}: #{var(:old_id)[0...7]}..#{var(:new_id)[0...7]}" do
-      repo.reset_hard! var(:new_id)
-    end
+    log shell("git diff --stat #{var(:old_id)}..#{var(:new_id)}")
+    repo.reset_hard! var(:new_id)
   }
 end
 
