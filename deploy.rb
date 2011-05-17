@@ -70,17 +70,29 @@ end
 
 dep 'branch exists.repo' do
   met? { repo.branches.include? var(:branch) }
-  meet { repo.branch! var(:branch) }
+  meet {
+    log_block "Creating #{var(:branch)}" do
+      repo.branch! var(:branch)
+    end
+  }
 end
 
 dep 'branch checked out.repo' do
   met? { repo.current_branch == var(:branch) }
-  meet { repo.checkout! var(:branch) }
+  meet {
+    log_block "Checking out #{var(:branch)}" do
+      repo.checkout! var(:branch)
+    end
+  }
 end
 
 dep 'HEAD up to date.repo' do
   met? { repo.current_full_head == var(:new_id) && repo.clean? }
-  meet { repo.reset_hard! var(:new_id) }
+  meet {
+    log_block "Updating #{var(:branch)}: #{var(:old_id)[0...7]}..#{var(:new_id)[0...7]}" do
+      repo.reset_hard! var(:new_id)
+    end
+  }
 end
 
 dep 'untracked styles & scripts removed' do
