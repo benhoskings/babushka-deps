@@ -50,10 +50,10 @@ dep 'vhost configured.nginx' do
   requires 'webserver configured.nginx'
   define_var :vhost_type, :default => 'passenger', :choices => %w[passenger proxy static]
   define_var :document_root, :default => L{ '/srv/http' / var(:domain) }
-  met? { nginx_conf_for(var(:domain), 'conf').exists? }
+  met? { nginx_conf_for(var(:domain), 'conf').exists? and nginx_conf_for(var(:domain), 'common').exists? }
   meet {
-    render_erb "nginx/#{var :vhost_type}_vhost.conf.erb",   :to => nginx_conf_for(var(:domain), 'conf'), :sudo => true
-    render_erb "nginx/#{var :vhost_type}_vhost.common.erb", :to => nginx_conf_for(var(:domain), 'common'), :sudo => true, :optional => true
+    render_erb "nginx/vhost.conf.erb",                      :to => nginx_conf_for(var(:domain), 'conf'), :sudo => true
+    render_erb "nginx/#{var :vhost_type}_vhost.common.erb", :to => nginx_conf_for(var(:domain), 'common'), :sudo => true
   }
   after { restart_nginx if nginx_conf_link_for(var(:domain)).exists? }
 end
