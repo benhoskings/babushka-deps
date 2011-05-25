@@ -65,7 +65,10 @@ end
 dep 'pushed.repo' do
   requires 'remote exists.repo'
   setup { repo.repo_shell "git fetch #{var(:remote_name)}" }
-  met? { repo.current_head == repo.repo_shell("git rev-parse --short #{var(:remote_name)}/#{var(:deploy_branch)}") }
+  met? {
+    repo.repo_shell("git rev-parse --short #{var(:deploy_branch)}") ==
+    repo.repo_shell("git rev-parse --short #{var(:remote_name)}/#{var(:deploy_branch)}")
+  }
   meet { repo.repo_shell "git push #{var(:remote_name)} #{var(:deploy_branch)}", :log => true }
 end
 
