@@ -17,7 +17,8 @@ dep 'web repo' do
   requires [
     'web repo exists',
     'web repo hooks',
-    'web repo always receives'
+    'web repo always receives',
+    'bundler.gem'
   ]
 end
 
