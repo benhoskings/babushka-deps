@@ -1,5 +1,4 @@
 meta :push do
-  accepts_value_for :lol
   def repo
     @repo ||= Babushka::GitRepo.new('.')
   end
