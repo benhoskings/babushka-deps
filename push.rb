@@ -11,8 +11,8 @@ meta :push do
   end
 end
 
-dep 'deploy!' do
-  define_var :ref, :message => "What would you like to deploy?", :default => 'HEAD'
+dep 'push!' do
+  define_var :ref, :message => "What would you like to push?", :default => 'HEAD'
   define_var :production, :message => "What's your production remote called?", :default => 'production'
   requires [
     'ready.push',
