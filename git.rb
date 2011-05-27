@@ -79,8 +79,10 @@ dep 'remote exists.repo' do
   met? { remote_url == var(:remote_url) }
   meet {
     if remote_url.blank?
+      log "The #{var(:remote_name)} remote isn't configured."
       repo.repo_shell("git remote add #{var(:remote_name)} '#{var(:remote_url)}'")
     elsif remote_url != var(:remote_url)
+      log "The #{var(:remote_name)} remote has a different URL (#{var(:remote_url)})."
       repo.repo_shell("git remote set-url #{var(:remote_name)} '#{var(:remote_url)}'")
     end
   }
