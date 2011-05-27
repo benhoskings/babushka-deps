@@ -9,6 +9,9 @@ meta :push do
     host, path = remote_location(remote_name)
     shell "ssh #{host} 'cd #{path} && git rev-parse --short HEAD 2>/dev/null'"
   end
+  def git_log from, to
+    log shell("git log --graph --pretty=format:'%Cblue%h%d%Creset %ad %Cgreen%an%Creset %s' #{from}..#{to}")
+  end
 end
 
 dep 'push!' do
@@ -57,7 +60,7 @@ dep 'pushed.push' do
     }
   }
   meet {
-    log shell("git log --graph --pretty=format:'%Cblue%h%d%Creset %ad %Cgreen%an%Creset %s' #{@remote_head}..#{var(:ref)}")
+    git_log @remote_head, var(:ref)
     confirm "OK to push to #{var(:remote)} (#{repo.repo_shell("git config remote.#{var(:remote)}.url")})?" do
       push_cmd = "git push #{var(:remote)} #{var(:ref)}:babs -f"
       log push_cmd.colorize("on red") do
