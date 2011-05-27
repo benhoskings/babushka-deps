@@ -55,7 +55,7 @@ dep 'on production.push' do
   }
   meet {
     log shell("git log --graph --pretty=format:'%Cblue%h%d%Creset %ad %Cgreen%an%Creset %s' #{@production_head}..#{var(:ref)}")
-    confirm "OK to push?" do
+    confirm "OK to push to #{var(:production)} (#{repo.repo_shell("git config remote.#{var(:production)}.url")})?" do
       push_cmd = "git push #{var(:production)} #{var(:ref)}:babs -f"
       log push_cmd.colorize("on red") do
         shell push_cmd, :log => true
