@@ -115,7 +115,7 @@ dep 'untracked styles & scripts removed' do
     }
   end
   met? { to_remove.empty? }
-  meet { to_remove.each {|path| log_shell "Removing #{path}", "rm '#{path}'" } }
+  meet { to_remove.each {|path| log_shell "Removing #{path}", "rm -rf '#{path}'" } }
 end
 
 dep 'app flagged for restart.task' do
