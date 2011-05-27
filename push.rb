@@ -76,9 +76,7 @@ dep 'ok to update production.push' do
 end
 
 dep 'on origin.push' do
-  setup {
-    repo.repo_shell("git config remote.origi.url") || log_error("There is no 'origin' remote.")
-  }
+  requires Dep('remote exists.push').with('origin')
   met? {
     shell("git branch -r --contains #{var(:ref)}").split("\n").map(&:strip).include? "origin/#{repo.current_branch}"
   }
@@ -91,10 +89,6 @@ end
 
 dep 'remote exists.push' do |remote|
   met? {
-    repo.repo_shell("git config remote.#{remote}.url")
-  }
-  meet {
-    log "The #{remote} remote isn't configured."
-    repo.repo_shell("git remote add #{remote} '#{var(:remote_url)}'")
+    repo.repo_shell("git config remote.#{remote}.url") or log_error("The #{remote} remote isn't configured.")
   }
 end
