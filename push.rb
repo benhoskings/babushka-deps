@@ -10,7 +10,7 @@ meta :push do
     @@remote_head ||= shell("ssh #{host} 'cd #{path} && git rev-parse --short HEAD 2>/dev/null'")
   end
   def prev_head
-    @@prev_head
+    @@prev_head if defined?(@@prev_head)
   end
   def uncache_remote_head!
     @@prev_head, @@remote_head = @@remote_head, nil
@@ -79,11 +79,11 @@ end
 
 dep 'tagged.push' do
   met? {
-    @current_tag = repo.repo_shell("git rev-parse on-#{var(:remote)}") {|s| s.stdout.chomp if s.ok? }
-    @current_tag == repo.repo_shell("git rev-parse #{var(:ref)}")
+    current_tag = repo.repo_shell("git rev-parse on-#{var(:remote)}") {|s| s.stdout.chomp if s.ok? }
+    current_tag == repo.repo_shell("git rev-parse #{var(:ref)}")
   }
   meet {
-    repo.repo_shell "git tag -f prev-#{var(:remote)} #{prev_head}" unless @current_tag.nil?
+    repo.repo_shell "git tag -f prev-#{var(:remote)} #{prev_head}" unless prev_head.nil?
     repo.repo_shell "git tag -f on-#{var(:remote)} #{var(:ref)}"
   }
 end
