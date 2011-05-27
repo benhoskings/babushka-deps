@@ -52,8 +52,8 @@ dep 'pushed.push' do
   ]
   met? {
     @remote_head = remote_head(var(:remote))
-    (@remote_head[0...7] == shell("git rev-parse --short #{var(:ref)} 2>/dev/null")).tap {|result|
-      log "#{var(:remote)} is on #{@remote_head[0...7]}.", :as => (:ok if result)
+    (@remote_head == shell("git rev-parse --short #{var(:ref)} 2>/dev/null")).tap {|result|
+      log "#{var(:remote)} is on #{@remote_head}.", :as => (:ok if result)
     }
   }
   meet {
@@ -71,7 +71,7 @@ dep 'ok to update.push' do
   met? {
     remote_head = remote_head(var(:remote))
     (shell("git merge-base #{var(:ref)} #{remote_head}")[0...7] == remote_head) or
-    confirm("Pushing #{var(:ref)} to #{var(:remote)} would not fast forward (#{var(:remote)} is on #{remote_head[0...7]}). That OK?")
+    confirm("Pushing #{var(:ref)} to #{var(:remote)} would not fast forward (#{var(:remote)} is on #{remote_head}). That OK?")
   }
 end
 
