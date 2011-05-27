@@ -23,7 +23,7 @@ end
 dep 'ready.push' do
   met? {
     !(
-      repo.dirty? # or repo.merging?  or repo.rebasing? or repo.applying? or repo.bisecting?
+      repo.dirty? or repo.merging?  or repo.rebasing? or repo.applying? or repo.bisecting?
     )
   }
 end
