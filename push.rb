@@ -13,7 +13,6 @@ end
 
 dep 'push!' do
   define_var :ref, :message => "What would you like to push?", :default => 'HEAD'
-  define_var :production, :message => "What's your production remote called?", :default => 'production'
   requires [
     'ready.push',
     'before push',
@@ -43,6 +42,10 @@ dep 'ready.push' do
 end
 
 dep 'on production.push' do
+  define_var :production,
+    :message => "Where would you like to push to?",
+    :default => 'production',
+    :choices => repo.repo_shell('git remote').split("\n")
   requires [
     'on origin.push',
     'ok to update production.push'
@@ -65,7 +68,6 @@ dep 'on production.push' do
 end
 
 dep 'ok to update production.push' do
-  requires Dep('remote exists.push').with(var(:production))
   met? {
     production_head = remote_head(var(:production))
     (shell("git merge-base #{var(:ref)} #{production_head}")[0...7] == production_head) or
