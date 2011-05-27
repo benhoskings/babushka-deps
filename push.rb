@@ -73,8 +73,13 @@ end
 dep 'ok to update.push' do
   met? {
     remote_head = remote_head(var(:remote))
-    (shell("git merge-base #{var(:ref)} #{remote_head}")[0...7] == remote_head) or
-    confirm("Pushing #{var(:ref)} to #{var(:remote)} would not fast forward (#{var(:remote)} is on #{remote_head}). That OK?")
+    if !repo.repo_shell("git rev-parse #{remote_head}", &:ok?)
+      confirm "The current HEAD on #{var(:remote)}, #{remote_head}, isn't present locally. OK to push #{'(This is probably a bad idea)'.colorize('on red')}"
+    elsif shell("git merge-base #{var(:ref)} #{remote_head}")[0...7] != remote_head
+      confirm "Pushing #{var(:ref)} to #{var(:remote)} would not fast forward (#{var(:remote)} is on #{remote_head}). That OK?"
+    else
+      true
+    end
   }
 end
 
