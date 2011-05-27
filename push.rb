@@ -16,7 +16,7 @@ dep 'push!' do
   requires [
     'ready.push',
     'before push',
-    'on production.push',
+    'pushed.push',
     'after push'
   ]
 end
@@ -41,25 +41,25 @@ dep 'ready.push' do
   }
 end
 
-dep 'on production.push' do
-  define_var :production,
+dep 'pushed.push' do
+  define_var :remote,
     :message => "Where would you like to push to?",
     :default => 'production',
     :choices => repo.repo_shell('git remote').split("\n")
   requires [
     'on origin.push',
-    'ok to update production.push'
+    'ok to update.push'
   ]
   met? {
-    @production_head = remote_head(var(:production))
-    (@production_head[0...7] == shell("git rev-parse --short #{var(:ref)} 2>/dev/null")).tap {|result|
-      log "#{var(:production)} is on #{@production_head[0...7]}.", :as => (:ok if result)
+    @remote_head = remote_head(var(:remote))
+    (@remote_head[0...7] == shell("git rev-parse --short #{var(:ref)} 2>/dev/null")).tap {|result|
+      log "#{var(:remote)} is on #{@remote_head[0...7]}.", :as => (:ok if result)
     }
   }
   meet {
-    log shell("git log --graph --pretty=format:'%Cblue%h%d%Creset %ad %Cgreen%an%Creset %s' #{@production_head}..#{var(:ref)}")
-    confirm "OK to push to #{var(:production)} (#{repo.repo_shell("git config remote.#{var(:production)}.url")})?" do
-      push_cmd = "git push #{var(:production)} #{var(:ref)}:babs -f"
+    log shell("git log --graph --pretty=format:'%Cblue%h%d%Creset %ad %Cgreen%an%Creset %s' #{@remote_head}..#{var(:ref)}")
+    confirm "OK to push to #{var(:remote)} (#{repo.repo_shell("git config remote.#{var(:remote)}.url")})?" do
+      push_cmd = "git push #{var(:remote)} #{var(:ref)}:babs -f"
       log push_cmd.colorize("on red") do
         shell push_cmd, :log => true
       end
@@ -67,11 +67,11 @@ dep 'on production.push' do
   }
 end
 
-dep 'ok to update production.push' do
+dep 'ok to update.push' do
   met? {
-    production_head = remote_head(var(:production))
-    (shell("git merge-base #{var(:ref)} #{production_head}")[0...7] == production_head) or
-    confirm("Pushing #{var(:ref)} to #{var(:production)} would not fast forward (#{var(:production)} is on #{production_head[0...7]}). That OK?")
+    remote_head = remote_head(var(:remote))
+    (shell("git merge-base #{var(:ref)} #{remote_head}")[0...7] == remote_head) or
+    confirm("Pushing #{var(:ref)} to #{var(:remote)} would not fast forward (#{var(:remote)} is on #{remote_head[0...7]}). That OK?")
   }
 end
 
