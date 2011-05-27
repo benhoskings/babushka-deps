@@ -90,7 +90,7 @@ dep 'remote exists.push' do |remote|
     repo.repo_shell("git config remote.#{remote}.url")
   }
   meet {
-    log "The #{var(:remote_name)} remote isn't configured."
+    log "The #{remote} remote isn't configured."
     repo.repo_shell("git remote add #{remote} '#{var(:remote_url)}'")
   }
 end
