@@ -65,6 +65,7 @@ dep 'on production.push' do
 end
 
 dep 'ok to update production.push' do
+  requires Dep('remote exists.push').with(var(:production))
   met? {
     production_head = remote_head(var(:production))
     (shell("git merge-base #{var(:ref)} #{production_head}")[0...7] == production_head) or
@@ -73,8 +74,7 @@ dep 'ok to update production.push' do
 end
 
 dep 'on origin.push' do
-  requires [
-  ]
+  requires Dep('remote exists.push').with('origin')
   met? {
     shell("git branch -r --contains #{var(:ref)}").split("\n").map(&:strip).include? "origin/#{repo.current_branch}"
   }
@@ -82,5 +82,15 @@ dep 'on origin.push' do
     confirm("#{var(:ref)} isn't pushed to origin/#{repo.current_branch} yet. Do that now?") do
       shell("git push origin #{repo.current_branch}")
     end
+  }
+end
+
+dep 'remote exists.push' do |remote|
+  met? {
+    repo.repo_shell("git config remote.#{remote}.url")
+  }
+  meet {
+    log "The #{var(:remote_name)} remote isn't configured."
+    repo.repo_shell("git remote add #{remote} '#{var(:remote_url)}'")
   }
 end
