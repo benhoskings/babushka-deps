@@ -16,9 +16,20 @@ dep 'push!' do
   define_var :production, :message => "What's your production remote called?", :default => 'production'
   requires [
     'ready.push',
-    'on production.push'
+    'before push',
+    'on production.push',
+    'after push'
   ]
 end
+
+# These are looked up with Dep() so they're just skipped if they don't exist.
+dep 'before push' do
+  requires Dep('current dir:before push')
+end
+dep 'after push' do
+  requires Dep('current dir:after push')
+end
+
 
 dep 'ready.push' do
   met? {
