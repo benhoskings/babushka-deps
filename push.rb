@@ -20,6 +20,7 @@ dep 'push!' do
     'ready.push',
     'before push',
     'pushed.push',
+    'tagged.push',
     'after push'
   ]
 end
@@ -67,6 +68,17 @@ dep 'pushed.push' do
         shell push_cmd, :log => true
       end
     end
+  }
+end
+
+dep 'tagged.push' do
+  met? {
+    @current_tag = repo.repo_shell("git rev-parse on-#{var(:remote)}") {|s| s.stdout.chomp if s.ok? }
+    @current_tag == repo.repo_shell("git rev-parse #{var(:ref)}")
+  }
+  meet {
+    repo.repo_shell "git tag -f prev-#{var(:remote)} on-#{var(:remote)}" unless @current_tag.nil?
+    repo.repo_shell "git tag -f on-#{var(:remote)} #{var(:ref)}"
   }
 end
 
