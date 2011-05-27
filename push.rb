@@ -84,6 +84,7 @@ dep 'on origin.push' do
     shell("git branch -r --contains #{var(:ref)}").split("\n").map(&:strip).include? "origin/#{repo.current_branch}"
   }
   meet {
+    git_log "origin/#{repo.current_branch}", var(:ref)
     confirm("#{var(:ref)} isn't pushed to origin/#{repo.current_branch} yet. Do that now?") do
       shell("git push origin #{repo.current_branch}")
     end
