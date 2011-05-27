@@ -26,7 +26,8 @@ dep 'up to date.repo' do
 
     'app flagged for restart.task',
     'untracked styles & scripts removed',
-    'maintenance page down'
+    'maintenance page down',
+    'after deploy'
   ]
 end
 
@@ -36,6 +37,9 @@ dep 'on deploy, live' do
 end
 dep 'on deploy, maintenance' do
   requires Dep('current dir:on deploy, maintenance')
+end
+dep 'after deploy' do
+  requires Dep('current dir:after deploy')
 end
 
 dep 'ref info extracted.repo' do
