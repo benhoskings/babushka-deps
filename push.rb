@@ -13,6 +13,7 @@ meta :push do
     @@prev_head if defined?(@@prev_head)
   end
   def uncache_remote_head!
+    set :prev_head, @@remote_head
     @@prev_head, @@remote_head = @@remote_head, nil
   end
   def git_log from, to
