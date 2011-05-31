@@ -45,7 +45,7 @@ dep 'ready.push' do
   met? {
     state = [:dirty, :merging, :rebasing, :applying, :bisecting].detect {|s| repo.send("#{s}?") }
     if !state.nil?
-      raise UnmeetableDep, "The repo is currently #{state}."
+      unmeetable "The repo is #{state}."
     else
       log_ok "The repo is clean."
     end
