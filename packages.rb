@@ -86,7 +86,7 @@ dep 'pcre.managed' do
     via :macports, 'pcre'
     via :apt, 'libpcre3-dev'
   }
-  provides 'pcretest'
+  provides 'pcre-config'
 end
 dep 'rcconf.managed' do
   installs { via :apt, 'rcconf' }
