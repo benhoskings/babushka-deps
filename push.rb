@@ -17,7 +17,7 @@ meta :push do
     @@prev_head, @@remote_head = @@remote_head, nil
   end
   def git_log from, to
-    log shell("git log --graph --pretty=format:'%Cblue%h%d%Creset %ad %Cgreen%an%Creset %s' #{from}..#{to}")
+    log shell("git log --graph --pretty=format:'%Cblue%h%d%Creset %ar %Cgreen%an%Creset %s' #{from}..#{to}")
   end
 end
 
