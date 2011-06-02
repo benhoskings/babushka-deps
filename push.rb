@@ -7,7 +7,7 @@ meta :push do
   end
   def remote_head
     host, path = remote_location
-    @@remote_head ||= shell("ssh #{host} 'cd #{path} && git rev-parse --short HEAD 2>/dev/null'")
+    @@remote_head ||= shell("ssh #{host} 'cd #{path} && git rev-parse --short HEAD 2>/dev/null'") || ''
   end
   def prev_head
     @@prev_head if defined?(@@prev_head)
