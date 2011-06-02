@@ -69,7 +69,7 @@ dep 'pushed.push' do
   meet {
     git_log remote_head, var(:ref)
     confirm "OK to push to #{var(:remote)} (#{repo.repo_shell("git config remote.#{var(:remote)}.url")})?" do
-      push_cmd = "git push #{var(:remote)} #{var(:ref)}:babs -f"
+      push_cmd = "git push #{var(:remote)} #{var(:ref)}:master -f"
       log push_cmd.colorize("on grey") do
         uncache_remote_head!
         shell push_cmd, :log => true
