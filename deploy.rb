@@ -21,7 +21,6 @@ dep 'up to date.repo' do
     # This and the 'maintenace' one below are separate so the 'current dir'
     # deps load lazily from the new code checked out by 'HEAD up to date.repo'.
     'on deploy',
-    'maintenance page up',
 
     'app flagged for restart.task',
     'untracked styles removed',
