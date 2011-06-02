@@ -20,9 +20,8 @@ dep 'up to date.repo' do
 
     # This and the 'maintenace' one below are separate so the 'current dir'
     # deps load lazily from the new code checked out by 'HEAD up to date.repo'.
-    'on deploy, live',
+    'on deploy',
     'maintenance page up',
-    'on deploy, maintenance',
 
     'app flagged for restart.task',
     'untracked styles removed',
@@ -32,11 +31,8 @@ dep 'up to date.repo' do
 end
 
 # These are looked up with Dep() so they're just skipped if they don't exist.
-dep 'on deploy, live' do
-  requires Dep('current dir:on deploy, live')
-end
-dep 'on deploy, maintenance' do
-  requires Dep('current dir:on deploy, maintenance')
+dep 'on deploy' do
+  requires Dep('current dir:on deploy')
 end
 dep 'after deploy' do
   requires Dep('current dir:after deploy')
