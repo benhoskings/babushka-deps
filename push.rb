@@ -102,7 +102,7 @@ dep 'ok to update.push' do
 end
 
 dep 'on origin.push' do
-  requires Dep('remote exists.push').with('origin')
+  requires Dep('remote exists.push', :from => dependency.dep_source).with('origin')
   met? {
     shell("git branch -r --contains #{var(:ref)}").split("\n").map(&:strip).include? "origin/#{repo.current_branch}"
   }
