@@ -23,7 +23,7 @@ dep 'up to date.repo' do
     'on deploy',
 
     'app flagged for restart.task',
-    'untracked styles removed',
+    'untracked styles & scripts removed',
     'maintenance page down',
     'after deploy'
   ]
@@ -101,10 +101,10 @@ dep 'HEAD up to date.repo' do
   }
 end
 
-dep 'untracked styles removed' do
+dep 'untracked styles & scripts removed' do
   def to_remove
     shell(
-      "git clean -dxn -- public/*style*/*"
+      "git clean -dxn -- public/*style*/* public/*script*/*"
     ).split("\n").collapse(/^Would remove /).select {|path|
       path.p.exists?
     }
