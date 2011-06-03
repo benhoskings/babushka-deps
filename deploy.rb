@@ -104,7 +104,7 @@ end
 dep 'untracked styles & scripts removed' do
   def to_remove
     shell(
-      "git clean -dxn -- public/*style*/* public/*script*/*"
+      "git clean -dxn -- public/*style* public/*script*"
     ).split("\n").collapse(/^Would remove /).select {|path|
       path.p.exists?
     }
