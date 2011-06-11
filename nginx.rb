@@ -53,7 +53,10 @@ dep 'vhost configured.nginx' do
   requires 'webserver configured.nginx'
   define_var :vhost_type, :default => 'passenger', :choices => %w[passenger proxy static]
   define_var :document_root, :default => L{ '/srv/http' / var(:domain) }
-  met? { nginx_conf_for(var(:domain), 'conf').exists? and nginx_conf_for(var(:domain), 'common').exists? }
+  met? {
+    Babushka::Renderable.new(nginx_conf_for(var(:domain), 'conf')).from?(dependency.load_path.parent / "nginx/vhost.conf.erb") and
+    Babushka::Renderable.new(nginx_conf_for(var(:domain), 'common')).from?(dependency.load_path.parent / "nginx/#{var :vhost_type}_vhost.common.erb")
+  }
   meet {
     render_erb "nginx/vhost.conf.erb",                      :to => nginx_conf_for(var(:domain), 'conf'), :sudo => true
     render_erb "nginx/#{var :vhost_type}_vhost.common.erb", :to => nginx_conf_for(var(:domain), 'common'), :sudo => true
