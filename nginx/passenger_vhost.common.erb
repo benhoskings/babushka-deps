@@ -1,5 +1,5 @@
 server_name <%= var :domain %> <%= var :extra_domains, :default => '' %> <%= var :www_aliases %>;
-root <%= var(:rails_root) / 'public' %>;
+root <%= var(:app_root) / 'public' %>;
 
 if ($host !~ ^<%= var(:domain).gsub('.', '\.') %>$) {
   rewrite ^(.*)$ http://<%= var(:domain) %>$1 permanent;
