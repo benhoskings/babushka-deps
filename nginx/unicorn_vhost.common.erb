@@ -1,0 +1,35 @@
+server_name <%= var :domain %> <%= var :extra_domains, :default => '' %> <%= var :www_aliases %>;
+root <%= var(:rails_root) / 'public' %>;
+
+if ($host !~ ^<%= var(:domain).gsub('.', '\.') %>$) {
+  rewrite ^(.*)$ http://<%= var(:domain) %>$1 permanent;
+}
+
+location ~* \.(js|css|jpe?g|png|gif|ico|eot|woff|ttf|swf)$ {
+  if ($request_uri ~ "\?[0-9]+$") {
+    expires max; # cache timestamped assets forever...
+    break;
+  }
+  if ($request_uri !~ "\?[0-9]+$") {
+    expires 1d; # ...and others for 1 day
+    break;
+  }
+}
+
+error_page 503 /system/maintenance.html;
+location /system/maintenance.html { return 503; }
+
+try_files /system/maintenance.html $uri/index.html $uri.html $uri @app;
+
+location @app {
+  proxy_pass            http://<%= unicorn_socket_name %>;
+  proxy_redirect        off;
+
+  proxy_buffer_size     64k;
+  proxy_buffers         32 16k;
+  client_max_body_size  128m;
+
+  proxy_set_header      Host            $host;
+  proxy_set_header      X-Real-IP       $remote_addr;
+  proxy_set_header      X-Forwarded-For $proxy_add_x_forwarded_for;
+}

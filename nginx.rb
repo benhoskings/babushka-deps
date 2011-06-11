@@ -19,6 +19,9 @@ meta :nginx do
   def passenger_root
     Babushka::GemHelper.gem_path_for('passenger')
   end
+  def unicorn_socket_name
+    "#{var(:domain).gsub(/[^\w]+/, '_')}_unicorns"
+  end
   def worker_pool_size
     (Babushka::Base.host.total_memory - 500.mb) / 300.mb
   end
@@ -51,7 +54,7 @@ dep 'vhost configured.nginx' do
     }.join(' ')
   }
   requires 'webserver configured.nginx'
-  define_var :vhost_type, :default => 'passenger', :choices => %w[passenger proxy static]
+  define_var :vhost_type, :default => 'passenger', :choices => %w[unicorn passenger proxy static]
   define_var :document_root, :default => L{ '/srv/http' / var(:domain) }
   met? {
     Babushka::Renderable.new(nginx_conf_for(var(:domain), 'conf')).from?(dependency.load_path.parent / "nginx/vhost.conf.erb") and
