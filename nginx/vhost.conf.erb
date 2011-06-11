@@ -3,7 +3,7 @@
 upstream <%= unicorn_socket %> {
   # fail_timeout=0 means we always retry an upstream even if it failed to return a good
   # HTTP response (in case the Unicorn master nukes a single worker for timing out).
-  server unix:<%= File.join(var(:app_root), unicorn_socket) %> fail_timeout=0;
+  server unix:<%= unicorn_socket_path %> fail_timeout=0;
 }
 <% end %>
 

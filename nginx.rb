@@ -22,6 +22,9 @@ meta :nginx do
   def unicorn_socket
     "#{var(:domain)}.unicorn.socket"
   end
+  def unicorn_socket_path
+    var(:app_root) / 'tmp/sockets' / unicorn_socket
+  end
   def worker_pool_size
     (Babushka::Base.host.total_memory - 500.mb) / 300.mb
   end
