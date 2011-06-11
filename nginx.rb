@@ -19,6 +19,9 @@ meta :nginx do
   def passenger_root
     Babushka::GemHelper.gem_path_for('passenger')
   end
+  def worker_pool_size
+    Babushka::Base.host.total_memory / 250.mb
+  end
   def nginx_running?
     shell "netstat -an | grep -E '^tcp.*[.:]80 +.*LISTEN'"
   end
@@ -123,7 +126,6 @@ dep 'webserver configured.nginx' do
   # Default to 1 instance per 250MB -- most rails instances are between 80MB and 130MB,
   # and so 250MB means 30-50% of available RAM will be used by instances (the remainder
   # by DB/cache/etc).
-  set :passenger_pool_size, (Babushka::Base.host.total_memory / 250.mb)
   met? {
     if babushka_config? nginx_conf
       configured_root = nginx_conf.read.val_for('passenger_root')
