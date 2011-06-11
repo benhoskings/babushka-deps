@@ -20,7 +20,7 @@ meta :nginx do
     Babushka::GemHelper.gem_path_for('passenger')
   end
   def worker_pool_size
-    Babushka::Base.host.total_memory / 250.mb
+    (Babushka::Base.host.total_memory - 500.mb) / 300.mb
   end
   def nginx_running?
     shell "netstat -an | grep -E '^tcp.*[.:]80 +.*LISTEN'"
