@@ -22,7 +22,7 @@ location /system/maintenance.html { return 503; }
 try_files /system/maintenance.html $uri/index.html $uri.html $uri @app;
 
 location @app {
-  proxy_pass            http://<%= unicorn_socket_name %>;
+  proxy_pass            http://<%= unicorn_socket %>;
   proxy_redirect        off;
 
   proxy_buffer_size     64k;

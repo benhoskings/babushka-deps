@@ -1,9 +1,9 @@
 <% if var(:vhost_type) == 'unicorn' %>
 <%# It'd be nice if this could be in the unicorn config instead, but it's only valid in the http{ } block. %>
-upstream <%= unicorn_socket_name %> {
+upstream <%= unicorn_socket %> {
   # fail_timeout=0 means we always retry an upstream even if it failed to return a good
   # HTTP response (in case the Unicorn master nukes a single worker for timing out).
-  server unix:<%= unicorn_socket_name %> fail_timeout=0;
+  server unix:<%= unicorn_socket %> fail_timeout=0;
 }
 <% end %>
 
