@@ -11,7 +11,7 @@ location /system/maintenance.html { } # bypass the 503 rewrite
 location / {
   passenger_enabled on;
   passenger_use_global_queue on;
-  rails_env <%= var :rails_env, :default => 'production' %>;
+  rails_env <%= var :app_env, :default => 'production' %>;
 
   if (-f $document_root/system/maintenance.html) {
     rewrite ^(.*)$ /system/maintenance.html;

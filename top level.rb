@@ -15,8 +15,8 @@ end
 
 dep 'rails app' do
   requires 'webapp', 'web repo', 'app bundled', 'migrated db', 'rails.logrotate'
-  define_var :rails_env, :default => 'production'
-  define_var :rails_root, :default => '~/current', :type => :path
+  define_var :app_env, :default => 'production'
+  define_var :app_root, :default => '~/current', :type => :path
   setup {
     set :username, shell('whoami')
     set :vhost_type, 'passenger'

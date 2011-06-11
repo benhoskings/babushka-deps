@@ -7,8 +7,8 @@ end
 
 dep 'up to date.repo' do
   setup {
-    set :rails_root, var(:repo_path)
-    set :rails_env, 'production'
+    set :app_root, var(:repo_path)
+    set :app_env, 'production'
     set :username, shell('whoami')
   }
   requires [
