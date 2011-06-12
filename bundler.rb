@@ -5,7 +5,7 @@ dep 'app bundled' do
   meet { cd(var(:app_root)) {
     install_args = var(:app_env) != 'production' ? '' : "--deployment --without 'development test'"
     unless shell("bundle install #{install_args}", :log => true)
-      confirm("Try a `bundle update`") {
+      confirm("Try a `bundle update`", :default => 'n') {
         shell 'bundle update', :log => true
       }
     end
