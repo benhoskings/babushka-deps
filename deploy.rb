@@ -1,3 +1,5 @@
+# coding: utf-8
+
 dep 'ready for update.repo' do
   requires [
     'valid git_ref_data.repo',
@@ -23,7 +25,8 @@ dep 'up to date.repo' do
     'on deploy',
 
     'app flagged for restart.task',
-    'untracked styles & scripts removed',
+    'scss built',
+    '☕',
     'maintenance page down',
     'after deploy'
   ]
@@ -98,6 +101,47 @@ dep 'HEAD up to date.repo' do
   meet {
     log shell("git diff --stat #{var(:old_id)}..#{var(:new_id)}")
     repo.reset_hard! var(:new_id)
+  }
+end
+
+dep '☕' do
+  def to_brew
+    Dir.glob("app/coffeescripts/**/*.coffee").reject {|coffee|
+      js = coffee.sub(/^app\/coffeescripts\//, 'public/javascripts/').sub(/\.coffee$/, '.js')
+      File.exists?(js) && File.mtime(js) > File.mtime(coffee)
+    }
+  end
+  met? {
+    (count = to_brew.length).zero?.tap {|result|
+      log result ? "☕ Mmmm!" : "Found #{count} unbrewed coffee#{'s' unless count == 1}."
+    }
+  }
+  meet {
+    log_shell "Brewing", "coffee --compile --output public/javascripts #{to_brew.map {|c| "'#{c}'" }.join(' ')}"
+  }
+end
+
+dep 'scss built' do
+  def missing_css
+    Dir.glob("app/stylesheets/**/*.scss").reject {|asset|
+      asset[/\/_[^\/]+\.scss$/] # Don't try to build _partials.scss
+    }.reject {|asset|
+      File.exists? asset.sub(/^app\//, 'public/').sub(/\.scss$/, '.css')
+    }
+  end
+  met? {
+    if !missing_css.empty?
+      log "There are #{missing_css.length} file#{'s' unless missing_css.length == 1} to build."
+    elsif !shell("grep -ri 'syntax error' public/stylesheets/") {|s| s.stdout.empty? }
+      log "There are syntax errors in the scss."
+    else
+      log_ok "The scss is built."
+    end
+  }
+  meet {
+    shell "bundle exec sass --update app/stylesheets:public/stylesheets" do |shell|
+      log_error shell.stdout.split("\n").grep(/error/).map(&:strip).join("\n") unless shell.ok?
+    end
   }
 end
 
