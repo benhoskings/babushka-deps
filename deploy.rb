@@ -123,10 +123,11 @@ end
 
 dep 'scss built' do
   def missing_css
-    Dir.glob("app/stylesheets/**/*.scss").reject {|asset|
-      asset[/\/_[^\/]+\.scss$/] # Don't try to build _partials.scss
-    }.reject {|asset|
-      File.exists? asset.sub(/^app\//, 'public/').sub(/\.scss$/, '.css')
+    Dir.glob("app/stylesheets/**/*.scss").reject {|scss|
+      scss[/\/_[^\/]+\.scss$/] # Don't try to build _partials.scss
+    }.reject {|scss|
+      css = scss.sub(/^app\//, 'public/').sub(/\.scss$/, '.css')
+      File.exists?(css) && File.mtime(css) > File.mtime(scss)
     }
   end
   met? {
