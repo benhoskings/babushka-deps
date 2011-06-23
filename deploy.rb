@@ -25,6 +25,7 @@ dep 'up to date.repo' do
     'on deploy',
 
     'app flagged for restart.task',
+    'old css removed',
     'scss built',
     '☕',
     'maintenance page down',
@@ -145,6 +146,23 @@ dep 'scss built' do
     end
   }
 end
+
+dep 'old css removed' do
+  def old_css
+    Dir.glob("public/stylesheets/**/*.css").reject {|css|
+      File.exists? css.sub(/^public\//, 'app/').sub(/\.css$/, '.scss')
+    }
+  end
+  met? {
+    old_css.empty?
+  }
+  meet {
+    old_css.each {|css|
+      log_shell "Removing #{css}", "rm -f '#{css}'"
+    }
+  }
+end
+
 
 dep 'untracked styles & scripts removed' do
   def to_remove
