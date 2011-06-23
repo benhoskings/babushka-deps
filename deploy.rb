@@ -132,7 +132,7 @@ dep 'scss built' do
   end
   met? {
     if !missing_css.empty?
-      log "There are #{missing_css.length} file#{'s' unless missing_css.length == 1} to build."
+      log "There #{missing_css.length == 1 ? 'is' : 'are'} #{missing_css.length} scss file#{'s' unless missing_css.length == 1} to rebuild."
     elsif !shell("grep -ri 'syntax error' public/stylesheets/") {|s| s.stdout.empty? }
       log "There are syntax errors in the scss."
     else
