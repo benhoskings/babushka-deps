@@ -19,11 +19,11 @@ meta :nginx do
   def passenger_root
     Babushka::GemHelper.gem_path_for('passenger')
   end
-  def unicorn_socket
+  def unicorn_upstream
     "#{var(:domain)}.unicorn.socket"
   end
   def unicorn_socket_path
-    var(:app_root) / 'tmp/sockets' / unicorn_socket
+    var(:app_root) / 'tmp/sockets/unicorn.sock'
   end
   def worker_pool_size
     (Babushka::Base.host.total_memory - 500.mb) / 300.mb
