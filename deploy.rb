@@ -177,8 +177,13 @@ dep 'untracked styles & scripts removed' do
 end
 
 dep 'app flagged for restart.task' do
-  before { shell 'mkdir -p tmp' }
-  run { shell 'touch tmp/restart.txt' }
+  run {
+    if File.exists? 'tmp/pids/unicorn.pid'
+      shell "kill -USR2 #{'tmp/pids/unicorn.pid'.p.read}"
+    else
+      shell "mkdir -p tmp && touch tmp/restart.txt"
+    end
+  }
 end
 
 dep 'maintenance page up' do
