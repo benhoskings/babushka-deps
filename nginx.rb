@@ -142,7 +142,7 @@ dep 'webserver configured.nginx' do
     if Babushka::Renderable.new(nginx_conf).from?(dependency.load_path.parent / "nginx/nginx.conf.erb")
       configured_root = nginx_conf.read.val_for('passenger_root')
       (configured_root == passenger_root).tap {|result|
-        log_result "nginx is configured to use #{File.basename configured_root}", :result => result
+        log "nginx is configured to use #{File.basename configured_root}", :as => (:ok if result)
       }
     end
   }
