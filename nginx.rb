@@ -20,7 +20,7 @@ meta :nginx do
     Babushka::GemHelper.gem_path_for('passenger')
   end
   def unicorn_upstream
-    "#{var(:domain).gsub(/[^a-z]/, '_')}_unicorn"
+    "#{var(:domain)}.unicorn.socket"
   end
   def unicorn_socket_path
     var(:app_root) / 'tmp/sockets/unicorn.socket'
