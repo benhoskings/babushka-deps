@@ -8,7 +8,7 @@ upstream <%= unicorn_upstream %> {
 <% end %>
 
 server {
-  listen 80;
+  listen [::]:80;
 
   <% if var(:force_ssl, :default => 'no').starts_with?('y') %>
   rewrite ^(.*)$ https://$host$1 redirect;
@@ -19,7 +19,7 @@ server {
 
 <% if var(:enable_ssl, :default => 'no').starts_with?('y') %>
 server {
-  listen 443;
+  listen [::]:443;
 
   ssl                  on;
   ssl_certificate      certs/<%= var :domain %>.crt;

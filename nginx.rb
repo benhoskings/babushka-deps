@@ -180,7 +180,7 @@ dep 'webserver installed.src' do
   merge :versions, {:nginx => '1.0.2', :nginx_upload_module => '2.2.0'}
   source "http://nginx.org/download/nginx-#{var(:versions)[:nginx]}.tar.gz"
   extra_source "http://www.grid.net.ru/nginx/download/nginx_upload_module-#{var(:versions)[:nginx_upload_module]}.tar.gz"
-  configure_args "--with-pcre", "--with-http_ssl_module",
+  configure_args "--with-ipv6", "--with-pcre", "--with-http_ssl_module",
     L{ "--add-module='#{Babushka::GemHelper.gem_path_for('passenger') / 'ext/nginx'}'" },
     "--add-module='../../nginx_upload_module-#{var(:versions)[:nginx_upload_module]}/nginx_upload_module-#{var(:versions)[:nginx_upload_module]}'"
   setup {
