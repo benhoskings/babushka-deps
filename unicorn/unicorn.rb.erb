@@ -1,0 +1,16 @@
+worker_processes <%= worker_pool_size %>
+working_directory '.'
+
+preload_app true
+timeout 60
+
+listen "<%= unicorn_socket_path %>", :backlog => 64
+pid "<%= var(:app_root) / 'tmp/pids/unicorn.pid' %>"
+stderr_path "<%= var(:app_root) / 'log/unicorn.stderr.log' %>"
+stdout_path "<%= var(:app_root) / 'log/unicorn.stdout.log' %>"
+
+before_fork do |server, worker|
+  `cat #{server.pid}.oldbin`.scan(/^\d+$/).each {|ppid|
+    `kill -QUIT #{ppid}`
+  }
+end
