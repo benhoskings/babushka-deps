@@ -139,7 +139,7 @@ dep 'webserver configured.nginx' do
   requires 'webserver installed.src', 'www user and group', 'nginx.logrotate'
   define_var :nginx_prefix, :default => '/opt/nginx'
   met? {
-    if babushka_config? nginx_conf
+    if Babushka::Renderable.new(nginx_conf).from?(dependency.load_path.parent / "nginx/nginx.conf.erb")
       configured_root = nginx_conf.read.val_for('passenger_root')
       (configured_root == passenger_root).tap {|result|
         log_result "nginx is configured to use #{File.basename configured_root}", :result => result
