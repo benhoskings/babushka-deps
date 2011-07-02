@@ -34,7 +34,7 @@ meta :nginx do
     ].max].min
   end
   def nginx_running?
-    shell "netstat -an | grep -E '^tcp.*[.:]80 +.*LISTEN'"
+    shell? "netstat -an | grep -E '^tcp.*[.:]80 +.*LISTEN'"
   end
   def restart_nginx
     if nginx_running?
