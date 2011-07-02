@@ -1,3 +1,7 @@
+dep 'Vim.app' do
+  source 'http://macvim.org/OSX/files/binaries/OSX10_4/Vim7.0-univ.tar.bz2'
+end
+
 dep 'Twitter.app' do
   source "http://files.droplr.com/files/8046732/4T4e.Twitter.zip"
   after {
