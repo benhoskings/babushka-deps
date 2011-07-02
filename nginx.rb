@@ -61,9 +61,10 @@ dep 'vhost configured.nginx' do
       "www.#{d}"
     }.join(' ')
   }
-  requires 'webserver configured.nginx'
   define_var :vhost_type, :default => 'passenger', :choices => %w[unicorn passenger proxy static]
   define_var :document_root, :default => L{ '/srv/http' / var(:domain) }
+  requires 'webserver configured.nginx'
+  requires 'unicorn configured' if var(:vhost_type) == 'unicorn'
   met? {
     Babushka::Renderable.new(nginx_conf_for(var(:domain), 'conf')).from?(dependency.load_path.parent / "nginx/vhost.conf.erb") and
     Babushka::Renderable.new(nginx_conf_for(var(:domain), 'common')).from?(dependency.load_path.parent / "nginx/#{var :vhost_type}_vhost.common.erb")
