@@ -73,7 +73,6 @@ dep 'vhost configured.nginx' do
     render_erb "nginx/vhost.conf.erb",                      :to => nginx_conf_for(var(:domain), 'conf'), :sudo => true
     render_erb "nginx/#{var :vhost_type}_vhost.common.erb", :to => nginx_conf_for(var(:domain), 'common'), :sudo => true
   }
-  after { restart_nginx if nginx_conf_link_for(var(:domain)).exists? }
 end
 
 dep 'self signed cert.nginx' do
@@ -151,7 +150,6 @@ dep 'webserver configured.nginx' do
   }
   after {
     sudo "mkdir -p #{var(:nginx_prefix) / 'conf/vhosts/on'}"
-    restart_nginx
   }
 end
 
