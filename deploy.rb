@@ -157,9 +157,7 @@ dep 'untracked css removed' do
     untracked_css.empty?
   }
   meet {
-    untracked_css.each {|css|
-      log_shell "Removing #{css}", "rm -f '#{css}'"
-    }
+    log_shell "Removing", "rm -f #{untracked_css.map {|f| "'#{f}'" }.join(' ')}"
   }
 end
 
