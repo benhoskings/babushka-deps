@@ -27,6 +27,7 @@ dep 'push!' do
     'ready.push',
     'before push',
     'pushed.push',
+    'marked on newrelic.task',
     'after push'
   ]
 end
@@ -73,6 +74,14 @@ dep 'pushed.push' do
         uncache_remote_head!
         shell push_cmd, :log => true
       end
+    end
+  }
+end
+
+dep 'marked on newrelic.task' do
+  run {
+    if 'config/newrelic.yml'.p.exists?
+      shell "bundle exec newrelic deployments -r #{Babushka::GitRepo.new('.').current_head}"
     end
   }
 end
