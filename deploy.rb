@@ -25,9 +25,9 @@ dep 'up to date.repo' do
     'on deploy',
 
     'app flagged for restart.task',
-    'old css removed',
-    'scss built',
     '☕',
+    'scss built',
+    'old css removed',
     'maintenance page down',
     'after deploy'
   ]
