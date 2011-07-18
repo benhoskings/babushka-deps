@@ -104,7 +104,7 @@ dep 'webserver running.nginx' do
   requires 'webserver configured.nginx', 'webserver startup script.nginx'
   met? {
     nginx_running?.tap {|result|
-      log "There is #{result ? 'something' : 'nothing'} listening on #{result ? result.scan(/[0-9.*]+[.:]80/).first : 'port 80'}"
+      log "There is #{result ? 'something' : 'nothing'} listening on port 80."
     }
   }
   meet :on => :linux do
