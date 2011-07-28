@@ -27,7 +27,7 @@ dep 'up to date.repo' do
     'app flagged for restart.task',
     '☕',
     'scss built',
-    'untracked css removed',
+    'untracked assets removed',
     'maintenance page down',
     'after deploy'
   ]
@@ -147,31 +147,25 @@ dep 'scss built' do
   }
 end
 
-dep 'untracked css removed' do
-  def untracked_css
-    Dir.glob("public/stylesheets/**/*.css").reject {|css|
-      File.exists? css.sub(/^public\//, 'app/').sub(/\.css$/, '.scss')
-    }
+dep 'untracked assets removed' do
+  def to_remove
+    existing_sources = Dir.glob('app/{stylesheets,coffeescripts}/**/*')
+    existing_assets = shell("git clean -xn -- public/*style* public/*script*").split("\n").collapse(/^Would remove /)
+    (existing_assets - existing_sources.map {|path|
+      path.
+        gsub(/\.coffee$/, '.js'). # .coffee is compiled to .js
+        gsub(/\.s[ac]ss$/, '.css'). # .sass and .scss are compiled to .css
+        gsub(/^app\/coffeescripts\//, 'public/javascripts/'). # the coffee in app/coffeescripts/ ends up in public/javascripts/
+        gsub(/^app\//, 'public/') # and everything else is in the same subpath, within public/ instead of app/.
+    })
   end
   met? {
-    untracked_css.empty?
+    to_remove.empty?
   }
   meet {
-    log_shell "Removing", "rm -f #{untracked_css.map {|f| "'#{f}'" }.join(' ')}"
+    cached_to_remove = to_remove
+    log_shell "Removing:\n#{cached_to_remove.join("\n")}", "rm -f #{cached_to_remove.map {|f| "'#{f}'" }.join(' ')}"
   }
-end
-
-
-dep 'untracked styles & scripts removed' do
-  def to_remove
-    shell(
-      "git clean -dxn -- public/*style* public/*script*"
-    ).split("\n").collapse(/^Would remove /).select {|path|
-      path.p.exists?
-    }
-  end
-  met? { to_remove.empty? }
-  meet { to_remove.each {|path| log_shell "Removing #{path}", "rm -rf '#{path}'" } }
 end
 
 dep 'app flagged for restart.task' do
