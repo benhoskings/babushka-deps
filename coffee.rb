@@ -1,7 +1,7 @@
 dep 'coffeescript.src' do
   requires 'nodejs.src'
-  source 'git://github.com/jashkenas/coffee-script.git'
-  provides 'coffee ~> 0.9.6'
+  source 'http://github.com/jashkenas/coffee-script/tarball/1.1.1'
+  provides 'coffee ~> 1.1.1'
 
   configure { true }
   build { shell "bin/cake build" }
