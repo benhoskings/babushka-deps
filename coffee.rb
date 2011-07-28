@@ -3,9 +3,12 @@ dep 'coffeescript.src' do
   source 'http://github.com/jashkenas/coffee-script/tarball/1.1.1'
   provides 'coffee ~> 1.1.1'
 
-  configure { true }
-  build { shell "bin/cake build" }
-  install { shell "bin/cake install" }
+  process_source {
+    cd 'jashkenas-coffee-script-d4d0271' do
+      shell "bin/cake build"
+      shell "bin/cake install"
+    end
+  }
 end
 
 dep 'nodejs.src' do
