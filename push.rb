@@ -39,7 +39,6 @@ dep 'after push' do
   requires Dep('current dir:after push')
 end
 
-
 dep 'ready.push' do
   met? {
     state = [:dirty, :merging, :rebasing, :applying, :bisecting].detect {|s| repo.send("#{s}?") }
