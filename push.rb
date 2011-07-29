@@ -53,7 +53,6 @@ end
 dep 'pushed.push' do
   define_var :remote,
     :message => "Where would you like to push to?",
-    :default => 'production',
     :choices => repo.repo_shell('git remote').split("\n")
   requires [
     'on origin.push',
