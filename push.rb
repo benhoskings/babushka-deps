@@ -9,12 +9,8 @@ meta :push do
     host, path = remote_location
     @@remote_head ||= shell("ssh #{host} 'cd #{path} && git rev-parse --short HEAD 2>/dev/null'") || ''
   end
-  def prev_head
-    @@prev_head if defined?(@@prev_head)
-  end
   def uncache_remote_head!
-    set :prev_head, @@remote_head
-    @@prev_head, @@remote_head = @@remote_head, nil
+    @@remote_head = nil
   end
   def git_log from, to
     log shell("git log --graph --pretty=format:'%Cblue%h%d%Creset %ar %Cgreen%an%Creset %s' #{from}..#{to}")
