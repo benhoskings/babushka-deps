@@ -2,15 +2,18 @@ meta :push do
   def repo
     @repo ||= Babushka::GitRepo.new('.')
   end
-  def remote_location
+  def self.remote_location
     shell("git config remote.#{var(:remote)}.url").split(':', 2)
   end
-  def remote_head
+  def self.remote_head
     host, path = remote_location
-    @@remote_head ||= shell("ssh #{host} 'cd #{path} && git rev-parse --short HEAD 2>/dev/null'") || ''
+    @remote_head ||= shell("ssh #{host} 'cd #{path} && git rev-parse --short HEAD 2>/dev/null'") || ''
   end
-  def uncache_remote_head!
-    @@remote_head = nil
+  def remote_head
+    self.class.remote_head
+  end
+  def self.uncache_remote_head!
+    @remote_head = nil
   end
   def git_log from, to
     log shell("git log --graph --pretty=format:'%Cblue%h%d%Creset %ar %Cgreen%an%Creset %s' #{from}..#{to}")
@@ -67,7 +70,7 @@ dep 'pushed.push' do
     confirm "OK to push to #{var(:remote)} (#{repo.repo_shell("git config remote.#{var(:remote)}.url")})?" do
       push_cmd = "git push #{var(:remote)} #{var(:ref)}:master -f"
       log push_cmd.colorize("on grey") do
-        uncache_remote_head!
+        self.class.uncache_remote_head!
         shell push_cmd, :log => true
       end
     end
