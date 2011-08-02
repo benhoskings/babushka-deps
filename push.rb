@@ -78,7 +78,7 @@ end
 dep 'marked on newrelic.task' do
   run {
     if 'config/newrelic.yml'.p.exists?
-      shell "bundle exec newrelic deployments -r #{Babushka::GitRepo.new('.').current_head}"
+      shell "bundle exec newrelic deployments -r #{var(:ref)}"
     end
   }
 end
