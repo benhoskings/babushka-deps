@@ -48,6 +48,7 @@ end
 
 dep '1.9.2.rbenv' do
   builds '1.9.2-p290'
+  installs '1.9.2p290'
 end
 
 dep '1.9.3.rbenv' do
