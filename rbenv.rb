@@ -1,3 +1,7 @@
+dep 'libyaml.managed' do
+  provides []
+end
+
 meta :rbenv do
   accepts_value_for :builds
   accepts_value_for :installs, :builds
@@ -11,13 +15,15 @@ meta :rbenv do
     def version_group
       version.scan(/^\d\.\d/).first
     end
+    requires 'libyaml.managed'
     met? {
       (prefix / 'bin/ruby').executable? and
       shell(prefix / 'bin/ruby -v')[/^ruby #{installs}\b/]
     }
     meet {
+      yaml_location = shell('brew info libyaml').split("\n").collapse(/\s+\(\d+ files, \S+\)/)
       handle_source "http://ftp.ruby-lang.org/pub/ruby/#{version_group}/ruby-#{version}.tar.gz" do |path|
-        log_shell 'Configure', "./configure --prefix='#{prefix}'"
+        log_shell 'Configure', "./configure --prefix='#{prefix}' --with-libyaml-dir='#{yaml_location}'"
         log_shell 'Build',     "make"
         log_shell 'Install',   "make install"
       end
