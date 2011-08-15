@@ -34,6 +34,9 @@ meta :rbenv do
         log_shell 'Install',   "make install"
       end
     }
+    after {
+      log_shell 'rbenv rehash', 'rbenv rehash'
+    }
   }
 end
 
