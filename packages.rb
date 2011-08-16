@@ -76,10 +76,6 @@ dep 'ncurses.managed' do
 end
 dep 'nmap.managed'
 dep 'oniguruma.managed'
-dep 'passenger.gem' do
-  installs 'passenger ~> 3.0.7'
-  provides 'passenger-install-nginx-module'
-end
 dep 'pcre.managed' do
   installs {
     via :brew, 'pcre'

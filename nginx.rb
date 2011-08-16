@@ -16,9 +16,6 @@ meta :nginx do
   def nginx_conf_link_for domain
     var(:nginx_prefix) / "conf/vhosts/on/#{domain}.conf"
   end
-  def passenger_root
-    Babushka::GemHelper.gem_path_for('passenger')
-  end
   def upstream_name
     "#{var(:domain)}.upstream"
   end
@@ -61,7 +58,7 @@ dep 'vhost configured.nginx' do
       "www.#{d}"
     }.join(' ')
   }
-  define_var :vhost_type, :default => 'passenger', :choices => %w[unicorn passenger proxy static]
+  define_var :vhost_type, :default => 'unicorn', :choices => %w[unicorn proxy static]
   define_var :document_root, :default => L{ '/srv/http' / var(:domain) }
   requires 'webserver configured.nginx'
   requires 'unicorn configured' if var(:vhost_type) == 'unicorn'
@@ -138,12 +135,7 @@ dep 'webserver configured.nginx' do
   requires 'webserver installed.src', 'www user and group', 'nginx.logrotate'
   set :nginx_prefix, '/opt/nginx'
   met? {
-    if Babushka::Renderable.new(nginx_conf).from?(dependency.load_path.parent / "nginx/nginx.conf.erb")
-      configured_root = nginx_conf.read.val_for('passenger_root')
-      (configured_root == passenger_root).tap {|result|
-        log "nginx is configured to use #{File.basename configured_root}", :as => (:ok if result)
-      }
-    end
+    Babushka::Renderable.new(nginx_conf).from?(dependency.load_path.parent / "nginx/nginx.conf.erb")
   }
   meet {
     render_erb 'nginx/nginx.conf.erb', :to => nginx_conf, :sudo => true
@@ -153,43 +145,21 @@ dep 'webserver configured.nginx' do
   }
 end
 
-dep 'passenger built' do
-  requires 'passenger.gem', 'build tools', 'curl.managed'
-  met? {
-    %W[
-      ./agents/nginx/PassengerHelperAgent
-      ./agents/PassengerLoggingAgent
-      ./agents/PassengerWatchdog
-      ./ext/common/libpassenger_common.a
-      ./ext/ruby/#{Babushka::GemHelper.ruby_binary_slug}/passenger_native_support.#{Babushka::Base.host.library_ext}
-    ].all? {|obj|
-      (Babushka::GemHelper.gem_path_for('passenger') / obj).exists?
-    }
-  }
-  meet {
-    cd Babushka::GemHelper.gem_path_for('passenger') do
-      log_shell "Building passenger", "rake clean nginx", :sudo => Babushka::GemHelper.should_sudo?
-    end
-  }
-end
-
 dep 'webserver installed.src' do
-  requires 'passenger built', 'pcre.managed', 'libssl headers.managed', 'zlib headers.managed'
+  requires 'pcre.managed', 'libssl headers.managed', 'zlib headers.managed'
   set :nginx_prefix, '/opt/nginx'
   merge :versions, {:nginx => '1.0.5', :nginx_upload_module => '2.2.0'}
   source "http://nginx.org/download/nginx-#{var(:versions)[:nginx]}.tar.gz"
   extra_source "http://www.grid.net.ru/nginx/download/nginx_upload_module-#{var(:versions)[:nginx_upload_module]}.tar.gz"
   configure_args "--with-ipv6", "--with-pcre", "--with-http_ssl_module",
-    L{ "--add-module='#{Babushka::GemHelper.gem_path_for('passenger') / 'ext/nginx'}'" },
     "--add-module='../../nginx_upload_module-#{var(:versions)[:nginx_upload_module]}/nginx_upload_module-#{var(:versions)[:nginx_upload_module]}'"
   setup {
     prefix var(:nginx_prefix)
     provides var(:nginx_prefix) / 'sbin/nginx'
   }
 
-  # The build process needs to write to passenger_root/ext/nginx.
-  configure { log_shell "configure", default_configure_command, :sudo => Babushka::GemHelper.should_sudo? }
-  build { log_shell "build", "make", :sudo => Babushka::GemHelper.should_sudo? }
+  configure { log_shell "configure", default_configure_command }
+  build { log_shell "build", "make" }
   install { log_shell "install", "make install", :sudo => true }
 
   met? {
@@ -199,8 +169,6 @@ dep 'webserver installed.src' do
       installed_version = shell(var(:nginx_prefix) / 'sbin/nginx -V') {|shell| shell.stderr }.val_for(/(nginx: )?nginx version:/).sub('nginx/', '')
       if installed_version != var(:versions)[:nginx]
         unmet "an outdated version of nginx is installed (#{installed_version})"
-      elsif !shell(var(:nginx_prefix) / 'sbin/nginx -V') {|shell| shell.stderr }[Babushka::GemHelper.gem_path_for('passenger').to_s + '/']
-        unmet "nginx is installed, but built against the wrong passenger version"
       else
         met "nginx-#{installed_version} is installed"
       end
