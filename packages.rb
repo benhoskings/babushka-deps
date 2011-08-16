@@ -48,7 +48,10 @@ dep 'readline headers.managed' do
   provides []
 end
 dep 'libssl headers.managed' do
-  installs { via :apt, 'libssl-dev' }
+  installs {
+    via :apt, 'libssl-dev'
+    via :yum, 'openssl-devel'
+  }
   provides []
 end
 dep 'libxml.managed' do
@@ -81,6 +84,7 @@ dep 'pcre.managed' do
     via :brew, 'pcre'
     via :macports, 'pcre'
     via :apt, 'libpcre3-dev'
+    via :yum, 'pcre-devel'
   }
   provides 'pcre-config'
 end
@@ -106,6 +110,9 @@ dep 'tree.managed'
 dep 'vim.managed'
 dep 'wget.managed'
 dep 'zlib headers.managed' do
-  installs { via :apt, 'zlib1g-dev' }
+  installs {
+    via :apt, 'zlib1g-dev'
+    via :yum, 'zlib-devel'
+  }
   provides []
 end
