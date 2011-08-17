@@ -93,11 +93,14 @@ dep 'rcconf.managed' do
 end
 dep 'screen.managed'
 dep 'sed.managed' do
-  installs { via :macports, 'gsed' }
+  installs {
+    via :brew, 'gnu-sed'
+    via :macports, 'gsed'
+  }
   provides 'sed'
   after {
-    cd '/opt/local/bin' do
-      sudo "ln -s gsed sed"
+    cd pkg_manager.bin_path do
+      shell "ln -s gsed sed", :sudo => pkg_manager.should_sudo?
     end
   }
 end
