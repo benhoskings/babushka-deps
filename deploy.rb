@@ -9,7 +9,7 @@ end
 
 dep 'up to date.repo' do
   setup {
-    set :app_root, var(:repo_path)
+    set :app_root, '.'
     set :app_env, 'production'
     set :username, shell('whoami')
   }
