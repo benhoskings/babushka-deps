@@ -78,7 +78,7 @@ end
 dep 'marked on newrelic.task' do
   run {
     if 'config/newrelic.yml'.p.exists?
-      shell "bundle exec newrelic deployments -r #{var(:ref)}"
+      shell "bundle exec newrelic deployments -r $(git rev-parse --short #{var(:ref)})"
     end
   }
 end
