@@ -60,25 +60,3 @@ dep 'tmp cleaning grace period', :for => :ubuntu do
   met? { !grep(/^[^#]*TMPTIME=0/, "/etc/default/rcS") }
   meet { change_line "TMPTIME=0", "TMPTIME=30", "/etc/default/rcS" }
 end
-
-dep 'bad certificates removed' do
-  def cert_names
-    %w[
-      DigiNotar_Root_CA
-    ]
-  end
-  def existing_certs
-    cert_names.map {|name|
-      "/etc/ssl/certs/#{name}.pem".p
-    }.select {|cert|
-      cert.exists?
-    }
-  end
-  setup {
-    unless [:debian, :ubuntu].include?(Babushka::Base.host.flavour)
-      unmeetable "Not sure where to find certs on a #{Babushka::Base.host.description} system."
-    end
-  }
-  met? { existing_certs.empty? }
-  meet { existing_certs.each(&:rm) }
-end
