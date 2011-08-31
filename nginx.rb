@@ -148,7 +148,7 @@ end
 dep 'webserver installed.src' do
   requires 'pcre.managed', 'libssl headers.managed', 'zlib headers.managed'
   set :nginx_prefix, '/opt/nginx'
-  merge :versions, {:nginx => '1.0.5', :nginx_upload_module => '2.2.0'}
+  merge :versions, {:nginx => '1.0.6', :nginx_upload_module => '2.2.0'}
   source "http://nginx.org/download/nginx-#{var(:versions)[:nginx]}.tar.gz"
   extra_source "http://www.grid.net.ru/nginx/download/nginx_upload_module-#{var(:versions)[:nginx_upload_module]}.tar.gz"
   configure_args "--with-ipv6", "--with-pcre", "--with-http_ssl_module",
