@@ -10,10 +10,6 @@ dep 'rbenv' do
   }
 end
 
-dep 'libyaml.managed' do
-  provides []
-end
-
 meta :rbenv do
   accepts_value_for :builds
   accepts_value_for :installs, :builds
@@ -27,7 +23,7 @@ meta :rbenv do
     def version_group
       version.scan(/^\d\.\d/).first
     end
-    requires 'rbenv', 'libyaml.managed'
+    requires 'rbenv', 'yaml headers.managed'
     met? {
       (prefix / 'bin/ruby').executable? and
       shell(prefix / 'bin/ruby -v')[/^ruby #{installs}\b/]
