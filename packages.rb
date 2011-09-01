@@ -112,6 +112,13 @@ end
 dep 'tree.managed'
 dep 'vim.managed'
 dep 'wget.managed'
+dep 'yaml headers.managed' do
+  installs {
+    via :brew, 'libyaml'
+    via :apt, 'libyaml-dev'
+  }
+  provides []
+end
 dep 'zlib headers.managed' do
   installs {
     via :apt, 'zlib1g-dev'
