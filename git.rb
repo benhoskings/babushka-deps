@@ -15,6 +15,11 @@ dep 'web repo' do
     'web repo always receives',
     'bundler.gem'
   ]
+  met? {
+    vanity_path = var(:web_repo_root).p.sub(/^#{Etc.getpwuid(Process.euid).dir.chomp('/')}/, '~')
+    log "All done. The repo's URI: " + "#{shell('whoami')}@#{shell('hostname -f')}:#{vanity_path}".colorize('underline')
+    true
+  }
 end
 
 dep 'web repo always receives' do
