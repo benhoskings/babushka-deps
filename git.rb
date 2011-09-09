@@ -19,7 +19,7 @@ end
 
 dep 'web repo always receives' do
   requires 'web repo exists'
-  met? { cd(var(:web_repo_root)) { shell("git config receive.denyCurrentBranch") == 'ignore' } }
+  met? { cd(var(:web_repo_root)) { shell?("git config receive.denyCurrentBranch") == 'ignore' } }
   meet { cd(var(:web_repo_root)) { shell("git config receive.denyCurrentBranch ignore") } }
 end
 
