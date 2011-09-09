@@ -100,7 +100,11 @@ dep 'HEAD up to date.repo' do
     }
   }
   meet {
-    log shell("git diff --stat #{var(:old_id)}..#{var(:new_id)}")
+    if var(:old_id)[/^0+$/]
+      log "Starting HEAD at #{var(:new_id)[0...7]} (a #{shell("git rev-list #{var(:new_id)} | wc -l").strip}-commit history) since the repo is blank."
+    else
+      log shell("git diff --stat #{var(:old_id)}..#{var(:new_id)}")
+    end
     repo.reset_hard! var(:new_id)
   }
 end
