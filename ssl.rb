@@ -42,7 +42,7 @@ dep 'public key installed' do
 end
 
 dep 'public key' do
-  met? { grep /^ssh-dss/, '~/.ssh/id_dsa.pub' }
+  met? { grep(/^ssh-dss/, '~/.ssh/id_dsa.pub') }
   meet { log shell("ssh-keygen -t dsa -f ~/.ssh/id_dsa -N ''") }
 end
 

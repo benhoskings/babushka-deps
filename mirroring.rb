@@ -10,7 +10,7 @@ dep 'mirror has assets' do
   end
   def asset_map
     scanned_urls.group_by {|url|
-      url[/^(http\:)?\/\//] ? url.scan(/^[http\:]*\/\/([^\/]+)/).flatten.first : var(:mirror_domain)
+      url[/^(http\:)?\/\//] ? url.scan(/^[htp\:]*\/\/([^\/]+)/).flatten.first : var(:mirror_domain)
     }.map_values {|domain,urls|
       urls.map {|url| url.sub(/^(http\:)?\/\/[^\/]+\//, '') }
     }
@@ -23,7 +23,7 @@ dep 'mirror has assets' do
       }
     }
   end
-  met? { nonexistent_asset_map.values.all? &:empty? }
+  met? { nonexistent_asset_map.values.all?(&:empty?) }
   meet {
     nonexistent_asset_map.each_pair {|domain,assets|
       assets.each {|asset|
@@ -121,7 +121,7 @@ dep 'google ajax libs mirrored' do
     require 'hpricot'
     require 'net/http'
     Hpricot(Net::HTTP.get(URI.parse('http://code.google.com/apis/ajaxlibs/documentation/'))).search('.al-liblist').map {|lib|
-      lib_name = search_libstate(lib, 'name')
+      # lib_name = search_libstate(lib, 'name')
       versions = search_libstate(lib, 'versions').split(/[, ]+/)
       [search_libstate(lib, 'path'), search_libstate(lib, 'path(u)')].squash.map {|path_template|
         versions.map {|version|

@@ -41,7 +41,7 @@ end
 
 dep 'lax host key checking' do
   requires 'sed.managed'
-  met? { grep /^StrictHostKeyChecking[ \t]+no/, ssh_conf_path(:ssh) }
+  met? { grep(/^StrictHostKeyChecking[ \t]+no/, ssh_conf_path(:ssh)) }
   meet { change_with_sed 'StrictHostKeyChecking', 'yes', 'no', ssh_conf_path(:ssh) }
 end
 
@@ -52,7 +52,7 @@ dep 'admins can sudo' do
 end
 
 dep 'admin group' do
-  met? { grep /^admin\:/, '/etc/group' }
+  met? { grep(/^admin\:/, '/etc/group') }
   meet { sudo 'groupadd admin' }
 end
 

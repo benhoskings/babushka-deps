@@ -6,7 +6,7 @@ dep 'npm mirrored' do
     JSON.parse(`curl #{registry} 2>/dev/null`).each_pair {|pkg,details|
       details['versions'].each_pair {|version,url|
         src = JSON.parse(`curl #{url} 2>/dev/null`)['dist']['tarball']
-        destdir = File.dirname(src.sub(/^[a-z]+:\/\/[^\/]+\//, ''))
+        # destdir = File.dirname(src.sub(/^[a-z]+:\/\/[^\/]+\//, ''))
         Babushka::Resource.download src
       }
     }
