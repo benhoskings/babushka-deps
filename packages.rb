@@ -88,6 +88,9 @@ dep 'pcre.managed' do
   }
   provides 'pcre-config'
 end
+dep 'rake.gem' do
+  provides 'rake >= 0.8.7'
+end
 dep 'rcconf.managed' do
   installs { via :apt, 'rcconf' }
 end
