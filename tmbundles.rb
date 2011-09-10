@@ -6,6 +6,18 @@ dep 'Sinatra.tmbundle' do
   source 'git://github.com/foca/sinatra-tmbundle.git'
 end
 
+dep 'RSpec.tmbundle' do
+  source 'git://github.com/rspec/rspec-tmbundle.git'
+end
+
+dep 'jQuery.tmbundle' do
+  source 'git://github.com/kswedberg/jquery-tmbundle.git'
+end
+
+dep 'JavaScript Tools.tmbundle' do
+  source 'git://github.com/subtleGradient/javascript-tools.tmbundle.git'
+end
+
 dep 'Tcl.tmbundle' do
   source 'git://github.com/textmate/tcl.tmbundle.git'
 end
