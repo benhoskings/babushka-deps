@@ -1,6 +1,6 @@
 dep 'passwordless ssh logins' do
   met? { shell "grep '#{var(:your_ssh_public_key)}' ~/.ssh/authorized_keys" }
-  before { shell "mkdir -p ~/.ssh && chmod 700 ~/.ssh" }
+  before { shell "mkdir -p -m 700 ~/.ssh" }
   meet { append_to_file var(:your_ssh_public_key), '~/.ssh/authorized_keys' }
   after { shell "chmod 600 ~/.ssh/authorized_keys" }
 end
