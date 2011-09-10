@@ -51,3 +51,13 @@ dep '1.9.3.rbenv' do
   builds '1.9.3-preview1'
   installs '1.9.3dev'
 end
+
+dep '1.8.6.rbenv' do
+  builds '1.8.6-p420'
+  installs '1.8.6p420'
+end
+
+dep '1.8.7.rbenv' do
+  builds '1.8.7-p352'
+  installs '1.8.7p352'
+end
