@@ -21,26 +21,6 @@ dep 'passwordless ssh logins' do
   }
 end
 
-dep 'public key installed' do
-  def group
-    shell "id -gn #{shell('whoami')}"
-  end
-  met? {
-    shell "grep '#{var(:your_ssh_public_key)}' ~/.ssh/authorized_keys"
-  }
-  before {
-    shell "mkdir -p ~/.ssh"
-    shell "chmod 700 ~/.ssh"
-  }
-  meet {
-    append_to_file var(:your_ssh_public_key), '~/.ssh/authorized_keys'
-  }
-  after {
-    shell "chown -R #{shell('whoami')}:#{group} ~/.ssh"
-    shell "chmod 600 ~/.ssh/authorized_keys"
-  }
-end
-
 dep 'public key' do
   met? { grep(/^ssh-dss/, '~/.ssh/id_dsa.pub') }
   meet { log shell("ssh-keygen -t dsa -f ~/.ssh/id_dsa -N ''") }
