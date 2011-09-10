@@ -31,7 +31,7 @@ meta :rbenv do
     meet {
       yaml_location = shell('brew info libyaml').split("\n").collapse(/\s+\(\d+ files, \S+\)/)
       handle_source "http://ftp.ruby-lang.org/pub/ruby/#{version_group}/ruby-#{version}.tar.gz" do |path|
-        log_shell 'Configure', "./configure --prefix='#{prefix}' --with-libyaml-dir='#{yaml_location}'"
+        log_shell 'Configure', "./configure --prefix='#{prefix}' --with-libyaml-dir='#{yaml_location}' CC=/usr/bin/gcc-4.2"
         log_shell 'Build',     "make"
         log_shell 'Install',   "make install"
       end
