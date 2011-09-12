@@ -1,0 +1,53 @@
+# <%= generated_by_babushka? %>
+# this config needs haproxy-1.1.28 or haproxy-1.2.1
+
+global
+	log 127.0.0.1	local0
+	log 127.0.0.1	local1 notice
+	#log loghost	local0 info
+	maxconn 4096
+	#chroot /usr/share/haproxy
+	user haproxy
+	group haproxy
+	daemon
+	#debug
+	#quiet
+
+defaults
+	log	global
+	mode	http
+	option	httplog
+	option	dontlognull
+	retries	3
+	option redispatch
+	maxconn	2000
+	contimeout	5000
+	clitimeout	50000
+	srvtimeout	50000
+
+listen <%= var :service_alias %> <%= var :listen_address %>:<%= var :listen_port %>
+  option  httpchk *
+  balance roundrobin
+  cookie  SERVERID insert indirect nocache
+
+  # babushka needs this line to be deleted once you've finished editing this section.
+  <% 1.upto var(:number_of_backends).to_i do |i| %>
+  server backend<%= i %> backend<%= i %>.<%= var :service_alias %>:80 cookie backend<%= i %> check inter 2000 fall 3
+  <% end %>
+
+  srvtimeout  20000
+
+	option	httpclose		# disable keep-alive
+	option  checkcache		# block response if set-cookie & cacheable
+
+	rspidel ^Set-cookie:\ IP=	# do not let this cookie tell our internal IP address
+	
+	#errorloc	502	http://192.168.114.58/error502.html
+	#errorfile	503	/etc/haproxy/errors/503.http
+	errorfile	400	/etc/haproxy/errors/400.http
+	errorfile	403	/etc/haproxy/errors/403.http
+	errorfile	408	/etc/haproxy/errors/408.http
+	errorfile	500	/etc/haproxy/errors/500.http
+	errorfile	502	/etc/haproxy/errors/502.http
+	errorfile	503	/etc/haproxy/errors/503.http
+	errorfile	504	/etc/haproxy/errors/504.http
