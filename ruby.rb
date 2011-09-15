@@ -9,7 +9,9 @@ dep 'ruby19.src' do
   requires 'readline headers.managed', 'yaml headers.managed'
   source 'ftp://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.2-p290.tar.gz'
   provides 'ruby == 1.9.2p290', 'gem', 'irb'
-  configure_args '--disable-install-doc', '--with-readline-dir=/usr'
+  configure_args '--disable-install-doc',
+    "--with-readline-dir=#{Babushka::Base.host.pkg_helper.prefix}",
+    "--with-libyaml-dir=#{Babushka::Base.host.pkg_helper.prefix}"
   # TODO: hack for ruby bug where bin/* aren't installed when the build path
   # contains a dot-dir.
   postinstall {
