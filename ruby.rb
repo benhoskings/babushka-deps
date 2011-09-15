@@ -12,9 +12,9 @@ dep 'ruby19.src' do
   configure_args '--disable-install-doc',
     "--with-readline-dir=#{Babushka::Base.host.pkg_helper.prefix}",
     "--with-libyaml-dir=#{Babushka::Base.host.pkg_helper.prefix}"
-  # TODO: hack for ruby bug where bin/* aren't installed when the build path
-  # contains a dot-dir.
   postinstall {
+    # TODO: hack for ruby bug where bin/* aren't installed when the build path
+    # contains a dot-dir.
     shell "cp bin/* #{prefix / 'bin'}", :sudo => Babushka::SrcHelper.should_sudo?
   }
 end
