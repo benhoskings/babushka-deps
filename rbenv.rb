@@ -37,6 +37,10 @@ meta :rbenv do
       end
     }
     after {
+      # TODO: hack for ruby bug where bin/* aren't installed when the build path
+      # contains a dot-dir.
+      shell "cp bin/* #{prefix / 'bin'}"
+
       log_shell 'rbenv rehash', 'rbenv rehash'
     }
   }
