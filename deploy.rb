@@ -27,7 +27,6 @@ dep 'up to date.repo' do
     'app flagged for restart.task',
     '☕',
     'scss built',
-    'untracked assets removed',
     'maintenance page down',
     'after deploy'
   ]
