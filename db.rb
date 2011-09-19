@@ -32,7 +32,7 @@ dep 'activerecord db migrated' do
     end
   }
   meet {
-    shell 'bundle exec rake db:migrate --trace RAILS_ENV=production', log: true
+    shell 'bundle exec rake db:migrate --trace RAILS_ENV=production', :log => true
     @run = true
   }
 end
