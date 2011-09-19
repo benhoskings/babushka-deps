@@ -58,7 +58,7 @@ end
 dep 'valid git_ref_data.repo' do
   met? {
     var(:git_ref_data)[ref_data_regexp] ||
-      raise(UnmeetableDep, "Invalid value '#{var(:git_ref_data)}' for :git_ref_data.")
+      unmeetable("Invalid value '#{var(:git_ref_data)}' for :git_ref_data.")
   }
 end
 
@@ -67,7 +67,7 @@ dep 'clean.repo' do
     # Clear git's internal cache, which sometimes says the repo is dirty when it isn't.
     repo.repo_shell "git diff"
   }
-  met? { repo.clean? || raise(UnmeetableDep, "The remote repo has local changes.") }
+  met? { repo.clean? || unmeetable("The remote repo has local changes.") }
 end
 
 dep 'branch exists.repo' do
