@@ -36,7 +36,7 @@ dep 'RubyAMP.tmbundle' do
 end
 
 dep 'SCSS.tmbundle' do
-  source 'git://github.com/kuroir/SCSS.tmbundle.git'
+  source 'git://github.com/kuroir/SCSS.git'
 end
 
 dep 'nginx.tmbundle' do
