@@ -18,6 +18,10 @@ dep 'JavaScript Tools.tmbundle' do
   source 'git://github.com/subtleGradient/javascript-tools.tmbundle.git'
 end
 
+dep 'CoffeeScript.tmbundle' do
+  source 'git://github.com/jashkenas/coffee-script-tmbundle.git'
+end
+
 dep 'Tcl.tmbundle' do
   source 'git://github.com/textmate/tcl.tmbundle.git'
 end
