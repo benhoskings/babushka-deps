@@ -19,7 +19,7 @@ dep 'passwordless ssh logins', :user, :key do
     append_to_file key, (ssh_dir / 'authorized_keys'), :sudo => sudo?
   }
   after {
-    shell "chown -R #{user}:#{group} '#{ssh_dir}'", :sudo => sudo?
+    sudo "chown -R #{user}:#{group} '#{ssh_dir}'" unless ssh_dir.owner == user
     shell "chmod 600 #{(ssh_dir / 'authorized_keys')}", :sudo => sudo?
   }
 end
