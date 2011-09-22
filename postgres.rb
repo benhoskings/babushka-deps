@@ -55,16 +55,17 @@ dep 'postgres backups' do
   }
 end
 
-dep 'postgres.managed' do
+dep 'postgres.managed', :version do
+  version.default('9.1')
   requires {
     on :apt, 'set.locale', 'postgres.ppa'
     on :brew, 'set.locale'
   }
   installs {
-    via :apt, %w[postgresql libpq-dev]
-    via :brew, 'postgresql'
+    via :apt, ["postgresql-#{owner.version}", "libpq-dev"]
+    via :brew, "postgresql"
   }
-  provides 'psql ~> 9.1.0'
+  provides "psql ~> #{version}.0"
 end
 
 dep 'postgres.ppa' do
