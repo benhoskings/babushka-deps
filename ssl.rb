@@ -1,13 +1,13 @@
-dep 'passwordless ssh logins', :user, :key do
-  user.default(shell('whoami'))
+dep 'passwordless ssh logins', :username, :key do
+  username.default(shell('whoami'))
   def ssh_dir
-    "~#{user}" / '.ssh'
+    "~#{username}" / '.ssh'
   end
   def group
-    shell "id -gn #{user}"
+    shell "id -gn #{username}"
   end
   def sudo?
-    @sudo ||= user == shell('whoami')
+    @sudo ||= username == shell('whoami')
   end
   met? {
     shell "grep '#{key}' '#{ssh_dir / 'authorized_keys'}'", :sudo => sudo?
@@ -19,7 +19,7 @@ dep 'passwordless ssh logins', :user, :key do
     append_to_file key, (ssh_dir / 'authorized_keys'), :sudo => sudo?
   }
   after {
-    sudo "chown -R #{user}:#{group} '#{ssh_dir}'" unless ssh_dir.owner == user
+    sudo "chown -R #{username}:#{group} '#{ssh_dir}'" unless ssh_dir.owner == username
     shell "chmod 600 #{(ssh_dir / 'authorized_keys')}", :sudo => sudo?
   }
 end
