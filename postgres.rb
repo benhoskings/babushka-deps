@@ -64,7 +64,7 @@ dep 'postgres.managed' do
     via :apt, %w[postgresql postgresql-client libpq-dev]
     via :brew, 'postgresql'
   }
-  provides 'psql ~> 9.0.0'
+  provides 'psql ~> 9.1.0'
 end
 
 dep 'postgres.ppa' do
