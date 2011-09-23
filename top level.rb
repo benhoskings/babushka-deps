@@ -6,12 +6,9 @@ dep 'system' do
   }
 end
 
-dep 'user setup' do
-  requires 'dot files', 'passwordless ssh logins', 'public key', 'zsh'
-  define_var :username, :default => shell('whoami')
-  setup {
-    set :username, shell('whoami')
-  }
+dep 'user setup', :username do
+  username.default(shell('whoami'))
+  requires 'dot files'.with(username), 'passwordless ssh logins'.with(:username => username), 'public key', 'zsh'
 end
 
 dep 'rails app' do
