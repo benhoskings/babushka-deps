@@ -2,5 +2,4 @@
 
 cd .. # up from .git/
 unset GIT_DIR # otherwise `git` commands can't see other repos
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # so we run against the right ruby
 babushka --colour 'benhoskings:up to date.repo' git_ref_data="$(cat /dev/stdin)"
