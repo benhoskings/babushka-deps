@@ -8,36 +8,36 @@ dep 'git.managed' do
   provides 'git >= 1.7.4.1'
 end
 
-dep 'web repo' do
+dep 'web repo', :path do
   requires [
-    'web repo exists',
-    'web repo hooks',
-    'web repo always receives',
+    'web repo exists'.with(path),
+    'web repo hooks'.with(path),
+    'web repo always receives'.with(path),
     'bundler.gem'
   ]
   met? {
-    vanity_path = var(:web_repo_root).p.sub(/^#{Etc.getpwuid(Process.euid).dir.chomp('/')}/, '~')
+    vanity_path = path.p.sub(/^#{Etc.getpwuid(Process.euid).dir.chomp('/')}/, '~')
     log "All done. The repo's URI: " + "#{shell('whoami')}@#{shell('hostname -f')}:#{vanity_path}".colorize('underline')
     true
   }
 end
 
-dep 'web repo always receives' do
-  requires 'web repo exists'
-  met? { cd(var(:web_repo_root)) { shell?("git config receive.denyCurrentBranch") == 'ignore' } }
-  meet { cd(var(:web_repo_root)) { shell("git config receive.denyCurrentBranch ignore") } }
+dep 'web repo always receives', :path do
+  requires 'web repo exists'.with(path)
+  met? { cd(path) { shell?("git config receive.denyCurrentBranch") == 'ignore' } }
+  meet { cd(path) { shell("git config receive.denyCurrentBranch ignore") } }
 end
 
-dep 'web repo hooks' do
-  requires 'web repo exists'
+dep 'web repo hooks', :path do
+  requires 'web repo exists'.with(path)
   met? {
     %w[pre-receive post-receive].all? {|hook_name|
-      (var(:web_repo_root) / ".git/hooks/#{hook_name}").executable? &&
-      Babushka::Renderable.new(var(:web_repo_root) / ".git/hooks/#{hook_name}").from?(dependency.load_path.parent / "git/deploy-repo-#{hook_name}")
+      (path / ".git/hooks/#{hook_name}").executable? &&
+      Babushka::Renderable.new(path / ".git/hooks/#{hook_name}").from?(dependency.load_path.parent / "git/deploy-repo-#{hook_name}")
     }
   }
   meet {
-    cd var(:web_repo_root), :create => true do
+    cd path, :create => true do
       %w[pre-receive post-receive].each {|hook_name|
         render_erb "git/deploy-repo-#{hook_name}", :to => ".git/hooks/#{hook_name}"
         shell "chmod +x .git/hooks/#{hook_name}"
@@ -46,12 +46,12 @@ dep 'web repo hooks' do
   }
 end
 
-dep 'web repo exists' do
+dep 'web repo exists', :path do
   requires 'git'
-  define_var :web_repo_root, :default => "~/current"
-  met? { (var(:web_repo_root) / '.git').dir? }
+  path.ask("Where should the repo be created").default("~/current")
+  met? { (path / '.git').dir? }
   meet {
-    cd var(:web_repo_root), :create => true do
+    cd path, :create => true do
       shell "git init"
     end
   }
