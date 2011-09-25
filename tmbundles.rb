@@ -10,6 +10,10 @@ dep 'RSpec.tmbundle' do
   source 'git://github.com/rspec/rspec-tmbundle.git'
 end
 
+dep 'Ruby Haml.tmbundle' do
+  source 'git://github.com/benhoskings/ruby-haml.tmbundle.git'
+end
+
 dep 'jQuery.tmbundle' do
   source 'git://github.com/kswedberg/jquery-tmbundle.git'
 end
