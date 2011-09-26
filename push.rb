@@ -19,20 +19,10 @@ end
 
 dep 'push!', :ref, :remote do
   ref.ask("What would you like to push?").default('HEAD')
-  requires [
-    'ready.push',
-    'before push',
-    'pushed.push'.with(ref, remote),
-    'marked on newrelic.task'.with(ref),
-    'after push'
-  ]
-end
-
-# These are looked up with Dep() so they're just skipped if they don't exist.
-dep 'before push' do
+  requires 'ready.push'
   requires Dep('current dir:before push')
-end
-dep 'after push' do
+  requires 'pushed.push'.with(ref, remote)
+  requires 'marked on newrelic.task'.with(ref)
   requires Dep('current dir:after push')
 end
 
