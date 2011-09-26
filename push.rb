@@ -20,10 +20,10 @@ end
 dep 'push!', :ref, :remote do
   ref.ask("What would you like to push?").default('HEAD')
   requires 'ready.push'
-  requires Dep('current dir:before push')
+  requires 'current dir:before push'.with(ref, remote) if Dep('current dir:before push')
   requires 'pushed.push'.with(ref, remote)
   requires 'marked on newrelic.task'.with(ref)
-  requires Dep('current dir:after push')
+  requires 'current dir:after push'.with(ref, remote) if Dep('current dir:after push')
 end
 
 dep 'ready.push' do
