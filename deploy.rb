@@ -13,8 +13,7 @@ dep 'up to date.repo', :git_ref_data do
     {:old_id => old_id, :new_id => new_id, :branch => branch}
   end
   requires [
-    'branch exists.repo'.with(branch),
-    'branch checked out.repo'.with(ref_info[:branch]),
+    'on correct branch.repo'.with(ref_info[:branch]),
     'HEAD up to date.repo'.with(ref_info),
     'app bundled'.with(:root => '.', :env => 'production'),
 
@@ -64,6 +63,7 @@ dep 'branch exists.repo', :branch do
 end
 
 dep 'on correct branch.repo', :branch do
+  requires 'branch exists.repo'.with(branch)
   met? {
     repo.current_branch == branch
   }
