@@ -1,64 +1,46 @@
 # coding: utf-8
 
-dep 'ready for update.repo' do
+dep 'ready for update.repo', :git_ref_data do
   requires [
-    'valid git_ref_data.repo',
+    'valid git_ref_data.repo'.with(git_ref_data),
     'clean.repo'
   ]
 end
 
-dep 'up to date.repo' do
-  setup {
-    set :app_root, '.'
-    set :app_env, 'production'
-    set :username, shell('whoami')
-  }
+dep 'up to date.repo', :git_ref_data do
+  def ref_info
+    old_id, new_id, branch = git_ref_data.to_s.scan(ref_data_regexp).flatten
+    {:old_id => old_id, :new_id => new_id, :branch => branch}
+  end
   requires [
-    'ref info extracted.repo',
-    'branch exists.repo',
-    'branch checked out.repo',
-    'HEAD up to date.repo',
-    'app bundled',
+    'branch exists.repo'.with(branch),
+    'branch checked out.repo'.with(ref_info[:branch]),
+    'HEAD up to date.repo'.with(ref_info),
+    'app bundled'.with(:root => '.', :env => 'production'),
 
     # This and the 'maintenace' one below are separate so the 'current dir'
     # deps load lazily from the new code checked out by 'HEAD up to date.repo'.
-    'on deploy',
+    'on deploy'.with(ref_info),
 
     'app flagged for restart.task',
     '☕',
     'scss built',
     'maintenance page down',
-    'after deploy'
+    'after deploy'.with(ref_info)
   ]
 end
 
 # These are looked up with Dep() so they're just skipped if they don't exist.
-dep 'on deploy' do
-  requires Dep('current dir:on deploy')
+dep 'on deploy', :old_id, :new_id, :branch do
+  requires 'current dir:on deploy'.with(old_id, new_id, branch) if Dep('current dir:on deploy')
 end
-dep 'after deploy' do
-  requires Dep('current dir:after deploy')
-end
-
-dep 'ref info extracted.repo' do
-  requires 'valid git_ref_data.repo'
-  met? {
-    %w[old_id new_id branch].all? {|name|
-      !Babushka::Base.task.vars.vars[name][:value].nil?
-    }
-  }
-  meet {
-    old_id, new_id, branch = var(:git_ref_data).scan(ref_data_regexp).flatten
-    set :old_id, old_id
-    set :new_id, new_id
-    set :branch, branch
-  }
+dep 'after deploy', :old_id, :new_id, :branch do
+  requires 'current dir:after deploy'.with(old_id, new_id, branch) if Dep('current dir:after deploy')
 end
 
-dep 'valid git_ref_data.repo' do
+dep 'valid git_ref_data.repo', :git_ref_data do
   met? {
-    var(:git_ref_data)[ref_data_regexp] ||
-      unmeetable("Invalid value '#{var(:git_ref_data)}' for :git_ref_data.")
+    git_ref_data[ref_data_regexp] || unmeetable("Invalid value '#{git_ref_data}' for :git_ref_data.")
   }
 end
 
@@ -70,41 +52,45 @@ dep 'clean.repo' do
   met? { repo.clean? || unmeetable("The remote repo has local changes.") }
 end
 
-dep 'branch exists.repo' do
-  met? { repo.branches.include? var(:branch) }
-  meet {
-    log_block "Creating #{var(:branch)}" do
-      repo.branch! var(:branch)
-    end
-  }
-end
-
-dep 'branch checked out.repo' do
-  met? { repo.current_branch == var(:branch) }
-  meet {
-    log_block "Checking out #{var(:branch)}" do
-      repo.checkout! var(:branch)
-    end
-  }
-end
-
-dep 'HEAD up to date.repo' do
+dep 'branch exists.repo', :branch do
   met? {
-    (repo.current_full_head == var(:new_id) && repo.clean?).tap {|result|
+    repo.branches.include? branch
+  }
+  meet {
+    log_block "Creating #{branch}" do
+      repo.branch! branch
+    end
+  }
+end
+
+dep 'on correct branch.repo', :branch do
+  met? {
+    repo.current_branch == branch
+  }
+  meet {
+    log_block "Checking out #{branch}" do
+      repo.checkout! branch
+    end
+  }
+end
+
+dep 'HEAD up to date.repo', :old_id, :new_id, :branch do
+  met? {
+    (repo.current_full_head == new_id && repo.clean?).tap {|result|
       if result
-        log_ok "#{var(:branch)} is up to date at #{repo.current_head}."
+        log_ok "#{branch} is up to date at #{repo.current_head}."
       else
-        log "#{var(:branch)} needs updating: #{var(:old_id)[0...7]}..#{var(:new_id)[0...7]}"
+        log "#{branch} needs updating: #{old_id[0...7]}..#{new_id[0...7]}"
       end
     }
   }
   meet {
-    if var(:old_id)[/^0+$/]
-      log "Starting HEAD at #{var(:new_id)[0...7]} (a #{shell("git rev-list #{var(:new_id)} | wc -l").strip}-commit history) since the repo is blank."
+    if old_id[/^0+$/]
+      log "Starting HEAD at #{new_id[0...7]} (a #{shell("git rev-list #{new_id} | wc -l").strip}-commit history) since the repo is blank."
     else
-      log shell("git diff --stat #{var(:old_id)}..#{var(:new_id)}")
+      log shell("git diff --stat #{old_id}..#{new_id}")
     end
-    repo.reset_hard! var(:new_id)
+    repo.reset_hard! new_id
   }
 end
 
