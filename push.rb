@@ -17,12 +17,12 @@ meta :push do
   end
 end
 
-dep 'push!', :ref do
+dep 'push!', :ref, :remote do
   ref.ask("What would you like to push?").default('HEAD')
   requires [
     'ready.push',
     'before push',
-    'pushed.push'.with(:ref => ref),
+    'pushed.push'.with(ref, remote),
     'marked on newrelic.task'.with(ref),
     'after push'
   ]
