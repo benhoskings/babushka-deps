@@ -40,7 +40,7 @@ end
 
 dep 'valid git_ref_data.repo', :git_ref_data do
   met? {
-    git_ref_data[ref_data_regexp] || unmeetable("Invalid value '#{git_ref_data}' for :git_ref_data.")
+    git_ref_data[ref_data_regexp] || unmeetable("Invalid git_ref_data '#{git_ref_data}'.")
   }
 end
 
