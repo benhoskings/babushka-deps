@@ -20,13 +20,13 @@ dep 'up to date.repo', :git_ref_data, :env do
 
     # This and the 'maintenace' one below are separate so the 'current dir'
     # deps load lazily from the new code checked out by 'HEAD up to date.repo'.
-    'on deploy'.with(ref_info, :env => env),
+    'on deploy'.with(ref_info[:old_id], ref_info[:new_id], ref_info[:branch], env),
 
     'app flagged for restart.task',
     '☕',
     'scss built',
     'maintenance page down',
-    'after deploy'.with(ref_info, :env => env)
+    'after deploy'.with(ref_info[:old_id], ref_info[:new_id], ref_info[:branch], env)
   ]
 end
 
