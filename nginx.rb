@@ -73,7 +73,7 @@ dep 'vhost configured.nginx' do
 end
 
 dep 'self signed cert.nginx' do
-  requires 'webserver installed.src'
+  requires 'nginx.src'
   met? { %w[key csr crt].all? {|ext| (nginx_cert_path / "#{var :domain}.#{ext}").exists? } }
   meet {
     cd nginx_cert_path, :create => "700", :sudo => true do
@@ -113,7 +113,7 @@ dep 'webserver running.nginx' do
 end
 
 dep 'webserver startup script.nginx' do
-  requires 'webserver installed.src'
+  requires 'nginx.src'
   on :linux do
     requires 'rcconf.managed'
     met? { shell("rcconf --list").val_for('nginx') == 'on' }
@@ -132,7 +132,7 @@ dep 'webserver startup script.nginx' do
 end
 
 dep 'webserver configured.nginx' do
-  requires 'webserver installed.src', 'www user and group', 'nginx.logrotate'
+  requires 'nginx.src', 'www user and group', 'nginx.logrotate'
   set :nginx_prefix, '/opt/nginx'
   met? {
     Babushka::Renderable.new(nginx_conf).from?(dependency.load_path.parent / "nginx/nginx.conf.erb")
@@ -145,7 +145,7 @@ dep 'webserver configured.nginx' do
   }
 end
 
-dep 'webserver installed.src', :nginx_prefix, :version, :upload_module_version do
+dep 'nginx.src', :nginx_prefix, :version, :upload_module_version do
   nginx_prefix.default!("/opt/nginx")
   version.default!('1.0.6')
   upload_module_version.default!('2.2.0')
