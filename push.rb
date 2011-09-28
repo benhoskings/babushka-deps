@@ -4,7 +4,7 @@ meta :push do
   end
   def self.remote_head remote
     host, path = shell("git config remote.#{remote}.url").split(':', 2)
-    @remote_head ||= shell!("ssh #{host} 'cd #{path} && git rev-parse --short HEAD 2>/dev/null'") || ''
+    @remote_head ||= shell!("ssh #{host} 'cd #{path} && git rev-parse --short HEAD 2>/dev/null || echo 0000000'")
   end
   def remote_head
     self.class.remote_head(remote)
