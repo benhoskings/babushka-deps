@@ -157,7 +157,7 @@ dep 'nginx.src', :nginx_prefix, :version, :upload_module_version do
     if !File.executable?(nginx_prefix / 'sbin/nginx')
       unmet "nginx isn't installed"
     else
-      installed_version = shell(nginx_prefix / 'sbin/nginx -V') {|shell| shell.stderr }.val_for(/(nginx: )?nginx version:/).sub('nginx/', '')
+      installed_version = shell(nginx_prefix / 'sbin/nginx -v') {|shell| shell.stderr }.val_for(/(nginx: )?nginx version:/).sub('nginx/', '')
       if installed_version != version
         unmet "an outdated version of nginx is installed (#{installed_version})"
       else
