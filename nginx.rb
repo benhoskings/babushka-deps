@@ -113,7 +113,7 @@ dep 'startup script.nginx', :nginx_prefix do
   on :osx do
     met? { !sudo('launchctl list').split("\n").grep(/org\.nginx/).empty? }
     meet {
-      render_erb 'nginx/nginx.launchd.erb', :to => '/Library/LaunchDaemons/org.nginx.plist', :sudo => true
+      render_erb 'nginx/nginx.launchd.erb', :to => '/Library/LaunchDaemons/org.nginx.plist', :sudo => true, :comment => '<!--', :comment_suffix => '-->'
       sudo 'launchctl load -w /Library/LaunchDaemons/org.nginx.plist'
     }
   end
