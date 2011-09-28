@@ -145,29 +145,28 @@ dep 'webserver configured.nginx' do
   }
 end
 
-dep 'webserver installed.src' do
+dep 'webserver installed.src', :nginx_prefix, :version, :upload_module_version do
+  nginx_prefix.default!("/opt/nginx")
+  version.default!('1.0.6')
+  upload_module_version.default!('2.2.0')
   requires 'pcre.managed', 'libssl headers.managed', 'zlib headers.managed'
-  set :nginx_prefix, '/opt/nginx'
-  merge :versions, {:nginx => '1.0.6', :nginx_upload_module => '2.2.0'}
-  source "http://nginx.org/download/nginx-#{var(:versions)[:nginx]}.tar.gz"
-  extra_source "http://www.grid.net.ru/nginx/download/nginx_upload_module-#{var(:versions)[:nginx_upload_module]}.tar.gz"
+  source "http://nginx.org/download/nginx-#{version}.tar.gz"
+  extra_source "http://www.grid.net.ru/nginx/download/nginx_upload_module-#{upload_module_version}.tar.gz"
   configure_args "--with-ipv6", "--with-pcre", "--with-http_ssl_module",
-    "--add-module='../../nginx_upload_module-#{var(:versions)[:nginx_upload_module]}/nginx_upload_module-#{var(:versions)[:nginx_upload_module]}'"
-  setup {
-    prefix var(:nginx_prefix)
-    provides var(:nginx_prefix) / 'sbin/nginx'
-  }
+    "--add-module='../../nginx_upload_module-#{upload_module_version}/nginx_upload_module-#{upload_module_version}'"
+  prefix nginx_prefix
+  provides nginx_prefix / 'sbin/nginx'
 
   configure { log_shell "configure", default_configure_command }
   build { log_shell "build", "make" }
   install { log_shell "install", "make install", :sudo => true }
 
   met? {
-    if !File.executable?(var(:nginx_prefix) / 'sbin/nginx')
+    if !File.executable?(nginx_prefix / 'sbin/nginx')
       unmet "nginx isn't installed"
     else
-      installed_version = shell(var(:nginx_prefix) / 'sbin/nginx -V') {|shell| shell.stderr }.val_for(/(nginx: )?nginx version:/).sub('nginx/', '')
-      if installed_version != var(:versions)[:nginx]
+      installed_version = shell(nginx_prefix / 'sbin/nginx -V') {|shell| shell.stderr }.val_for(/(nginx: )?nginx version:/).sub('nginx/', '')
+      if installed_version != version
         unmet "an outdated version of nginx is installed (#{installed_version})"
       else
         met "nginx-#{installed_version} is installed"
