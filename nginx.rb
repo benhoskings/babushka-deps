@@ -60,13 +60,13 @@ dep 'vhost configured.nginx', :nginx_prefix, :type, :domain, :path do
   }
 end
 
-dep 'self signed cert.nginx' do
-  requires 'nginx.src'
-  met? { %w[key csr crt].all? {|ext| (nginx_cert_path / "#{var :domain}.#{ext}").exists? } }
+dep 'self signed cert.nginx', :nginx_prefix, :domain do
+  requires 'nginx.src'.with(:nginx_prefix => nginx_prefix)
+  met? { %w[key csr crt].all? {|ext| (cert_path / "#{domain}.#{ext}").exists? } }
   meet {
-    cd nginx_cert_path, :create => "700", :sudo => true do
-      log_shell("generating private key", "openssl genrsa -out #{var :domain}.key 2048", :sudo => true) and
-      log_shell("generating certificate", "openssl req -new -key #{var :domain}.key -out #{var :domain}.csr",
+    cd cert_path, :create => "700", :sudo => true do
+      log_shell("generating private key", "openssl genrsa -out #{domain}.key 2048", :sudo => true) and
+      log_shell("generating certificate", "openssl req -new -key #{domain}.key -out #{domain}.csr",
         :sudo => true, :input => [
           var(:country, :default => 'AU'),
           var(:state),
@@ -80,7 +80,7 @@ dep 'self signed cert.nginx' do
           '' # done
         ].join("\n")
       ) and
-      log_shell("signing certificate with key", "openssl x509 -req -days 365 -in #{var :domain}.csr -signkey #{var :domain}.key -out #{var :domain}.crt", :sudo => true)
+      log_shell("signing certificate with key", "openssl x509 -req -days 365 -in #{domain}.csr -signkey #{domain}.key -out #{domain}.crt", :sudo => true)
     end
   }
 end
