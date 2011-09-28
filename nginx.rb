@@ -60,7 +60,7 @@ dep 'vhost configured.nginx' do
   }
   define_var :vhost_type, :default => 'unicorn', :choices => %w[unicorn proxy static]
   define_var :document_root, :default => L{ '/srv/http' / var(:domain) }
-  requires 'webserver configured.nginx'
+  requires 'configured.nginx'
   requires 'unicorn configured' if var(:vhost_type) == 'unicorn'
   met? {
     Babushka::Renderable.new(nginx_conf_for(var(:domain), 'conf')).from?(dependency.load_path.parent / "nginx/vhost.conf.erb") and
@@ -97,8 +97,8 @@ dep 'self signed cert.nginx' do
   }
 end
 
-dep 'webserver running.nginx' do
-  requires 'webserver configured.nginx', 'webserver startup script.nginx'
+dep 'running.nginx' do
+  requires 'configured.nginx', 'startup script.nginx'
   met? {
     nginx_running?.tap {|result|
       log "There is #{result ? 'something' : 'nothing'} listening on port 80."
@@ -112,7 +112,7 @@ dep 'webserver running.nginx' do
   end
 end
 
-dep 'webserver startup script.nginx' do
+dep 'startup script.nginx' do
   requires 'nginx.src'
   on :linux do
     requires 'rcconf.managed'
@@ -131,7 +131,7 @@ dep 'webserver startup script.nginx' do
   end
 end
 
-dep 'webserver configured.nginx' do
+dep 'configured.nginx' do
   requires 'nginx.src', 'www user and group', 'nginx.logrotate'
   set :nginx_prefix, '/opt/nginx'
   met? {

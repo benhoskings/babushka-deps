@@ -28,7 +28,7 @@ dep 'proxied app' do
 end
 
 dep 'webapp' do
-  requires 'user exists', 'vhost enabled.nginx', 'webserver running.nginx'
+  requires 'user exists', 'vhost enabled.nginx', 'running.nginx'
   define_var :domain, :default => :username
   setup {
     set :home_dir_base, "/srv/http"
