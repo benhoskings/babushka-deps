@@ -22,14 +22,6 @@ meta :nginx do
   def unicorn_socket_path
     var(:app_root) / 'tmp/sockets/unicorn.socket'
   end
-  def worker_pool_size
-    # 300MB 'working room' per worker (hopefully the worker itself should be
-    # no more than half that), with 500MB set aside for system, DB, etc,
-    # capped to at least 2 and at most 8 workers.
-    [8, [2,
-      (Babushka::Base.host.total_memory - 500.mb) / 300.mb,
-    ].max].min
-  end
   def nginx_running?
     shell? "netstat -an | grep -E '^tcp.*[.:]80 +.*LISTEN'"
   end
