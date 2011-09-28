@@ -85,8 +85,8 @@ dep 'self signed cert.nginx', :nginx_prefix, :domain do
   }
 end
 
-dep 'running.nginx' do
-  requires 'configured.nginx', 'startup script.nginx'
+dep 'running.nginx', :nginx_prefix do
+  requires 'configured.nginx'.with(nginx_prefix), 'startup script.nginx'.with(nginx_prefix)
   met? {
     nginx_running?.tap {|result|
       log "There is #{result ? 'something' : 'nothing'} listening on port 80."
@@ -100,8 +100,8 @@ dep 'running.nginx' do
   end
 end
 
-dep 'startup script.nginx' do
-  requires 'nginx.src'
+dep 'startup script.nginx', :nginx_prefix do
+  requires 'nginx.src'.with(:nginx_prefix => nginx_prefix)
   on :linux do
     requires 'rcconf.managed'
     met? { shell("rcconf --list").val_for('nginx') == 'on' }
