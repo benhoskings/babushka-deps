@@ -1,26 +1,19 @@
 meta :nginx do
   accepts_list_for :source
   accepts_list_for :extra_source
-  def nginx_bin
-    var(:nginx_prefix) / 'sbin/nginx'
-  end
-  def nginx_conf
-    var(:nginx_prefix) / 'conf/nginx.conf'
-  end
-  def nginx_cert_path
-    var(:nginx_prefix) / 'conf/certs'
-  end
-  def nginx_conf_for domain, ext
-    var(:nginx_prefix) / "conf/vhosts/#{domain}.#{ext}"
-  end
-  def nginx_conf_link_for domain
-    var(:nginx_prefix) / "conf/vhosts/on/#{domain}.conf"
-  end
+
+  def nginx_bin;    nginx_prefix / "sbin/nginx" end
+  def cert_path;    nginx_prefix / "conf/certs" end
+  def nginx_conf;   nginx_prefix / "conf/nginx.conf" end
+  def vhost_conf;   nginx_prefix / "conf/vhosts/#{domain}.conf" end
+  def vhost_common; nginx_prefix / "conf/vhosts/#{domain}.common" end
+  def vhost_link;   nginx_prefix / "conf/vhosts/on/#{domain}.conf" end
+
   def upstream_name
-    "#{var(:domain)}.upstream"
+    "#{domain}.upstream"
   end
   def unicorn_socket_path
-    var(:app_root) / 'tmp/sockets/unicorn.socket'
+    path / 'tmp/sockets/unicorn.socket'
   end
   def nginx_running?
     shell? "netstat -an | grep -E '^tcp.*[.:]80 +.*LISTEN'"
@@ -33,16 +26,16 @@ meta :nginx do
   end
 end
 
-dep 'vhost enabled.nginx' do
-  requires 'vhost configured.nginx'
-  met? { nginx_conf_link_for(var(:domain)).exists? }
-  meet { sudo "ln -sf '#{nginx_conf_for(var(:domain), 'conf')}' '#{nginx_conf_link_for(var(:domain))}'" }
+dep 'vhost enabled.nginx', :nginx_prefix, :type, :domain, :path do
+  requires 'vhost configured.nginx'.with(nginx_prefix, type, domain, path)
+  met? { vhost_link.exists? }
+  meet { sudo "ln -sf '#{vhost_conf}' '#{vhost_link}'" }
   after { restart_nginx }
 end
 
-dep 'vhost configured.nginx' do
+dep 'vhost configured.nginx', :nginx_prefix, :type, :domain, :path do
   define_var :www_aliases, :default => L{
-    "#{var :domain} #{var :extra_domains}".split(' ').compact.map(&:strip).reject {|d|
+    "#{domain} #{var :extra_domains}".split(' ').compact.map(&:strip).reject {|d|
       d.starts_with? '*.'
     }.reject {|d|
       d.starts_with? 'www.'
@@ -50,17 +43,20 @@ dep 'vhost configured.nginx' do
       "www.#{d}"
     }.join(' ')
   }
-  define_var :vhost_type, :default => 'unicorn', :choices => %w[unicorn proxy static]
-  define_var :document_root, :default => L{ '/srv/http' / var(:domain) }
-  requires 'configured.nginx'
-  requires 'unicorn configured' if var(:vhost_type) == 'unicorn'
+
+  type.default('unicorn').choose(%w[unicorn proxy static])
+  path.default("~#{domain}/current".p) if shell?('id', domain)
+
+  requires 'configured.nginx'.with(nginx_prefix)
+  requires 'unicorn configured'.with(path) if type == 'unicorn'
+
   met? {
-    Babushka::Renderable.new(nginx_conf_for(var(:domain), 'conf')).from?(dependency.load_path.parent / "nginx/vhost.conf.erb") and
-    Babushka::Renderable.new(nginx_conf_for(var(:domain), 'common')).from?(dependency.load_path.parent / "nginx/#{var :vhost_type}_vhost.common.erb")
+    Babushka::Renderable.new(vhost_conf).from?(dependency.load_path.parent / "nginx/vhost.conf.erb") and
+    Babushka::Renderable.new(vhost_common).from?(dependency.load_path.parent / "nginx/#{type}_vhost.common.erb")
   }
   meet {
-    render_erb "nginx/vhost.conf.erb",                      :to => nginx_conf_for(var(:domain), 'conf'), :sudo => true
-    render_erb "nginx/#{var :vhost_type}_vhost.common.erb", :to => nginx_conf_for(var(:domain), 'common'), :sudo => true
+    render_erb "nginx/vhost.conf.erb", :to => vhost_conf, :sudo => true
+    render_erb "nginx/#{type}_vhost.common.erb", :to => vhost_common, :sudo => true
   }
 end
 
@@ -123,9 +119,8 @@ dep 'startup script.nginx' do
   end
 end
 
-dep 'configured.nginx' do
-  requires 'nginx.src', 'www user and group', 'nginx.logrotate'
-  set :nginx_prefix, '/opt/nginx'
+dep 'configured.nginx', :nginx_prefix do
+  requires 'nginx.src'.with(:nginx_prefix => nginx_prefix), 'www user and group', 'nginx.logrotate'
   met? {
     Babushka::Renderable.new(nginx_conf).from?(dependency.load_path.parent / "nginx/nginx.conf.erb")
   }
@@ -133,7 +128,7 @@ dep 'configured.nginx' do
     render_erb 'nginx/nginx.conf.erb', :to => nginx_conf, :sudo => true
   }
   after {
-    sudo "mkdir -p #{var(:nginx_prefix) / 'conf/vhosts/on'}"
+    sudo "mkdir -p #{nginx_prefix / 'conf/vhosts/on'}"
   }
 end
 
