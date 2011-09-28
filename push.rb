@@ -22,7 +22,7 @@ dep 'push!', :ref, :remote do
   requires 'ready.push'
   requires 'current dir:before push'.with(ref, remote) if Dep('current dir:before push')
   requires 'pushed.push'.with(ref, remote)
-  requires 'marked on newrelic.task'.with(ref)
+  requires 'marked on newrelic.task'.with(ref, remote)
   requires 'current dir:after push'.with(ref, remote) if Dep('current dir:after push')
 end
 
@@ -60,9 +60,11 @@ dep 'pushed.push', :ref, :remote do
   }
 end
 
-dep 'marked on newrelic.task', :ref do
+dep 'marked on newrelic.task', :ref, :remote do
   run {
-    if 'config/newrelic.yml'.p.exists?
+    if remote == 'staging'
+      log "Not recording staging deploy."
+    elsif 'config/newrelic.yml'.p.exists?
       shell "bundle exec newrelic deployments -r #{shell("git rev-parse --short #{ref}")}"
     end
   }
