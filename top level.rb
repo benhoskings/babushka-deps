@@ -11,24 +11,24 @@ dep 'user setup', :username, :key do
   requires 'dot files'.with(username), 'passwordless ssh logins'.with(username, key), 'public key', 'zsh'
 end
 
-dep 'rails app' do
-  requires 'webapp', 'web repo', 'app bundled', 'migrated db', 'rails.logrotate'
-  define_var :app_env, :default => 'production'
-  define_var :app_root, :default => '~/current', :type => :path
-  setup {
-    set :username, shell('whoami')
-  }
+dep 'rails app', :domain, :username, :path, :env do
+  username.default!(shell('whoami'))
+  env.default('production')
+
+  requires 'webapp'.with('unicorn', domain, username, path)
+  requires 'web repo'.with(path)
+  requires 'app bundled'.with(path, env)
+  requires 'migrated db'.with(path, env)
+  requires 'rails.logrotate'
 end
 
 dep 'proxied app' do
-  requires 'webapp'
-  setup {
-    set :vhost_type, 'proxy'
-  }
+  requires 'webapp'.with('proxy')
 end
 
-dep 'webapp' do
-  requires 'user exists', 'vhost enabled.nginx', 'running.nginx'
+dep 'webapp', :type, :domain, :username, :path do
+  username.default!(domain)
+  requires 'user exists'.with(:username => username), 'vhost enabled.nginx'.with(:type => type, :domain => domain, :path => path), 'running.nginx'
   define_var :domain, :default => :username
   setup {
     set :home_dir_base, "/srv/http"
