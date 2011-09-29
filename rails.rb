@@ -4,7 +4,7 @@ dep 'migrated db', :username, :root, :env do
   end
 
   def db_name
-    if (db_config = yaml(root / 'config/database.yml')[env]).nil?
+    if (db_config = yaml(root / 'config/database.yml')[env.to_s]).nil?
       unmeetable "There's no database.yml entry for the #{env} environment."
     else
       db_config['database']
