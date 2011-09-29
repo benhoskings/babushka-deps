@@ -11,7 +11,7 @@ dep 'db gem' do
   }
 end
 
-dep 'activerecord db migrated' do
+dep 'activerecord db migrated', :old_id, :new_id, :env do
   requires_when_unmet 'benhoskings:maintenance page up'
   met? {
     if @run
@@ -19,8 +19,8 @@ dep 'activerecord db migrated' do
     else
       # If the branch was changed, git supplies 0000000 for var(:old_id), so
       # it looks the commit range is 'everything'.
-      old_id = var(:old_id)[/^0+$/] ? '' : var(:old_id)
-      pending = shell("git diff --numstat #{old_id}..#{var(:new_id)}").split("\n").grep(/^[\d\s]+db\/migrate\//)
+      effective_old_id = old_id[/^0+$/] ? '' : old_id
+      pending = shell("git diff --numstat #{effective_old_id}..#{new_id}").split("\n").grep(/^[\d\s]+db\/migrate\//)
       if pending.empty?
         log "No new migrations."
         true
@@ -32,7 +32,7 @@ dep 'activerecord db migrated' do
     end
   }
   meet {
-    shell 'bundle exec rake db:migrate --trace RAILS_ENV=production', :log => true
+    shell "bundle exec rake db:migrate --trace RAILS_ENV=#{env}", :log => true
     @run = true
   }
 end
