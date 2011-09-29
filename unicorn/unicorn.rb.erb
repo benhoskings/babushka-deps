@@ -5,9 +5,9 @@ preload_app true
 timeout 60
 
 listen "<%= unicorn_socket_path %>", :backlog => 64
-pid "<%= var(:app_root) / 'tmp/pids/unicorn.pid' %>"
-stderr_path "<%= var(:app_root) / 'log/unicorn.stderr.log' %>"
-stdout_path "<%= var(:app_root) / 'log/unicorn.stdout.log' %>"
+pid "<%= path / 'tmp/pids/unicorn.pid' %>"
+stderr_path "<%= path / 'log/unicorn.stderr.log' %>"
+stdout_path "<%= path / 'log/unicorn.stdout.log' %>"
 
 before_fork do |server, worker|
   ActiveRecord::Base.connection.disconnect!
