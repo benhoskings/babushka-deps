@@ -11,7 +11,7 @@ dep 'existing postgres db', :username, :db_name do
 end
 
 dep 'existing data', :username, :db_name do
-  requires 'existing db'
+  requires 'existing db'.with(username, db_name)
   met? {
     shell("psql #{db_name} -c '\\d'").scan(/\((\d+) rows?\)/).flatten.first.tap {|rows|
       if rows && rows.to_i > 0

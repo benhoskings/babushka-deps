@@ -1,14 +1,14 @@
-dep 'migrated db' do
+dep 'migrated db', :root, :env do
   requires 'app bundled', 'db gem'
-  requires var(:data_required).starts_with?('y') ? 'existing data' : 'existing db'
+  requires var(:data_required).starts_with?('y') ? 'existing data'.with : 'existing db'
   def orm
-    grep('dm-rails', var(:app_root)/'Gemfile') ? :datamapper : :activerecord
+    grep('dm-rails', root/'Gemfile') ? :datamapper : :activerecord
   end
   setup {
-    requires "migrated #{orm} db"
+    requires "migrated #{orm} db".with(root)
 
-    if (db_config = yaml(var(:app_root) / 'config/database.yml')[var(:app_env)]).nil?
-      log_error "There's no database.yml entry for the #{var(:app_env)} environment."
+    if (db_config = yaml(root / 'config/database.yml')[env]).nil?
+      log_error "There's no database.yml entry for the #{env} environment."
     else
       set :db_name, db_config['database']
     end
@@ -21,11 +21,11 @@ dep 'migrated datamapper db', :template => 'task' do
   }
 end
 
-dep 'migrated activerecord db' do
+dep 'migrated activerecord db', :root do
   met? {
     current_version = bundle_rake("db:version") {|shell| shell.stdout.val_for('Current version') }
     latest_version = Dir[
-      var(:app_root) / 'db/migrate/*.rb'
+      root / 'db/migrate/*.rb'
     ].map {|f| File.basename f }.push('0').sort.last.split('_', 2).first
 
     (current_version.gsub(/^0+/, '') == latest_version.gsub(/^0+/, '')).tap {|result|

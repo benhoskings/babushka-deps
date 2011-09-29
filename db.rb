@@ -1,6 +1,6 @@
-dep 'existing db' do
+dep 'existing db', :username, :db_name do
   setup {
-    requires "existing #{var(:db, :default => 'postgres')} db"
+    requires "existing #{var(:db, :default => 'postgres')} db".with(username, db_name)
   }
 end
 
