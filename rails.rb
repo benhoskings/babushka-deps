@@ -1,18 +1,19 @@
-dep 'migrated db', :root, :env do
-  requires 'app bundled', 'db gem'
-  requires var(:data_required).starts_with?('y') ? 'existing data'.with : 'existing db'
+dep 'migrated db', :username, :root, :env do
   def orm
     grep('dm-rails', root/'Gemfile') ? :datamapper : :activerecord
   end
-  setup {
-    requires "migrated #{orm} db".with(root)
 
+  def db_name
     if (db_config = yaml(root / 'config/database.yml')[env]).nil?
-      log_error "There's no database.yml entry for the #{env} environment."
+      unmeetable "There's no database.yml entry for the #{env} environment."
     else
-      set :db_name, db_config['database']
+      db_config['database']
     end
-  }
+  end
+
+  requires 'app bundled', 'db gem'
+  requires "existing #{var(:data_required).starts_with?('y') ? 'data' : 'db'}".with(username, db_name)
+  requires "migrated #{orm} db".with(root)
 end
 
 dep 'migrated datamapper db', :template => 'task' do

@@ -18,7 +18,7 @@ dep 'rails app', :domain, :username, :path, :env do
   requires 'webapp'.with('unicorn', domain, username, path)
   requires 'web repo'.with(path)
   requires 'app bundled'.with(path, env)
-  requires 'migrated db'.with(path, env)
+  requires 'migrated db'.with(username, path, env)
   requires 'rails.logrotate'
 end
 
