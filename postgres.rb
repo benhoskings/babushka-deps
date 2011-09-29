@@ -57,6 +57,8 @@ end
 
 dep 'postgres.managed', :version do
   version.default('9.1')
+  # Assume the installed version if there is one
+  version.default!(shell('psql --version').val_for('psql (PostgreSQL)')[/^\d\.\d/]) if which('psql')
   requires {
     on :apt, 'set.locale', 'postgres.ppa'
     on :brew, 'set.locale'
@@ -66,10 +68,6 @@ dep 'postgres.managed', :version do
     via :brew, "postgresql"
   }
   provides "psql ~> #{version}.0"
-  before(:on => :apt) {
-    # TODO: a temporary hack to prevent multiple postgres versions being installed on apt
-    !shell?('dpkg --get-selections | grep "^postgresql-[0-9]"')
-  }
 end
 
 dep 'postgres.ppa' do
