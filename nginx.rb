@@ -162,20 +162,21 @@ dep 'nginx.src', :nginx_prefix, :version, :upload_module_version do
   }
 end
 
-dep 'http basic logins.nginx' do
-  requires 'http basic auth enabled.nginx'
-  met? { shell("curl -I -u #{var(:http_user)}:#{var(:http_pass)} #{var(:domain)}").val_for('HTTP/1.1')[/^[25]00\b/] }
-  meet { append_to_file "#{var(:http_user)}:#{var(:http_pass).crypt(var(:http_pass))}", (var(:nginx_prefix) / 'conf/htpasswd'), :sudo => true }
+dep 'http basic logins.nginx', :nginx_prefix, :domain, :username, :pass do
+  requires 'http basic auth enabled.nginx'.with(nginx_prefix, domain)
+  met? { shell("curl -I -u #{username}:#{pass} #{domain}").val_for('HTTP/1.1')[/^[25]00\b/] }
+  meet { append_to_file "#{username}:#{pass.to_s.crypt(pass)}", (nginx_prefix / 'conf/htpasswd'), :sudo => true }
   after { restart_nginx }
 end
 
-dep 'http basic auth enabled.nginx' do
-  met? { shell("curl -I #{var(:domain)}").val_for('HTTP/1.1')[/^401\b/] }
+dep 'http basic auth enabled.nginx', :nginx_prefix, :domain do
+  requires 'configured.nginx'.with(nginx_prefix)
+  met? { shell("curl -I #{domain}").val_for('HTTP/1.1')[/^401\b/] }
   meet {
-    append_to_file %Q{auth_basic 'Restricted';\nauth_basic_user_file htpasswd;}, nginx_conf_for(var(:domain), 'common'), :sudo => true
+    append_to_file %Q{auth_basic 'Restricted';\nauth_basic_user_file htpasswd;}, vhost_common, :sudo => true
   }
   after {
-    sudo "touch #{var(:nginx_prefix) / 'conf/htpasswd'}"
+    sudo "touch #{nginx_prefix / 'conf/htpasswd'}"
     restart_nginx
   }
 end
