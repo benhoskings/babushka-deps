@@ -66,6 +66,10 @@ dep 'postgres.managed', :version do
     via :brew, "postgresql"
   }
   provides "psql ~> #{version}.0"
+  before(:on => :apt) {
+    # TODO: a temporary hack to prevent multiple postgres versions being installed on apt
+    !shell?('dpkg --get-selections | grep "^postgresql-[0-9]"')
+  }
 end
 
 dep 'postgres.ppa' do
