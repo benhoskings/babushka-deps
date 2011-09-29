@@ -1,25 +1,25 @@
-dep 'existing postgres db' do
-  requires 'postgres access'
+dep 'existing postgres db', :username, :db_name do
+  requires 'postgres access'.with(username)
   met? {
     !shell("psql -l") {|shell|
-      shell.stdout.split("\n").grep(/^\s*#{var :db_name}\s+\|/)
+      shell.stdout.split("\n").grep(/^\s*#{db_name}\s+\|/)
     }.empty?
   }
   meet {
-    shell "createdb -O '#{var :username}' '#{var :db_name}'"
+    shell "createdb -O '#{username}' '#{db_name}'"
   }
 end
 
-dep 'existing data' do
+dep 'existing data', :username, :db_name do
   requires 'existing db'
   met? {
-    shell("psql #{var(:db_name)} -c '\\d'").scan(/\((\d+) rows?\)/).flatten.first.tap {|rows|
+    shell("psql #{db_name} -c '\\d'").scan(/\((\d+) rows?\)/).flatten.first.tap {|rows|
       if rows && rows.to_i > 0
         log "There are already #{rows} tables."
       else
         unmeetable <<-MSG
 That database is empty. Load a database dump with:
-$ cat #{var(:db_name)} | ssh #{var(:username)}@#{var(:domain)} 'psql #{var(:db_name)}'
+$ cat #{db_name} | ssh #{username}@#{domain} 'psql #{db_name}'
         MSG
       end
     }
@@ -31,21 +31,21 @@ dep 'pg.gem' do
   provides []
 end
 
-dep 'postgres access' do
+dep 'postgres access', :username do
   requires 'postgres.managed', 'user exists'
-  met? { !sudo("echo '\\du' | #{which 'psql'}", :as => 'postgres').split("\n").grep(/^\W*\b#{var :username}\b/).empty? }
-  meet { sudo "createuser -SdR #{var :username}", :as => 'postgres' }
+  met? { !sudo("echo '\\du' | #{which 'psql'}", :as => 'postgres').split("\n").grep(/^\W*\b#{username}\b/).empty? }
+  meet { sudo "createuser -SdR #{username}", :as => 'postgres' }
 end
 
-dep 'postgres backups' do
+dep 'postgres backups', :offsite_host do
   requires 'postgres.managed'
   met? { shell "test -x /etc/cron.hourly/postgres_offsite_backup" }
   before {
-    sudo("ssh #{var :offsite_host} 'true'").tap {|result|
+    sudo("ssh #{offsite_host} 'true'").tap {|result|
       if result
-        log_ok "publickey login to #{var :offsite_host}"
+        log_ok "publickey login to #{offsite_host}"
       else
-        log_error "You need to add root's public key to #{var :offsite_host}:~/.ssh/authorized_keys."
+        log_error "You need to add root's public key to #{offsite_host}:~/.ssh/authorized_keys."
       end
     }
   }
