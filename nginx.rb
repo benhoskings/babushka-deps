@@ -164,7 +164,7 @@ end
 
 dep 'http basic logins.nginx', :nginx_prefix, :domain, :username, :pass do
   requires 'http basic auth enabled.nginx'.with(nginx_prefix, domain)
-  met? { shell("curl -I -u #{username}:#{pass} #{domain}").val_for('HTTP/1.1')[/^[25]00\b/] }
+  met? { shell("curl -I -u #{username}:#{pass} #{domain}").val_for('HTTP/1.1')[/^[25]0\d\b/] }
   meet { append_to_file "#{username}:#{pass.to_s.crypt(pass)}", (nginx_prefix / 'conf/htpasswd'), :sudo => true }
   after { restart_nginx }
 end
