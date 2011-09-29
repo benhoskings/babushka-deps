@@ -18,8 +18,10 @@ dep 'up to date.repo', :git_ref_data, :env do
     'HEAD up to date.repo'.with(ref_info),
     'app bundled'.with(:root => '.', :env => env),
 
-    # This and the 'maintenace' one below are separate so the 'current dir'
-    # deps load lazily from the new code checked out by 'HEAD up to date.repo'.
+    # This and 'after deploy' below are separated so the deps in 'current dir'
+    # they refer to load from the new code checked out by 'HEAD up to date.repo'.
+    # Normally it would be fine because dep loading is lazy, but the "if Dep('...')"
+    # checks trigger a source load when called.
     'on deploy'.with(ref_info[:old_id], ref_info[:new_id], ref_info[:branch], env),
 
     'app flagged for restart.task',
@@ -30,7 +32,6 @@ dep 'up to date.repo', :git_ref_data, :env do
   ]
 end
 
-# These are looked up with Dep() so they're just skipped if they don't exist.
 dep 'on deploy', :old_id, :new_id, :branch, :env do
   requires 'current dir:on deploy'.with(old_id, new_id, branch, env) if Dep('current dir:on deploy')
 end
