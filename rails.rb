@@ -13,18 +13,18 @@ dep 'migrated db', :username, :root, :env do
 
   requires 'app bundled', 'db gem'
   requires "existing #{var(:data_required).starts_with?('y') ? 'data' : 'db'}".with(username, db_name)
-  requires "migrated #{orm} db".with(root)
+  requires "migrated #{orm} db".with(root, env)
 end
 
-dep 'migrated datamapper db', :template => 'task' do
+dep 'migrated datamapper db', :root, :env, :template => 'task' do
   run {
-    bundle_rake "db:migrate db:autoupgrade db:seed"
+    shell "bundle exec rake db:migrate db:autoupgrade db:seed --trace RAILS_ENV=#{env}", :cd => root
   }
 end
 
-dep 'migrated activerecord db', :root do
+dep 'migrated activerecord db', :root, :env do
   met? {
-    current_version = bundle_rake("db:version") {|shell| shell.stdout.val_for('Current version') }
+    current_version = shell("bundle exec rake db:version RAILS_ENV=#{env}", :cd => root) {|shell| shell.stdout.val_for('Current version') }
     latest_version = Dir[
       root / 'db/migrate/*.rb'
     ].map {|f| File.basename f }.push('0').sort.last.split('_', 2).first
@@ -41,5 +41,7 @@ dep 'migrated activerecord db', :root do
       end
     }
   }
-  meet { bundle_rake "db:migrate --trace" }
+  meet {
+    shell "bundle exec rake db:migrate --trace RAILS_ENV=#{env}", :cd => root
+  }
 end
