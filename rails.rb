@@ -32,7 +32,7 @@ end
 
 dep 'migrated activerecord db', :root, :env do
   met? {
-    current_version = shell("bundle exec rake db:version RAILS_ENV=#{env}", :cd => root) {|shell| shell.stdout.val_for('Current version') }
+    current_version = shell("bundle exec rake db:version RAILS_ENV=#{env}", :cd => root, :log => true) {|shell| shell.stdout.val_for('Current version') }
     latest_version = Dir[
       root / 'db/migrate/*.rb'
     ].map {|f| File.basename f }.push('0').sort.last.split('_', 2).first
@@ -50,6 +50,6 @@ dep 'migrated activerecord db', :root, :env do
     }
   }
   meet {
-    shell "bundle exec rake db:migrate --trace RAILS_ENV=#{env}", :cd => root
+    shell "bundle exec rake db:migrate --trace RAILS_ENV=#{env}", :cd => root, :log => true
   }
 end
