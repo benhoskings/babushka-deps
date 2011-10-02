@@ -1,14 +1,10 @@
-dep 'existing db', :username, :db_name do
-  setup {
-    requires "existing #{var(:db, :default => 'postgres')} db".with(username, db_name)
-  }
+dep 'existing db', :username, :db_name, :db do
+  requires "existing #{db} db".with(username, db_name)
 end
 
-dep 'db gem' do
-  setup {
-    define_var :db, :choices => %w[postgres mysql]
-    requires var(:db) == 'postgres' ? 'pg.gem' : "#{var(:db)}.gem"
-  }
+dep 'db gem', :db do
+  db.choose(%w[postgres mysql])
+  requires db == 'postgres' ? 'pg.gem' : "#{db}.gem"
 end
 
 dep 'deployed migrations run', :old_id, :new_id, :env do
