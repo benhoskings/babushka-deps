@@ -13,7 +13,7 @@ end
 
 dep 'deployed migrations run', :old_id, :new_id, :env do
   requires_when_unmet 'maintenance page up'
-  requires_when_unmet 'migrated db'.with(shell('whoami'), '.', env)
+  requires_when_unmet 'migrated db'.with(shell('whoami'), '.', env, 'yes')
   met? {
     if @run
       true # done

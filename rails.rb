@@ -1,4 +1,4 @@
-dep 'migrated db', :username, :root, :env do
+dep 'migrated db', :username, :root, :env, :data_required do
   def orm
     grep('dm-rails', root/'Gemfile') ? :datamapper : :activerecord
   end
@@ -12,7 +12,7 @@ dep 'migrated db', :username, :root, :env do
   end
 
   requires 'app bundled', 'db gem'
-  requires "existing #{var(:data_required).starts_with?('y') ? 'data' : 'db'}".with(username, db_name)
+  requires "existing #{data_required.starts_with?('y') ? 'data' : 'db'}".with(username, db_name)
   requires "migrated #{orm} db".with(root, env)
 end
 
