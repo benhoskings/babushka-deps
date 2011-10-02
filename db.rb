@@ -4,7 +4,7 @@ end
 
 dep 'db gem', :db do
   db.choose(%w[postgres mysql])
-  requires db['postgres'] ? 'pg.gem' : "#{db}.gem"
+  requires db == 'postgres' ? 'pg.gem' : "#{db}.gem"
 end
 
 dep 'deployed migrations run', :old_id, :new_id, :env do
