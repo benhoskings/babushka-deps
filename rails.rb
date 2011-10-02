@@ -1,8 +1,4 @@
 dep 'migrated db', :username, :root, :env, :data_required do
-  def orm
-    grep('dm-rails', root/'Gemfile') ? :datamapper : :activerecord
-  end
-
   def db_config
     (db_config = yaml(root / 'config/database.yml')[env.to_s]).tap {|config|
       unmeetable "There's no database.yml entry for the #{env} environment." if config.nil?
@@ -17,6 +13,14 @@ dep 'migrated db', :username, :root, :env, :data_required do
   requires 'app bundled'.with(root, env)
   requires 'db gem'.with(db_type)
   requires "existing #{data_required[/^y/] ? 'data' : 'db'}".with(username, db_config['database'], db_type)
+  requires 'just migrated db'.with(root, env)
+end
+
+dep 'just migrated db', :root, :env do
+  def orm
+    grep('dm-rails', root/'Gemfile') ? :datamapper : :activerecord
+  end
+
   requires "migrated #{orm} db".with(root, env)
 end
 
