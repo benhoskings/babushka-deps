@@ -12,7 +12,7 @@ dep 'migrated db', :username, :root, :env, :data_required do
   end
 
   requires 'app bundled', 'db gem'
-  requires "existing #{data_required.starts_with?('y') ? 'data' : 'db'}".with(username, db_name)
+  requires "existing #{data_required[/^y/] ? 'data' : 'db'}".with(username, db_name)
   requires "migrated #{orm} db".with(root, env)
 end
 
