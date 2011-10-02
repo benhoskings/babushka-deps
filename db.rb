@@ -20,7 +20,7 @@ dep 'deployed migrations run', :old_id, :new_id, :env do
       pending.each {|p| log p }
 
       requires 'maintenance page up'
-      requires 'just migrated db'.with('.', env)
+      requires 'migrated db'.with(shell('whoami'), '.', env, 'yes')
     end
   }
 end
