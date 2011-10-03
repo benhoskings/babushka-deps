@@ -1,3 +1,16 @@
+dep 'seeded db', :username, :db_name, :db do
+  requires "existing db".with(username, db_name)
+  met? {
+    rows = shell("psql #{db_name} -c '\\d'").scan(/\((\d+) rows?\)/).flatten.first
+    (rows && rows.to_i > 0).tap {|result|
+      log "The DB looks seeded - there are #{rows} tables present."
+    }
+  }
+  meet {
+    shell "bundle exec rake db:seed --trace RAILS_ENV=#{env}", :cd => root, :log => true
+  }
+end
+
 dep 'existing db', :username, :db_name, :db do
   requires "existing #{db} db".with(username, db_name)
 end

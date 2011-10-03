@@ -16,7 +16,7 @@ dep 'migrated db', :username, :root, :env, :data_required do
 
   requires 'app bundled'.with(root, env)
   requires 'db gem'.with(db_type)
-  requires (data_required[/^y/] ? "existing data" : "existing db").with(username, db_config['database'], db_type)
+  requires (data_required[/^y/] ? "existing data" : "seeded db").with(username, db_config['database'], db_type)
   requires "migrated #{orm} db".with(root, env)
 end
 
