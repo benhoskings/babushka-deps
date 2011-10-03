@@ -11,14 +11,14 @@ dep 'user setup', :username, :key do
   requires 'dot files'.with(username), 'passwordless ssh logins'.with(username, key), 'public key', 'zsh'
 end
 
-dep 'rails app', :domain, :username, :path, :env do
+dep 'rails app', :domain, :username, :path, :env, :data_required do
   username.default!(shell('whoami'))
   env.default('production')
 
   requires 'webapp'.with('unicorn', domain, username, path)
   requires 'web repo'.with(path)
   requires 'app bundled'.with(path, env)
-  requires 'migrated db'.with(username, path, env)
+  requires 'migrated db'.with(username, path, env, data_required)
   requires 'rails.logrotate'
 end
 
