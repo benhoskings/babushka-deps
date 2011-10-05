@@ -1,6 +1,7 @@
 # coding: utf-8
 
-dep 'ready for update.repo', :git_ref_data do
+dep 'ready for update.repo', :git_ref_data, :env do
+  env.default!(ENV['RAILS_ENV'] || 'production')
   requires [
     'valid git_ref_data.repo'.with(git_ref_data),
     'clean.repo',
