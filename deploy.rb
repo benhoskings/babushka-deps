@@ -3,7 +3,8 @@
 dep 'ready for update.repo', :git_ref_data do
   requires [
     'valid git_ref_data.repo'.with(git_ref_data),
-    'clean.repo'
+    'clean.repo',
+    'before deploy'.with(ref_info[:old_id], ref_info[:new_id], ref_info[:branch], env)
   ]
 end
 
@@ -28,6 +29,9 @@ dep 'up to date.repo', :git_ref_data, :env do
   ]
 end
 
+dep 'before deploy', :old_id, :new_id, :branch, :env do
+  requires 'current dir:before deploy'.with(old_id, new_id, branch, env) if Dep('current dir:before deploy')
+end
 dep 'on deploy', :old_id, :new_id, :branch, :env do
   requires 'current dir:on deploy'.with(old_id, new_id, branch, env) if Dep('current dir:on deploy')
 end
