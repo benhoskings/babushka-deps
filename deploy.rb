@@ -12,7 +12,7 @@ dep 'up to date.repo', :git_ref_data, :env do
     old_id, new_id, branch = git_ref_data.to_s.scan(ref_data_regexp).flatten
     {:old_id => old_id, :new_id => new_id, :branch => branch}
   end
-  env.default!('production')
+  env.default!(ENV['RAILS_ENV'] || 'production')
   requires [
     'on correct branch.repo'.with(ref_info[:branch]),
     'HEAD up to date.repo'.with(ref_info),
