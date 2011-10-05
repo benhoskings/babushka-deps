@@ -74,7 +74,7 @@ end
 dep 'marked on airbrake.task', :ref, :remote do
   run {
     if 'config/initializers/airbrake.rb'.p.exists?
-      shell "bundle exec rake airbrake:deploy TO=#{remote} REVISION=#{ref} REPO=#{shell("git config remote.origin.url")} USER=#{shell('whoami')}"
+      shell "bundle exec rake airbrake:deploy TO=#{remote} REVISION=#{shell("git rev-parse --short #{ref}")} REPO=#{shell("git config remote.origin.url")} USER=#{shell('whoami')}"
     end
   }
 end
