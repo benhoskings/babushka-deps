@@ -23,6 +23,7 @@ dep 'push!', :ref, :remote do
   requires 'current dir:before push'.with(ref, remote) if Dep('current dir:before push')
   requires 'pushed.push'.with(ref, remote)
   requires 'marked on newrelic.task'.with(ref, remote)
+  requires 'marked on airbrake.task'.with(ref, remote)
   requires 'current dir:after push'.with(ref, remote) if Dep('current dir:after push')
 end
 
@@ -66,6 +67,14 @@ dep 'marked on newrelic.task', :ref, :remote do
       log "Not recording staging deploy."
     elsif 'config/newrelic.yml'.p.exists?
       shell "bundle exec newrelic deployments -r #{shell("git rev-parse --short #{ref}")}"
+    end
+  }
+end
+
+dep 'marked on airbrake.task', :ref, :remote do
+  run {
+    if 'config/initializers/airbrake.rb'.p.exists?
+      shell "bundle exec rake airbrake:deploy TO=#{remote} REVISION=#{ref} REPO=#{shell("git config remote.origin.url")} USER=#{shell('whoami')}"
     end
   }
 end
