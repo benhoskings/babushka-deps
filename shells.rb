@@ -15,6 +15,7 @@ dep 'fish.src' do
 end
 
 dep 'zsh', :username do
+  username.default!(shell('whoami'))
   requires 'zsh.shell_setup'
   met? { shell("sudo su - '#{username}' -c 'echo $SHELL'") == which('zsh') }
   meet { sudo("chsh -s '#{which('zsh')}' #{username}") }
