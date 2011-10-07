@@ -34,13 +34,12 @@ meta :rbenv do
         log_shell 'Configure', "./configure --prefix='#{prefix}' --with-libyaml-dir='#{yaml_location}' CC=/usr/bin/gcc-4.2"
         log_shell 'Build',     "make"
         log_shell 'Install',   "make install"
+
+        # ruby-1.9.2 doesn't install bin/* when the build path contains a dot-dir.
+        shell "cp bin/* #{prefix / 'bin'}"
       end
     }
     after {
-      # TODO: hack for ruby bug where bin/* aren't installed when the build path
-      # contains a dot-dir.
-      shell "cp bin/* #{prefix / 'bin'}"
-
       log_shell 'rbenv rehash', 'rbenv rehash'
     }
   }
