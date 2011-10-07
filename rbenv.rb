@@ -1,7 +1,7 @@
 # Usage:
 # [install rbenv like normal] https://github.com/sstephenson/rbenv
 # babushka 1.9.3.rbenv
-# rbenv set-default 1.9.3-preview1
+# rbenv global 1.9.3-rc1
 # rbenv rehash
 
 dep 'rbenv' do
