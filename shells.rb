@@ -14,10 +14,10 @@ dep 'fish.src' do
   source "git://github.com/benhoskings/fish.git"
 end
 
-dep 'zsh' do
+dep 'zsh', :username do
   requires 'zsh.shell_setup'
-  met? { shell("sudo su - '#{var(:username)}' -c 'echo $SHELL'") == which('zsh') }
-  meet { sudo("chsh -s '#{which('zsh')}' #{var(:username)}") }
+  met? { shell("sudo su - '#{username}' -c 'echo $SHELL'") == which('zsh') }
+  meet { sudo("chsh -s '#{which('zsh')}' #{username}") }
 end
 
 dep 'zsh.shell_setup' do

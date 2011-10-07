@@ -8,7 +8,7 @@ end
 
 dep 'user setup', :username, :key do
   username.default(shell('whoami'))
-  requires 'dot files'.with(username), 'passwordless ssh logins'.with(username, key), 'public key', 'zsh'
+  requires 'dot files'.with(username), 'passwordless ssh logins'.with(username, key), 'public key', 'zsh'.with(username)
 end
 
 dep 'rails app', :domain, :username, :path, :env, :data_required do
