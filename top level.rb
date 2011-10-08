@@ -29,7 +29,6 @@ end
 dep 'webapp', :type, :domain, :username, :path do
   username.default!(domain)
   requires 'user exists'.with(:username => username), 'vhost enabled.nginx'.with(:type => type, :domain => domain, :path => path), 'running.nginx'
-  define_var :domain, :default => :username
   setup {
     set :home_dir_base, "/srv/http"
   }
