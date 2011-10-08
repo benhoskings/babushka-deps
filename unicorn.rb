@@ -10,6 +10,6 @@ dep 'unicorn config exists', :path do
   def unicorn_config
     path / 'config/unicorn.rb'
   end
-  met? { Babushka::Renderable.new(unicorn_config).from?(dependency.load_path.parent / "unicorn/unicorn.rb.erb") }
+  met? { unicorn_config.exists? }
   meet { render_erb 'unicorn/unicorn.rb.erb', :to => unicorn_config }
 end
