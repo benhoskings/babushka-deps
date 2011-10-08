@@ -1,12 +1,12 @@
 dep 'unicorn configured', :path do
-  requires 'unicorn.gem', 'unicorn config exists.nginx'.with(path)
+  requires 'unicorn.gem', 'unicorn config exists'.with(path)
 end
 
 dep 'unicorn.gem' do
   provides %w[unicorn unicorn_rails]
 end
 
-dep 'unicorn config exists.nginx', :path do
+dep 'unicorn config exists', :path do
   def unicorn_config
     path / 'config/unicorn.rb'
   end
