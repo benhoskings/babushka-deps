@@ -26,15 +26,9 @@ dep 'db', :username, :root, :env, :data_required, :require_db_deps do
   end
 end
 
-dep 'seeded db', :username, :root, :env, :db_name, :db_type, :orm do
+dep 'seeded db', :username, :root, :env, :db_name, :db_type, :orm, :template => 'benhoskings:task' do
   requires "migrated db".with(root, env, orm)
-  met? {
-    rows = shell("psql #{db_name} -c '\\d'").scan(/\((\d+) rows?\)/).flatten.first
-    (rows && rows.to_i > 0).tap {|result|
-      log "The DB looks seeded - there are #{rows} tables present." if result
-    }
-  }
-  meet {
+  run {
     shell "bundle exec rake db:seed --trace RAILS_ENV=#{env}", :cd => root, :log => true
   }
 end
