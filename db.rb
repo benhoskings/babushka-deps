@@ -1,5 +1,5 @@
 dep 'seeded db', :username, :db_name, :db do
-  requires "existing db".with(username, db_name)
+  requires "existing db".with(username, db_name, db)
   met? {
     rows = shell("psql #{db_name} -c '\\d'").scan(/\((\d+) rows?\)/).flatten.first
     (rows && rows.to_i > 0).tap {|result|
