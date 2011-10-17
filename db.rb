@@ -1,4 +1,4 @@
-dep 'seeded db', :username, :db_name, :db, :root, :env do
+dep 'seeded db', :username, :root, :env, :db_name, :db do
   requires "existing db".with(username, db_name, db)
   met? {
     rows = shell("psql #{db_name} -c '\\d'").scan(/\((\d+) rows?\)/).flatten.first
