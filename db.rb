@@ -76,7 +76,7 @@ dep 'db gem', :db do
   requires db == 'postgres' ? 'pg.gem' : "#{db}.gem"
 end
 
-dep 'deployed migrations run', :old_id, :new_id, :env do
+dep 'deployed migrations run', :old_id, :new_id, :env, :orm do
   setup {
     # If the branch was changed, git supplies 0000000 for old_id,
     # so the commit range is 'everything'.
