@@ -3,7 +3,7 @@ dep 'seeded db', :username, :db_name, :db do
   met? {
     rows = shell("psql #{db_name} -c '\\d'").scan(/\((\d+) rows?\)/).flatten.first
     (rows && rows.to_i > 0).tap {|result|
-      log "The DB looks seeded - there are #{rows} tables present."
+      log "The DB looks seeded - there are #{rows} tables present." if result
     }
   }
   meet {
