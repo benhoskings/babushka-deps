@@ -18,7 +18,7 @@ dep 'migrated db', :username, :root, :env, :data_required, :require_db_deps do
 
   if require_db_deps[/^y/]
     requires 'db gem'.with(db_type)
-    requires (data_required[/^y/] ? "existing data" : "seeded db").with(username, db_config['database'], db_type)
+    requires (data_required[/^y/] ? "existing data" : "seeded db").with(username, db_config['database'], db_type, env)
     requires "migrated #{orm} db".with(root, env)
   end
 end
