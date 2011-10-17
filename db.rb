@@ -27,7 +27,7 @@ dep 'db', :username, :root, :env, :data_required, :require_db_deps do
 end
 
 dep 'seeded db', :username, :root, :env, :db_name, :db_type, :orm do
-  requires "migrated db".with(username, db_name, db)
+  requires "migrated db".with(username, db_name, db_type)
   met? {
     rows = shell("psql #{db_name} -c '\\d'").scan(/\((\d+) rows?\)/).flatten.first
     (rows && rows.to_i > 0).tap {|result|
