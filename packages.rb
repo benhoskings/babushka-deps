@@ -92,7 +92,6 @@ end
 dep 'rcconf.managed' do
   installs { via :apt, 'rcconf' }
 end
-dep 'screen.managed'
 dep 'sed.managed' do
   installs {
     via :brew, 'gnu-sed'
@@ -110,6 +109,7 @@ dep 'sshd.managed' do
     via :apt, 'openssh-server'
   }
 end
+dep 'tmux.managed'
 dep 'tree.managed'
 dep 'vim.managed'
 dep 'wget.managed'
