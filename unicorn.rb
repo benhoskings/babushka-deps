@@ -10,6 +10,9 @@ dep 'unicorn config exists', :path do
   def unicorn_config
     path / 'config/unicorn.rb'
   end
+  def unicorn_socket
+    path / 'tmp/sockets/unicorn.socket'
+  end
   met? { unicorn_config.exists? }
   meet { render_erb 'unicorn/unicorn.rb.erb', :to => unicorn_config }
 end

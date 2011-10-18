@@ -12,7 +12,7 @@ meta :nginx do
   def upstream_name
     "#{domain}.upstream"
   end
-  def unicorn_socket_path
+  def unicorn_socket
     path / 'tmp/sockets/unicorn.socket'
   end
   def nginx_running?
