@@ -34,6 +34,7 @@ dep 'image_science.gem' do
   requires 'freeimage.managed'
   provides []
 end
+dep 'iotop.managed'
 dep 'java.managed' do
   installs { via :apt, 'sun-java6-jre' }
   after { shell "set -Ux JAVA_HOME /usr/lib/jvm/java-6-sun" }
