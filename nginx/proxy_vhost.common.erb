@@ -5,7 +5,7 @@ if ($host !~ ^<%= domain.to_s.gsub('.', '\.') %>$) {
 }
 
 location / {
-  proxy_pass            http://<%= host %>:<%= port %>/;
+  proxy_pass            http://<%= var(:host) %>:<%= var(:port) %>/;
   proxy_redirect        off;
 
   proxy_set_header      Host            $host;
