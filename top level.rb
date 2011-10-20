@@ -13,7 +13,7 @@ end
 
 dep 'rails app', :domain, :username, :path, :env, :data_required do
   username.default!(shell('whoami'))
-  env.default('production')
+  env.default(ENV['RAILS_ENV'] || 'production')
 
   requires 'webapp'.with('unicorn', domain, username, path)
   requires 'web repo'.with(path)
