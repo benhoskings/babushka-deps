@@ -5,10 +5,11 @@ dep 'ruby trunk.src' do
   configure_args '--disable-install-doc', '--with-readline-dir=/usr'
 end
 
-dep 'ruby19.src' do
+dep 'ruby19.src', :version do
+  version.default!('1.9.2p290')
   requires 'readline headers.managed', 'yaml headers.managed'
-  source 'ftp://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.2-p290.tar.gz'
-  provides 'ruby == 1.9.2p290', 'gem', 'irb'
+  source "ftp://ftp.ruby-lang.org/pub/ruby/1.9/ruby-#{version}.tar.gz"
+  provides "ruby == #{version}", 'gem', 'irb'
   configure_args '--disable-install-doc',
     "--with-readline-dir=#{Babushka::Base.host.pkg_helper.prefix}",
     "--with-libyaml-dir=#{Babushka::Base.host.pkg_helper.prefix}"
