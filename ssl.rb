@@ -10,7 +10,7 @@ dep 'passwordless ssh logins', :username, :key do
     @sudo ||= username == shell('whoami')
   end
   met? {
-    shell "grep '#{key}' '#{ssh_dir / 'authorized_keys'}'", :sudo => sudo?
+    shell "fgrep '#{key}' '#{ssh_dir / 'authorized_keys'}'", :sudo => sudo?
   }
   before {
     shell "mkdir -p -m 700 '#{ssh_dir}'", :sudo => sudo?
