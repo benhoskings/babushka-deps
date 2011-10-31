@@ -6,7 +6,7 @@ dep 'ruby trunk.src' do
 end
 
 dep 'ruby19.src', :version do
-  version.default!('1.9.2p290')
+  version.default!('1.9.3p0')
   requires 'readline headers.managed', 'yaml headers.managed'
   source "ftp://ftp.ruby-lang.org/pub/ruby/1.9/ruby-#{version}.tar.gz"
   provides "ruby == #{version}", 'gem', 'irb'

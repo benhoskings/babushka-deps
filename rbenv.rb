@@ -51,7 +51,7 @@ dep '1.9.2.rbenv' do
 end
 
 dep '1.9.3.rbenv' do
-  builds '1.9.3-rc1'
+  builds '1.9.3-p0'
   installs '1.9.3dev'
 end
 
