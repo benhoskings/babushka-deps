@@ -5,11 +5,14 @@ dep 'ruby trunk.src' do
   configure_args '--disable-install-doc', '--with-readline-dir=/usr'
 end
 
-dep 'ruby19.src', :version, :patchlevel do
+dep 'ruby.src', :version, :patchlevel do
+  def version_group
+    version.scan(/^\d\.\d/).first
+  end
   version.default!('1.9.3')
   patchlevel.default!('p0')
   requires 'readline headers.managed', 'yaml headers.managed'
-  source "ftp://ftp.ruby-lang.org/pub/ruby/1.9/ruby-#{version}-#{patchlevel}.tar.gz"
+  source "ftp://ftp.ruby-lang.org/pub/ruby/#{version_group}/ruby-#{version}-#{patchlevel}.tar.gz"
   provides "ruby == #{version}#{patchlevel}", 'gem', 'irb'
   configure_args '--disable-install-doc',
     "--with-readline-dir=#{Babushka::Base.host.pkg_helper.prefix}",
