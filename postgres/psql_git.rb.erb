@@ -51,7 +51,7 @@ class PsqlGit
 
   def dump
     db_names.each {|db_name|
-      shell "pg_dump #{db_name} > #{db_name}.psql"
+      shell "sudo -u postgres pg_dump #{db_name} > #{db_name}.psql"
     }
   end
 
@@ -75,7 +75,7 @@ class PsqlGit
   end
 
   def db_names
-    shell('psql -l').split("\n").grep(/^ [^ ]/).map {|l|
+    shell('sudo -u postgres psql -l').split("\n").grep(/^ [^ ]/).map {|l|
       l.gsub(/\|.*$/, '').strip
     } - RESERVED_DBS
   end
