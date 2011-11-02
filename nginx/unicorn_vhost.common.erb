@@ -19,7 +19,7 @@ location ~* \.(js|css|jpe?g|png|gif|ico|eot|woff|ttf|swf)$ {
 error_page 503 /system/maintenance.html;
 location /system/maintenance.html { return 503; }
 
-try_files /system/maintenance.html $uri/index.html $uri.html $uri @app;
+try_files $uri/index.html $uri.html $uri /system/maintenance.html @app;
 
 # POSTs are intended for the app, not cached pages. We use '=' to let @app set the response code.
 error_page 405 = @app;
