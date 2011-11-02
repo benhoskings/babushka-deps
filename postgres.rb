@@ -37,21 +37,12 @@ dep 'postgres access', :username do
   meet { sudo "createuser -SdR #{username}", :as => 'postgres' }
 end
 
-dep 'postgres backups', :offsite_host do
+dep 'postgres backups' do
   requires 'postgres.managed'
-  met? { shell "test -x /etc/cron.hourly/postgres_offsite_backup" }
-  before {
-    sudo("ssh #{offsite_host} 'true'").tap {|result|
-      if result
-        log_ok "publickey login to #{offsite_host}"
-      else
-        log_error "You need to add root's public key to #{offsite_host}:~/.ssh/authorized_keys."
-      end
-    }
-  }
+  met? { shell "test -x /etc/cron.hourly/psql_git" }
   meet {
-    render_erb 'postgres/offsite_backup.rb.erb', :to => '/usr/local/bin/postgres_offsite_backup', :perms => '755', :sudo => true
-    sudo "ln -sf /usr/local/bin/postgres_offsite_backup /etc/cron.hourly/"
+    (dependency.load_path.parent / 'postgres/psql_git.rb').cp '/usr/local/bin'
+    sudo "ln -sf /usr/local/bin/psql_git /etc/cron.hourly/"
   }
 end
 
