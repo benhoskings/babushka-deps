@@ -39,7 +39,7 @@ end
 
 dep 'postgres backups' do
   requires 'postgres.managed'
-  met? { shell "test -x /etc/cron.hourly/psql_git" }
+  met? { shell? "test -x /etc/cron.hourly/psql_git" }
   meet {
     render_erb 'postgres/psql_git.rb.erb', :to => '/usr/local/bin/psql_git', :perms => '755', :sudo => true
     sudo "ln -sf /usr/local/bin/psql_git /etc/cron.hourly/"
