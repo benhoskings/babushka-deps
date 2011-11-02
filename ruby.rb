@@ -7,7 +7,7 @@ end
 
 dep 'ruby.src', :version, :patchlevel do
   def version_group
-    version.scan(/^\d\.\d/).first
+    version.to_s.scan(/^\d\.\d/).first
   end
   version.default!('1.9.3')
   patchlevel.default!('p0')
