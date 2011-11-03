@@ -39,7 +39,7 @@ end
 
 dep 'migrated datamapper db', :root, :env, :template => 'task' do
   run {
-    shell! "bundle exec rake db:migrate db:autoupgrade --trace RAILS_ENV=#{env}", :cd => root, :log => true
+    shell! "bundle exec rake db:migrate --trace RAILS_ENV=#{env}", :cd => root, :log => true
   }
 end
 
