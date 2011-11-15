@@ -2,9 +2,14 @@ meta :push do
   def repo
     @repo ||= Babushka::GitRepo.new('.')
   end
+  def self.remote_host_and_path remote
+    @remote_host_and_path ||= shell("git config remote.#{remote}.url").split(':', 2)
+  end
+  def self.remote_host(remote) remote_host_and_path(remote).first end
+  def self.remote_path(remote) remote_host_and_path(remote).last end
   def self.remote_head remote
-    host, path = shell("git config remote.#{remote}.url").split(':', 2)
-    @remote_head ||= shell!("ssh #{host} 'cd #{path} && git rev-parse --short HEAD 2>/dev/null || echo 0000000'")
+    host, path = remote_host_and_path(remote)
+    @remote_head ||= shell!("ssh #{remote_host} 'cd #{remote_path} && git rev-parse --short HEAD 2>/dev/null || echo 0000000'")
   end
   def remote_head
     self.class.remote_head(remote)
