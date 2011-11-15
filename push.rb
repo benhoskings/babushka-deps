@@ -27,6 +27,7 @@ dep 'push!', :ref, :remote do
   requires 'ready.push'
   requires 'current dir:before push'.with(ref, remote) if Dep('current dir:before push')
   requires 'pushed.push'.with(ref, remote)
+  requires 'schema up to date.push'.with(ref)
   requires 'marked on newrelic.task'.with(ref, remote)
   requires 'marked on airbrake.task'.with(ref, remote)
   requires 'current dir:after push'.with(ref, remote) if Dep('current dir:after push')
@@ -63,6 +64,31 @@ dep 'pushed.push', :ref, :remote do
         shell push_cmd, :log => true
       end
     end
+  }
+end
+
+dep 'schema up to date.push', :ref do
+  def dump_schema_cmd
+    pg_dump = 'pg_dump tc_production --no-privileges --no-owner'
+    # Dump the schema, and then the schema_migrations table including its contents.
+    "#{pg_dump} --schema-only -T schema_migrations && #{pg_dump} -t schema_migrations"
+  end
+  def fetch_schema
+    shell "ssh #{self.class.remote_host} '#{dump_schema_cmd}' > db/schema.sql.tmp"
+  end
+  def move_schema_into_place
+    shell "mv db/schema.sql.tmp db/schema.sql"
+  end
+  setup {
+    # We fetch to a temporary file first and move it into place on ssh
+    # success, because a failed connection can result in an empty file.
+    fetch_schema and move_schema_into_place
+  }
+  met? {
+    Babushka::GitRepo.new('.').clean?
+  }
+  meet {
+    shell "git commit db/schema.sql -m 'Updated schema after deploying #{ref}.'"
   }
 end
 
