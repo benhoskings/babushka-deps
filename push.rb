@@ -86,7 +86,7 @@ dep 'schema up to date.push', :ref, :remote do
     Babushka::GitRepo.new('.').clean?
   }
   meet {
-    shell "git commit db/schema.sql -m 'Updated schema after deploying #{ref}.'"
+    shell "git add db/schema.sql && git commit db/schema.sql -m 'Updated schema after deploying #{ref}.'"
   }
 end
 
