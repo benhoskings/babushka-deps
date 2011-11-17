@@ -5,15 +5,13 @@ meta :push do
   def self.remote_host_and_path remote
     @remote_host_and_path ||= shell("git config remote.#{remote}.url").split(':', 2)
   end
-  def self.remote_host(remote) remote_host_and_path(remote).first end
-  def self.remote_path(remote) remote_host_and_path(remote).last end
   def self.remote_head remote
     host, path = remote_host_and_path(remote)
-    @remote_head ||= shell!("ssh #{remote_host} 'cd #{remote_path} && git rev-parse --short HEAD 2>/dev/null || echo 0000000'")
+    @remote_head ||= shell!("ssh #{host} 'cd #{path} && git rev-parse --short HEAD 2>/dev/null || echo 0000000'")
   end
-  def remote_head
-    self.class.remote_head(remote)
-  end
+  def remote_host; self.class.remote_host_and_path(remote).first end
+  def remote_path; self.class.remote_host_and_path(remote).last end
+  def remote_head; self.class.remote_head(remote) end
   def self.uncache_remote_head!
     @remote_head = nil
   end
@@ -27,7 +25,7 @@ dep 'push!', :ref, :remote do
   requires 'ready.push'
   requires 'current dir:before push'.with(ref, remote) if Dep('current dir:before push')
   requires 'pushed.push'.with(ref, remote)
-  requires 'schema up to date.push'.with(ref)
+  requires 'schema up to date.push'.with(ref, remote)
   requires 'marked on newrelic.task'.with(ref, remote)
   requires 'marked on airbrake.task'.with(ref, remote)
   requires 'current dir:after push'.with(ref, remote) if Dep('current dir:after push')
@@ -67,14 +65,14 @@ dep 'pushed.push', :ref, :remote do
   }
 end
 
-dep 'schema up to date.push', :ref do
+dep 'schema up to date.push', :ref, :remote do
   def dump_schema_cmd
     pg_dump = 'pg_dump tc_production --no-privileges --no-owner'
     # Dump the schema, and then the schema_migrations table including its contents.
-    "#{pg_dump} --schema-only -T schema_migrations && #{pg_dump} -t schema_migrations"
+    "#{pg_dump} --schema-only -T migration_info && #{pg_dump} -t migration_info"
   end
   def fetch_schema
-    shell "ssh #{self.class.remote_host} '#{dump_schema_cmd}' > db/schema.sql.tmp"
+    shell "ssh #{remote_host} '#{dump_schema_cmd}' > db/schema.sql.tmp"
   end
   def move_schema_into_place
     shell "mv db/schema.sql.tmp db/schema.sql"
