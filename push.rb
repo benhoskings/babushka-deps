@@ -69,7 +69,7 @@ dep 'schema up to date.push', :ref, :remote do
   def dump_schema_cmd
     pg_dump = 'pg_dump tc_production --no-privileges --no-owner'
     # Dump the schema, and then the schema_migrations table including its contents.
-    "#{pg_dump} --schema-only -T migration_info && #{pg_dump} -t migration_info"
+    "#{pg_dump} --schema-only -T schema_migrations && #{pg_dump} -t schema_migrations"
   end
   def fetch_schema
     shell "ssh #{remote_host} '#{dump_schema_cmd}' > db/schema.sql.tmp"
