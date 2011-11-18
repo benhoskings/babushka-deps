@@ -66,8 +66,11 @@ dep 'pushed.push', :ref, :remote do
 end
 
 dep 'schema up to date.push', :ref, :remote do
+  def db_name
+    yaml('config/database.yml')[remote.to_s]['database']
+  end
   def dump_schema_cmd
-    pg_dump = 'pg_dump tc_production --no-privileges --no-owner'
+    pg_dump = "pg_dump #{db_name} --no-privileges --no-owner"
     # Dump the schema, and then the schema_migrations table including its contents.
     "#{pg_dump} --schema-only -T schema_migrations && #{pg_dump} -t schema_migrations"
   end
