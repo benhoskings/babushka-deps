@@ -95,10 +95,8 @@ end
 
 dep 'marked on newrelic.task', :ref, :remote do
   run {
-    if remote == 'staging'
-      log "Not recording staging deploy."
-    elsif 'config/newrelic.yml'.p.exists?
-      shell "bundle exec newrelic deployments -r #{shell("git rev-parse --short #{ref}")}"
+    if 'config/newrelic.yml'.p.exists?
+      shell "bundle exec newrelic deployments -e #{remote} -r #{shell("git rev-parse --short #{ref}")}"
     end
   }
 end
