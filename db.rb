@@ -88,7 +88,6 @@ dep 'deployed migrations run', :old_id, :new_id, :env, :orm do
       log "#{pending.length} migration#{'s' unless pending.length == 1} to run:"
       pending.each {|p| log p }
 
-      requires 'maintenance page up'
       requires 'migrated db'.with('.', env, orm)
     end
   }
