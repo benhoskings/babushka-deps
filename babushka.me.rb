@@ -1,6 +1,6 @@
 meta :bab_tarball do
   def uri
-    'git://github.com/benhoskings/babushka.git'
+    'https://github.com/benhoskings/babushka.git'
   end
   def latest
     var(:tarball_path) / 'LATEST'

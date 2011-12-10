@@ -11,7 +11,7 @@ end
 
 dep 'fish.src' do
   requires 'ncurses.managed', 'coreutils.managed', 'gettext.managed'
-  source "git://github.com/benhoskings/fish.git"
+  source "https://github.com/benhoskings/fish.git"
 end
 
 dep 'zsh', :username do
