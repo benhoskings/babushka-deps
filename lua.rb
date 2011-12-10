@@ -7,7 +7,7 @@ end
 
 dep 'Lua.tmbundle' do
   requires 'lua.managed'
-  source 'https://github.com/textmate/lua.tmbundle.git'
+  source 'git://github.com/textmate/lua.tmbundle.git'
 end
 
 # TODO set TextMate var: TM_LUA -> /opt/local/bin/lua

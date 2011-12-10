@@ -1,6 +1,6 @@
 dep 'ruby trunk.src' do
   requires 'bison.managed', 'readline headers.managed'
-  source 'https://github.com/ruby/ruby.git'
+  source 'git://github.com/ruby/ruby.git'
   provides 'ruby == 1.9.3.dev', 'gem', 'irb'
   configure_args '--disable-install-doc', '--with-readline-dir=/usr'
 end
