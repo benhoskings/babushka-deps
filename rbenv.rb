@@ -8,6 +8,9 @@ dep 'rbenv' do
   met? {
     in_path? 'rbenv'
   }
+  meet {
+    git 'https://github.com/sstephenson/rbenv.git', :to => '~/.rbenv'
+  }
 end
 
 meta :rbenv do
