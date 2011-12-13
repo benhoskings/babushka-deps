@@ -22,9 +22,9 @@ dep 'up to date.repo', :git_ref_data, :env do
     # checks trigger a source load when called.
     'on deploy'.with(ref_info[:old_id], ref_info[:new_id], ref_info[:branch], env),
 
-    'app flagged for restart.task',
     '☕',
     'scss built',
+    'app flagged for restart.task',
     'maintenance page down',
     'after deploy'.with(ref_info[:old_id], ref_info[:new_id], ref_info[:branch], env)
   ]
