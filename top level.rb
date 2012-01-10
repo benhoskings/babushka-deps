@@ -18,6 +18,7 @@ end
 
 dep 'rack app', :domain, :username, :path, :env, :data_required do
   username.default!(shell('whoami'))
+  path.default('~/current')
   env.default(ENV['RAILS_ENV'] || 'production')
 
   requires 'webapp'.with('unicorn', domain, username, path)
