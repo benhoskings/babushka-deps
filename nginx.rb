@@ -150,14 +150,12 @@ dep 'nginx.src', :nginx_prefix, :version, :upload_module_version do
 
   met? {
     if !File.executable?(nginx_prefix / 'sbin/nginx')
-      unmet "nginx isn't installed"
+      log "nginx isn't installed"
     else
       installed_version = shell(nginx_prefix / 'sbin/nginx -v') {|shell| shell.stderr }.val_for(/(nginx: )?nginx version:/).sub('nginx/', '')
-      if installed_version != version
-        unmet "an outdated version of nginx is installed (#{installed_version})"
-      else
-        met "nginx-#{installed_version} is installed"
-      end
+      (installed_version == version).tap {|result|
+        log "nginx-#{installed_version} is installed"
+      }
     end
   }
 end
