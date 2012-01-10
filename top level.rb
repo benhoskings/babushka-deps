@@ -11,7 +11,7 @@ dep 'user setup', :username, :key do
   requires 'dot files'.with(username), 'passwordless ssh logins'.with(username, key), 'public key', 'zsh'.with(username)
 end
 
-dep 'rails app', :domain, :username, :path, :env, :data_required do
+dep 'rack app', :domain, :username, :path, :env, :data_required do
   username.default!(shell('whoami'))
   env.default(ENV['RAILS_ENV'] || 'production')
 
