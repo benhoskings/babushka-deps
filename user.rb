@@ -6,7 +6,8 @@ dep 'dot files', :username do
 end
 
 dep 'user auth setup', :username, :password, :key do
-  requires 'user exists with password'.with(username, password), 'passwordless ssh logins'.with(username, key)
+  requires 'user exists with password'.with(username, password)
+  requires 'passwordless ssh logins'.with(username, key)
 end
 
 dep 'user exists with password', :username, :password do
