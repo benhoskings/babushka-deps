@@ -28,7 +28,7 @@ dep 'rack app', :domain, :username, :path, :env, :data_required do
 end
 
 dep 'proxied app' do
-  requires 'webapp'.with('proxy')
+  requires 'webapp'.with(type: 'proxy')
 end
 
 dep 'webapp', :type, :domain, :username, :path do
