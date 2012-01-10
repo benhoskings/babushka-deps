@@ -7,7 +7,7 @@ dep 'passwordless ssh logins', :username, :key do
     shell "id -gn #{username}"
   end
   def sudo?
-    @sudo ||= username == shell('whoami')
+    @sudo ||= username != shell('whoami')
   end
   met? {
     shell? "fgrep '#{key}' '#{ssh_dir / 'authorized_keys'}'", :sudo => sudo?
