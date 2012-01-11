@@ -18,7 +18,7 @@ dep 'existing data', :username, :db_name do
         log "There are already #{rows} tables."
       else
         unmeetable! <<-MSG
-That database is empty. Load a database dump with:
+The '#{db_name}' database is empty. Load a database dump with:
 $ cat #{db_name} | ssh #{username}@#{shell('hostname -f')} 'psql #{db_name}'
         MSG
       end
