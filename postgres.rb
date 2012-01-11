@@ -17,7 +17,7 @@ dep 'existing data', :username, :db_name do
       if rows && rows.to_i > 0
         log "There are already #{rows} tables."
       else
-        unmeetable <<-MSG
+        unmeetable! <<-MSG
 That database is empty. Load a database dump with:
 $ cat #{db_name} | ssh #{username}@#{shell('hostname -f')} 'psql #{db_name}'
         MSG

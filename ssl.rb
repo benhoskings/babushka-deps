@@ -44,7 +44,7 @@ dep 'bad certificates removed' do
   end
   setup {
     unless [:debian, :ubuntu].include?(Babushka::Base.host.flavour)
-      unmeetable "Not sure where to find certs on a #{Babushka::Base.host.description} system."
+      unmeetable! "Not sure where to find certs on a #{Babushka::Base.host.description} system."
     end
   }
   met? { existing_certs.empty? }
