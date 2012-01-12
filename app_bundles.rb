@@ -10,11 +10,11 @@ dep 'Twitter.app' do
 end
 
 dep 'LaunchBar.app' do
-  source 'http://www.obdev.at/downloads/launchbar/LaunchBar-5.0.3.dmg'
+  source 'http://www.obdev.at/downloads/launchbar/LaunchBar-5.1.3.dmg'
 end
 
 dep 'Dropbox.app' do
-  source 'http://cdn.dropbox.com/Dropbox%201.0.20.dmg'
+  source 'http://cdn.dropbox.com/Dropbox%201.2.49.dmg'
 end
 
 dep 'SizeUp.app' do
