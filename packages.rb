@@ -89,6 +89,7 @@ dep 'pcre.managed' do
   }
   provides 'pcre-config'
 end
+dep 'pv.managed'
 dep 'rcconf.managed' do
   installs { via :apt, 'rcconf' }
 end
