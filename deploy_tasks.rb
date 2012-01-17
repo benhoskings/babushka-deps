@@ -1,3 +1,5 @@
+# coding: utf-8
+
 dep '☕', :path do
   def to_brew
     Dir.glob(path / '**/*.coffee').reject {|coffee|
