@@ -2,7 +2,7 @@
 
 dep '☕', :path do
   def to_brew
-    Dir.glob(path / '**/*.coffee').reject {|coffee|
+    Dir.glob(File.join(path, '**/*.coffee')).reject {|coffee|
       js = coffee.sub(/^#{Regexp.escape(path.to_s)}/, 'public/javascripts/').sub(/\.coffee$/, '.js')
       File.exists?(js) && File.mtime(js) > File.mtime(coffee)
     }
@@ -19,7 +19,7 @@ end
 
 dep 'scss built', :path do
   def missing_css
-    Dir.glob(path / '**/*.scss').reject {|scss|
+    Dir.glob(File.join(path, '**/*.scss')).reject {|scss|
       scss[/\/_[^\/]+\.scss$/] # Don't try to build _partials.scss
     }.reject {|scss|
       css = scss.sub(/^#{Regexp.escape(path)}/, 'public/stylesheets/').sub(/\.scss$/, '.css')
