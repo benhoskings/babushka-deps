@@ -1,5 +1,7 @@
 dep 'unicorn configured', :path do
-  requires 'unicorn.gem', 'unicorn config exists'.with(path)
+  requires 'unicorn.gem'
+  requires 'unicorn config exists'.with(path)
+  requires 'unicorn paths'.with(path)
 end
 
 dep 'unicorn.gem' do
@@ -15,4 +17,12 @@ dep 'unicorn config exists', :path do
   end
   met? { unicorn_config.exists? }
   meet { render_erb 'unicorn/unicorn.rb.erb', :to => unicorn_config }
+end
+
+dep 'unicorn paths', :root do
+  def missing_paths
+    %w[log tmp/pids tmp/sockets].reject {|p| !File.directory?(p) }
+  end
+  met? { missing_paths.empty? }
+  meet { missing_paths.each {|p| (root / p).mkdir } }
 end
