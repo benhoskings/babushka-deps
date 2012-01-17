@@ -43,26 +43,8 @@ dep 'migrated datamapper db', :root, :env, :template => 'task' do
   }
 end
 
-dep 'migrated activerecord db', :root, :env do
-  met? {
-    current_version = shell("bundle exec rake db:version RAILS_ENV=#{env}", :cd => root, :log => true) {|shell| shell.stdout.val_for('Current version') }
-    latest_version = Dir[
-      root / 'db/migrate/*.rb'
-    ].map {|f| File.basename f }.push('0').sort.last.split('_', 2).first
-
-    (current_version.gsub(/^0+/, '') == latest_version.gsub(/^0+/, '')).tap {|result|
-      unless current_version.blank?
-        if latest_version == '0'
-          log_ok "This app doesn't have any migrations yet."
-        elsif result
-          log_ok "DB is up to date at migration #{current_version}"
-        else
-          log "DB needs migrating from #{current_version} to #{latest_version}"
-        end
-      end
-    }
-  }
-  meet {
+dep 'migrated activerecord db', :root, :env, :template => 'task' do
+  run {
     shell "bundle exec rake db:migrate --trace RAILS_ENV=#{env}", :cd => root, :log => true
   }
 end
