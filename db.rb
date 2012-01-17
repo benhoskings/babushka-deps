@@ -27,25 +27,15 @@ dep 'db', :username, :root, :env, :data_required, :require_db_deps do
 end
 
 dep 'seeded db', :username, :root, :env, :db_name, :db_type, :orm, :template => 'benhoskings:task' do
-  requires "migrated db".with(root, env, orm)
+  requires "migrated db".with(root, env)
   run {
     shell "bundle exec rake db:seed --trace RAILS_ENV=#{env}", :cd => root, :log => true
   }
 end
 
-dep 'migrated db', :root, :env, :orm do
-  requires "migrated #{orm} db".with(root, env)
-end
-
-dep 'migrated datamapper db', :root, :env, :template => 'task' do
+dep 'migrated db', :root, :env, :template => 'task' do
   run {
     shell! "bundle exec rake db:migrate --trace RAILS_ENV=#{env}", :cd => root, :log => true
-  }
-end
-
-dep 'migrated activerecord db', :root, :env, :template => 'task' do
-  run {
-    shell "bundle exec rake db:migrate --trace RAILS_ENV=#{env}", :cd => root, :log => true
   }
 end
 
@@ -70,7 +60,7 @@ dep 'deployed migrations run', :old_id, :new_id, :env, :orm do
       log "#{pending.length} migration#{'s' unless pending.length == 1} to run:"
       pending.each {|p| log p }
 
-      requires 'migrated db'.with('.', env, orm)
+      requires 'migrated db'.with('.', env)
     end
   }
 end
