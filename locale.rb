@@ -11,7 +11,7 @@ end
 
 dep 'set.locale', :locale_name do
   locale_name.default!('en_AU')
-  requires 'exists.locale'.with(:locale_name)
+  requires 'exists.locale'.with(locale_name)
   met? {
     shell('locale').val_for('LANG')[locale_regex(locale_name)]
   }
