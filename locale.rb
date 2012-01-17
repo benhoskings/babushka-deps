@@ -26,5 +26,10 @@ dep 'set.locale', :locale_name do
 end
 
 dep 'exists.locale', :locale_name do
-  met? { local_locale(locale_name) }
+  met? {
+    local_locale(locale_name)
+  }
+  meet {
+    shell "locale-gen #{locale_name}.UTF-8", :log => true
+  }
 end
