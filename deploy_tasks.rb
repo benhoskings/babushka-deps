@@ -1,7 +1,7 @@
-dep '☕' do
+dep '☕', :path do
   def to_brew
-    Dir.glob("app/coffeescripts/**/*.coffee").reject {|coffee|
-      js = coffee.sub(/^app\/coffeescripts\//, 'public/javascripts/').sub(/\.coffee$/, '.js')
+    Dir.glob(path / '**/*.coffee').reject {|coffee|
+      js = coffee.sub(/^#{Regexp.escape(path.to_s)}/, 'public/javascripts/').sub(/\.coffee$/, '.js')
       File.exists?(js) && File.mtime(js) > File.mtime(coffee)
     }
   end
@@ -11,16 +11,16 @@ dep '☕' do
     }
   }
   meet {
-    log_shell "Brewing", "coffee --compile --output public/javascripts #{to_brew.map {|c| "'#{c}'" }.join(' ')}"
+    log_shell "Brewing", "coffee --compile --output public/javascripts '#{path}'"
   }
 end
 
-dep 'scss built' do
+dep 'scss built', :path do
   def missing_css
-    Dir.glob("app/stylesheets/**/*.scss").reject {|scss|
+    Dir.glob(path / '**/*.scss').reject {|scss|
       scss[/\/_[^\/]+\.scss$/] # Don't try to build _partials.scss
     }.reject {|scss|
-      css = scss.sub(/^app\//, 'public/').sub(/\.scss$/, '.css')
+      css = scss.sub(/^#{Regexp.escape(path)}/, 'public/stylesheets/').sub(/\.scss$/, '.css')
       File.exists?(css) && File.mtime(css) > File.mtime(scss)
     }
   end
@@ -34,7 +34,7 @@ dep 'scss built' do
     end
   }
   meet {
-    shell "bundle exec sass --update app/stylesheets:public/stylesheets" do |shell|
+    shell "bundle exec sass --update '#{path}':public/stylesheets" do |shell|
       log_error shell.stdout.split("\n").grep(/error/).map(&:strip).join("\n") unless shell.ok?
     end
   }
