@@ -16,7 +16,12 @@ meta :push do
     @remote_head = nil
   end
   def git_log from, to
-    log shell("git log --graph --pretty='format:%C(yellow)%h%Cblue%d%Creset %s %C(white) %an, %ar%Creset' #{from}..#{to}")
+    range = if from[/^0+$/]
+      to # Log the full history under 'to' if 'from' isn't set.
+    else
+      "#{from}..#{to}"
+    end
+    log shell("git log --graph --pretty='format:%C(yellow)%h%Cblue%d%Creset %s %C(white) %an, %ar%Creset' #{range}")
   end
 end
 
@@ -111,7 +116,9 @@ end
 
 dep 'ok to update.push', :ref, :remote do
   met? {
-    if !repo.repo_shell("git rev-parse #{remote_head}", &:ok?)
+    if remote_head[/^0+$/]
+      log_ok "The remote repo is empty."
+    elsif !repo.repo_shell("git rev-parse #{remote_head}", &:ok?)
       confirm "The current HEAD on #{remote}, #{remote_head}, isn't present locally. OK to push #{'(This is probably a bad idea)'.colorize('on red')}"
     elsif shell("git merge-base #{ref} #{remote_head}", &:stdout)[0...7] != remote_head
       confirm "Pushing #{ref} to #{remote} would not fast forward (#{remote} is on #{remote_head}). That OK?"
