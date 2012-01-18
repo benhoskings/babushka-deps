@@ -21,7 +21,7 @@ end
 
 dep 'unicorn paths', :root do
   def missing_paths
-    %w[log tmp/pids tmp/sockets].reject {|p| File.directory?(p) }
+    %w[log tmp/pids tmp/sockets].reject {|p| (root / p).dir? }
   end
   met? { missing_paths.empty? }
   meet { missing_paths.each {|p| (root / p).mkdir } }
