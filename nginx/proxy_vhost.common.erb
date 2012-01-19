@@ -1,4 +1,4 @@
-server_name <%= domain %> <%= var :extra_domains, :default => '' %> <%= var :www_aliases %>;
+server_name <%= server_names.join(' ') %>;
 
 if ($host !~ ^<%= domain.to_s.gsub('.', '\.') %>$) {
   rewrite ^(.*)$ http://<%= domain %>$1 permanent;

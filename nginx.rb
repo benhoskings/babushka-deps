@@ -33,16 +33,22 @@ dep 'vhost enabled.nginx', :nginx_prefix, :type, :domain, :path do
   after { restart_nginx }
 end
 
-dep 'vhost configured.nginx', :nginx_prefix, :type, :domain, :path do
-  define_var :www_aliases, :default => L{
-    "#{domain} #{var :extra_domains}".split(' ').compact.map(&:strip).reject {|d|
-      d.starts_with? '*.'
-    }.reject {|d|
-      d.starts_with? 'www.'
+dep 'vhost configured.nginx', :nginx_prefix, :type, :domain, :domain_aliases, :path do
+  domain_aliases.default('').ask('Domains to alias (no need to specify www. aliases)')
+  def www_aliases
+    "#{domain} #{domain_aliases}".split(/\s+/).reject {|d|
+      d[/^\*\./] || d[/^www\./]
     }.map {|d|
       "www.#{d}"
-    }.join(' ')
-  }
+    }
+  end
+  def server_names
+    [domain].concat(
+      domain_aliases.to_s.split(/\s+/)
+    ).concat(
+      www_aliases
+    ).uniq
+  end
 
   type.default('unicorn').choose(%w[unicorn proxy static])
   path.default("~#{domain}/current".p) if shell?('id', domain)
