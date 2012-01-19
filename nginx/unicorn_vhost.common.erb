@@ -5,6 +5,14 @@ if ($host !~ ^<%= domain.to_s.gsub('.', '\.') %>$) {
   rewrite ^(.*)$ http://<%= domain %>$1 permanent;
 }
 
+location ~ ^/assets/ {
+  expires max;
+  add_header Cache-Control public;
+  add_header Last-Modified "";
+  add_header ETag "";
+  break;
+}
+
 location ~* \.(js|css|jpe?g|png|gif|ico|eot|woff|ttf|swf)$ {
   if ($request_uri ~ "\?[0-9]+$") {
     expires max; # cache timestamped assets forever...
