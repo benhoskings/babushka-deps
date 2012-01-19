@@ -7,6 +7,7 @@ if ($host !~ ^<%= domain.to_s.gsub('.', '\.') %>$) {
 
 location ~ ^/assets/ {
   expires max;
+  gzip_static on;
   add_header Cache-Control public;
   add_header Last-Modified "";
   add_header ETag "";
