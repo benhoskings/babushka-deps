@@ -22,6 +22,12 @@ dep 'apt packages removed', :match, :for => :apt do
   }
 end
 
+# These are for use in dollhouse, since at the moment only strings can be passed.
+
 dep 'lamp stack removed' do
   requires 'apt packages removed'.with(/apache|mysql|php/)
+end
+
+dep 'postfix removed' do
+  requires 'apt packages removed'.with(/postfix/)
 end
