@@ -26,14 +26,14 @@ meta :nginx do
   end
 end
 
-dep 'vhost enabled.nginx', :nginx_prefix, :type, :domain, :path do
-  requires 'vhost configured.nginx'.with(nginx_prefix, type, domain, path)
+dep 'vhost enabled.nginx', :type, :domain, :path, :nginx_prefix do
+  requires 'vhost configured.nginx'.with(type, domain, path, nginx_prefix)
   met? { vhost_link.exists? }
   meet { sudo "ln -sf '#{vhost_conf}' '#{vhost_link}'" }
   after { restart_nginx }
 end
 
-dep 'vhost configured.nginx', :nginx_prefix, :type, :domain, :domain_aliases, :path, :listen_host, :listen_port do
+dep 'vhost configured.nginx', :type, :domain, :domain_aliases, :path, :listen_host, :listen_port, :nginx_prefix do
   domain_aliases.default('').ask('Domains to alias (no need to specify www. aliases)')
   listen_host.default!('[::]')
   listen_port.default!('80')
@@ -68,7 +68,7 @@ dep 'vhost configured.nginx', :nginx_prefix, :type, :domain, :domain_aliases, :p
   }
 end
 
-dep 'self signed cert.nginx', :nginx_prefix, :domain do
+dep 'self signed cert.nginx', :domain, :nginx_prefix do
   requires 'nginx.src'.with(:nginx_prefix => nginx_prefix)
   met? { %w[key csr crt].all? {|ext| (cert_path / "#{domain}.#{ext}").exists? } }
   meet {
