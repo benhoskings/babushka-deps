@@ -33,8 +33,10 @@ dep 'vhost enabled.nginx', :nginx_prefix, :type, :domain, :path do
   after { restart_nginx }
 end
 
-dep 'vhost configured.nginx', :nginx_prefix, :type, :domain, :domain_aliases, :path do
+dep 'vhost configured.nginx', :nginx_prefix, :type, :domain, :domain_aliases, :path, :listen_host, :listen_port do
   domain_aliases.default('').ask('Domains to alias (no need to specify www. aliases)')
+  listen_host.default!('[::]')
+  listen_port.default!('80')
   def www_aliases
     "#{domain} #{domain_aliases}".split(/\s+/).reject {|d|
       d[/^\*\./] || d[/^www\./]
