@@ -16,12 +16,12 @@ dep 'user setup', :username, :key do
   ]
 end
 
-dep 'rack app', :domain, :username, :path, :env, :data_required do
+dep 'rack app', :domain, :domain_aliases, :username, :path, :listen_host, :listen_port, :env, :nginx_prefix, :data_required do
   username.default!(shell('whoami'))
   path.default('~/current')
   env.default(ENV['RAILS_ENV'] || 'production')
 
-  requires 'webapp'.with('unicorn', domain, username, path)
+  requires 'webapp'.with('unicorn', domain, domain_aliases, username, path, listen_host, listen_port, nginx_prefix)
   requires 'web repo'.with(path)
   requires 'app bundled'.with(path, env)
   requires 'db'.with(username, path, env, data_required, 'yes')
@@ -32,10 +32,10 @@ dep 'proxied app' do
   requires 'webapp'.with(:type => 'proxy')
 end
 
-dep 'webapp', :type, :domain, :username, :path do
+dep 'webapp', :type, :domain, :domain_aliases, :username, :path, :listen_host, :listen_port, :nginx_prefix do
   username.default!(domain)
   requires 'user exists'.with(username, '/srv/http')
-  requires 'vhost enabled.nginx'.with(:type => type, :domain => domain, :path => path)
+  requires 'vhost enabled.nginx'.with(type, domain, domain_aliases, path, listen_host, listen_port, nginx_prefix)
   requires 'running.nginx'
 end
 

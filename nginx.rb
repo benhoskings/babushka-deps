@@ -26,8 +26,8 @@ meta :nginx do
   end
 end
 
-dep 'vhost enabled.nginx', :type, :domain, :path, :nginx_prefix do
-  requires 'vhost configured.nginx'.with(type, domain, path, nginx_prefix)
+dep 'vhost enabled.nginx', :type, :domain, :domain_aliases, :path, :listen_host, :listen_port, :nginx_prefix do
+  requires 'vhost configured.nginx'.with(type, domain, domain_aliases, path, listen_host, listen_port, nginx_prefix)
   met? { vhost_link.exists? }
   meet { sudo "ln -sf '#{vhost_conf}' '#{vhost_link}'" }
   after { restart_nginx }
