@@ -25,7 +25,7 @@ dep 'rack app', :domain, :domain_aliases, :username, :path, :listen_host, :liste
   requires 'web repo'.with(path)
   requires 'app bundled'.with(path, env)
   requires 'db'.with(username, path, env, data_required, 'yes')
-  requires 'rails.logrotate'
+  requires 'rack.logrotate'
 end
 
 dep 'proxied app' do
