@@ -1,5 +1,5 @@
 dep 'ready for update.repo', :git_ref_data, :env do
-  env.default!(ENV['RAILS_ENV'] || 'production')
+  env.default!(ENV['RAILS_ENV'] || ENV['RACK_ENV'] || 'production')
   requires [
     'valid git_ref_data.repo'.with(git_ref_data),
     'clean.repo',
@@ -8,7 +8,7 @@ dep 'ready for update.repo', :git_ref_data, :env do
 end
 
 dep 'up to date.repo', :git_ref_data, :env do
-  env.default!(ENV['RAILS_ENV'] || 'production')
+  env.default!(ENV['RAILS_ENV'] || ENV['RACK_ENV'] || 'production')
   requires [
     'on correct branch.repo'.with(ref_info[:branch]),
     'HEAD up to date.repo'.with(ref_info),

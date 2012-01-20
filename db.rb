@@ -29,13 +29,13 @@ end
 dep 'seeded db', :username, :root, :env, :db_name, :db_type, :orm, :template => 'benhoskings:task' do
   requires "migrated db".with(root, env)
   run {
-    shell "bundle exec rake db:seed --trace RAILS_ENV=#{env}", :cd => root, :log => true
+    shell "bundle exec rake db:seed --trace RAILS_ENV=#{env} RACK_ENV=#{env}", :cd => root, :log => true
   }
 end
 
 dep 'migrated db', :root, :env, :template => 'task' do
   run {
-    shell! "bundle exec rake db:migrate --trace RAILS_ENV=#{env}", :cd => root, :log => true
+    shell! "bundle exec rake db:migrate --trace RAILS_ENV=#{env} RACK_ENV=#{env}", :cd => root, :log => true
   }
 end
 

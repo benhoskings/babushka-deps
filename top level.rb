@@ -19,7 +19,7 @@ end
 dep 'rack app', :domain, :domain_aliases, :username, :path, :listen_host, :listen_port, :env, :nginx_prefix, :data_required do
   username.default!(shell('whoami'))
   path.default('~/current')
-  env.default(ENV['RAILS_ENV'] || 'production')
+  env.default(ENV['RAILS_ENV'] || ENV['RACK_ENV'] || 'production')
 
   requires 'webapp'.with('unicorn', domain, domain_aliases, username, path, listen_host, listen_port, nginx_prefix)
   requires 'web repo'.with(path)
