@@ -16,6 +16,11 @@ dep 'user setup', :username, :key do
   ]
 end
 
+dep 'rails app', :domain, :domain_aliases, :username, :path, :listen_host, :listen_port, :env, :nginx_prefix, :data_required do
+  requires 'rack app'.with(domain, domain_aliases, username, path, listen_host, listen_port, env, nginx_prefix, data_required)
+  requires 'db'.with(username, path, env, data_required, 'yes')
+end
+
 dep 'rack app', :domain, :domain_aliases, :username, :path, :listen_host, :listen_port, :env, :nginx_prefix, :data_required do
   username.default!(shell('whoami'))
   path.default('~/current')
@@ -24,7 +29,6 @@ dep 'rack app', :domain, :domain_aliases, :username, :path, :listen_host, :liste
   requires 'webapp'.with('unicorn', domain, domain_aliases, username, path, listen_host, listen_port, nginx_prefix)
   requires 'web repo'.with(path)
   requires 'app bundled'.with(path, env)
-  requires 'db'.with(username, path, env, data_required, 'yes')
   requires 'rack.logrotate'
 end
 
