@@ -9,6 +9,7 @@ upstream <%= upstream_name %> {
 
 server {
   listen <%= listen_host %>:<%= listen_port %>;
+  charset utf-8;
 
   <% if var(:force_ssl, :default => 'no').starts_with?('y') %>
   rewrite ^(.*)$ https://<%= domain %>$1 redirect;
@@ -20,6 +21,7 @@ server {
 <% if var(:enable_ssl, :default => 'no').starts_with?('y') %>
 server {
   listen <%= listen_host %>:443;
+  charset utf-8;
 
   ssl                  on;
   ssl_certificate      certs/<%= domain %>.crt;
