@@ -46,6 +46,6 @@ end
 dep 'core software' do
   requires {
     on :linux, 'vim.managed', 'curl.managed', 'htop.managed', 'iotop.managed', 'jnettop.managed', 'tmux.managed', 'nmap.managed', 'tree.managed', 'pv.managed'
-    on :osx, 'curl.managed', 'jnettop.managed', 'nmap.managed', 'tree.managed', 'pv.managed'
+    on :osx, 'nmap.managed', 'tree.managed', 'pv.managed'
   }
 end
