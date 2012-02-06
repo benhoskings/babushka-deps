@@ -2,18 +2,21 @@ def ssh_conf_path file
   "/etc#{'/ssh' if Babushka::Base.host.linux?}/#{file}_config"
 end
 
-dep 'hostname', :for => :linux do
-  def hostname
-    shell 'hostname -f'
+dep 'hostname', :hostname, :for => :linux do
+  def current_hostname
+    shell('hostname -f')
   end
+  def stored_hostname
+    '/etc/hostname'.p.read
+  end
+  hostname.default(shell('hostname'))
   met? {
-    stored_hostname = '/etc/hostname'.p.read
-    !stored_hostname.blank? && hostname == stored_hostname
+    !stored_hostname.blank? && current_hostname == stored_hostname
   }
   meet {
-    sudo "echo #{var :hostname, :default => shell('hostname')} > /etc/hostname"
-    sudo "sed -ri 's/^127.0.0.1.*$/127.0.0.1 #{var(:hostname)} #{var(:hostname).sub(/\..*$/, '')} localhost.localdomain localhost/' /etc/hosts"
-    sudo "hostname #{var :hostname}"
+    sudo "echo #{hostname} > /etc/hostname"
+    sudo "sed -ri 's/^127.0.0.1.*$/127.0.0.1 #{hostname} #{hostname.to_s.sub(/\..*$/, '')} localhost.localdomain localhost/' /etc/hosts"
+    sudo "hostname #{hostname}"
   }
 end
 
