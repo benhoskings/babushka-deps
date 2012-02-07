@@ -68,7 +68,7 @@ dep 'vhost configured.nginx', :type, :domain, :domain_aliases, :path, :listen_ho
   }
 end
 
-dep 'self signed cert.nginx', :domain, :nginx_prefix do
+dep 'self signed cert.nginx', :domain, :nginx_prefix, :country, :state, :city, :organisation, :organisational_unit, :email do
   requires 'nginx.src'.with(:nginx_prefix => nginx_prefix)
   met? { %w[key csr crt].all? {|ext| (cert_path / "#{domain}.#{ext}").exists? } }
   meet {
@@ -76,13 +76,13 @@ dep 'self signed cert.nginx', :domain, :nginx_prefix do
       log_shell("generating private key", "openssl genrsa -out #{domain}.key 2048", :sudo => true) and
       log_shell("generating certificate", "openssl req -new -key #{domain}.key -out #{domain}.csr",
         :sudo => true, :input => [
-          var(:country, :default => 'AU'),
-          var(:state),
-          var(:city, :default => ''),
-          var(:organisation),
-          var(:organisational_unit, :default => ''),
-          var(:domain),
-          var(:email),
+          country.default('AU'),
+          state,
+          city.default(''),
+          organisation,
+          organisational_unit.default(''),
+          domain,
+          email,
           '', # password
           '', # optional company name
           '' # done
