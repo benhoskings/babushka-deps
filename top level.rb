@@ -16,17 +16,17 @@ dep 'user setup', :username, :key do
   ]
 end
 
-dep 'rails app', :domain, :domain_aliases, :username, :path, :listen_host, :listen_port, :env, :nginx_prefix, :data_required do
-  requires 'rack app'.with(domain, domain_aliases, username, path, listen_host, listen_port, env, nginx_prefix, data_required)
+dep 'rails app', :domain, :domain_aliases, :username, :path, :listen_host, :listen_port, :env, :nginx_prefix, :enable_ssl, :force_ssl, :data_required do
+  requires 'rack app'.with(domain, domain_aliases, username, path, listen_host, listen_port, env, nginx_prefix, enable_ssl, force_ssl, data_required)
   requires 'db'.with(username, path, env, data_required, 'yes')
 end
 
-dep 'rack app', :domain, :domain_aliases, :username, :path, :listen_host, :listen_port, :env, :nginx_prefix, :data_required do
+dep 'rack app', :domain, :domain_aliases, :username, :path, :listen_host, :listen_port, :env, :nginx_prefix, :enable_ssl, :force_ssl, :data_required do
   username.default!(shell('whoami'))
   path.default('~/current')
   env.default(ENV['RAILS_ENV'] || ENV['RACK_ENV'] || 'production')
 
-  requires 'webapp'.with('unicorn', domain, domain_aliases, username, path, listen_host, listen_port, nginx_prefix)
+  requires 'webapp'.with('unicorn', domain, domain_aliases, username, path, listen_host, listen_port, nginx_prefix, enable_ssl, force_ssl)
   requires 'web repo'.with(path)
   requires 'app bundled'.with(path, env)
   requires 'rack.logrotate'
@@ -36,10 +36,10 @@ dep 'proxied app' do
   requires 'webapp'.with(:type => 'proxy')
 end
 
-dep 'webapp', :type, :domain, :domain_aliases, :username, :path, :listen_host, :listen_port, :nginx_prefix do
+dep 'webapp', :type, :domain, :domain_aliases, :username, :path, :listen_host, :listen_port, :nginx_prefix, :enable_ssl, :force_ssl do
   username.default!(domain)
   requires 'user exists'.with(username, '/srv/http')
-  requires 'vhost enabled.nginx'.with(type, domain, domain_aliases, path, listen_host, listen_port, nginx_prefix)
+  requires 'vhost enabled.nginx'.with(type, domain, domain_aliases, path, listen_host, listen_port, nginx_prefix, enable_ssl, force_ssl)
   requires 'running.nginx'
 end
 

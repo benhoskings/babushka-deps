@@ -26,17 +26,19 @@ meta :nginx do
   end
 end
 
-dep 'vhost enabled.nginx', :type, :domain, :domain_aliases, :path, :listen_host, :listen_port, :nginx_prefix do
-  requires 'vhost configured.nginx'.with(type, domain, domain_aliases, path, listen_host, listen_port, nginx_prefix)
+dep 'vhost enabled.nginx', :type, :domain, :domain_aliases, :path, :listen_host, :listen_port, :nginx_prefix, :enable_ssl, :force_ssl do
+  requires 'vhost configured.nginx'.with(type, domain, domain_aliases, path, listen_host, listen_port, nginx_prefix, enable_ssl, force_ssl)
   met? { vhost_link.exists? }
   meet { sudo "ln -sf '#{vhost_conf}' '#{vhost_link}'" }
   after { restart_nginx }
 end
 
-dep 'vhost configured.nginx', :type, :domain, :domain_aliases, :path, :listen_host, :listen_port, :nginx_prefix do
+dep 'vhost configured.nginx', :type, :domain, :domain_aliases, :path, :listen_host, :listen_port, :nginx_prefix, :enable_ssl, :force_ssl do
   domain_aliases.default('').ask('Domains to alias (no need to specify www. aliases)')
   listen_host.default!('[::]')
   listen_port.default!('80')
+  enable_ssl.default('no')
+  force_ssl.default('no')
   def www_aliases
     "#{domain} #{domain_aliases}".split(/\s+/).reject {|d|
       d[/^\*\./] || d[/^www\./]
