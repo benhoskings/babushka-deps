@@ -14,14 +14,15 @@ dep 'rbenv' do
 end
 
 meta :rbenv do
-  accepts_value_for :builds
-  accepts_value_for :installs, :builds
+  accepts_value_for :version, :basename
+  accepts_value_for :patchlevel
+  accepts_block_for :customise
   template {
-    def version
-      builds
+    def version_spec
+      "#{version}-#{patchlevel}"
     end
     def prefix
-      "~/.rbenv/versions" / version
+      "~/.rbenv/versions" / basename
     end
     def version_group
       version.scan(/^\d\.\d/).first
@@ -29,13 +30,14 @@ meta :rbenv do
     requires 'rbenv', 'yaml headers.managed'
     met? {
       (prefix / 'bin/ruby').executable? and
-      shell(prefix / 'bin/ruby -v')[/^ruby #{installs}\b/]
+      shell(prefix / 'bin/ruby -v')[/^ruby #{version}#{patchlevel}\b/]
     }
     meet {
-      yaml_location = shell('brew info libyaml').split("\n").collapse(/\s+\(\d+ files, \S+\)/)
-      handle_source "http://ftp.ruby-lang.org/pub/ruby/#{version_group}/ruby-#{version}.tar.gz" do |path|
+      yaml_location = shell('brew info libyaml').split("\n").collapse(/\s+\(\d+ files, \S+\)/).first
+      handle_source "http://ftp.ruby-lang.org/pub/ruby/#{version_group}/ruby-#{version_spec}.tar.gz" do |path|
+        invoke(:customise)
         log_shell 'Configure', "./configure --prefix='#{prefix}' --with-libyaml-dir='#{yaml_location}' CC=/usr/bin/gcc-4.2"
-        log_shell 'Build',     "make"
+        log_shell 'Build',     "make -j#{Babushka::Base.host.cpus}"
         log_shell 'Install',   "make install"
 
         # ruby-1.9.2 doesn't install bin/* when the build path contains a dot-dir.
@@ -49,21 +51,26 @@ meta :rbenv do
 end
 
 dep '1.9.2.rbenv' do
-  builds '1.9.2-p290'
-  installs '1.9.2p290'
+  patchlevel 'p290'
 end
 
 dep '1.9.3.rbenv' do
-  builds '1.9.3-p0'
-  installs '1.9.3dev'
+  patchlevel 'p0'
+end
+
+dep '1.9.3-falcon.rbenv' do
+  version '1.9.3'
+  patchlevel 'p0'
+  customise {
+    falcon_patch = 'https://raw.github.com/gist/1658360/afd06eec533ad0140011bdaf652e6cd82eedf7ec/cumulative_performance.patch'
+    shell "curl '#{falcon_patch}' | git apply"
+  }
 end
 
 dep '1.8.6.rbenv' do
-  builds '1.8.6-p420'
-  installs '1.8.6p420'
+  patchlevel 'p420'
 end
 
 dep '1.8.7.rbenv' do
-  builds '1.8.7-p352'
-  installs '1.8.7p352'
+  patchlevel 'p352'
 end
