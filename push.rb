@@ -30,7 +30,6 @@ dep 'push!', :ref, :remote do
   requires 'ready.push'
   requires 'current dir:before push'.with(ref, remote) if Dep('current dir:before push')
   requires 'pushed.push'.with(ref, remote)
-  requires 'schema up to date.push'.with(ref, remote)
   requires 'marked on newrelic.task'.with(ref, remote)
   requires 'marked on airbrake.task'.with(ref, remote)
   requires 'current dir:after push'.with(ref, remote) if Dep('current dir:after push')
@@ -67,6 +66,9 @@ dep 'pushed.push', :ref, :remote do
         shell push_cmd, :log => true
       end
     end
+  }
+  after {
+    Dep('schema up to date.push').with(ref, remote).meet if remote == 'production'
   }
 end
 
