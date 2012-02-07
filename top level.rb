@@ -29,7 +29,7 @@ dep 'rack app', :domain, :domain_aliases, :username, :path, :listen_host, :liste
   requires 'webapp'.with('unicorn', domain, domain_aliases, username, path, listen_host, listen_port, nginx_prefix, enable_ssl, force_ssl)
   requires 'web repo'.with(path)
   requires 'app bundled'.with(path, env)
-  requires 'rack.logrotate'
+  requires 'rack.logrotate'.with(username)
 end
 
 dep 'proxied app' do
