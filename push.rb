@@ -68,7 +68,7 @@ dep 'pushed.push', :ref, :remote do
     end
   }
   after {
-    Dep('schema up to date.push').with(ref, remote).meet if remote == 'production'
+    Dep('benhoskings:schema up to date.push').with(ref, remote).meet if remote == 'production'
   }
 end
 
