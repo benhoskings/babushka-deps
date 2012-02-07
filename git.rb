@@ -8,6 +8,12 @@ dep 'git.managed' do
   provides 'git >= 1.7.4.1'
 end
 
+dep 'git.src', :version do
+  version.default!('1.7.9')
+  source "http://git-core.googlecode.com/files/git-#{version}.tar.gz"
+  met? { in_path? "git >= #{version}" }
+end
+
 dep 'web repo', :path do
   requires [
     'web repo exists'.with(path),
