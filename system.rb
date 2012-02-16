@@ -1,5 +1,5 @@
 def ssh_conf_path file
-  "/etc#{'/ssh' if Babushka::Base.host.linux?}/#{file}_config"
+  "/etc#{'/ssh' if Babushka.host.linux?}/#{file}_config"
 end
 
 dep 'hostname', :host_name, :for => :linux do

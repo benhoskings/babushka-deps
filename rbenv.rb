@@ -37,7 +37,7 @@ meta :rbenv do
       handle_source "http://ftp.ruby-lang.org/pub/ruby/#{version_group}/ruby-#{version_spec}.tar.gz" do |path|
         invoke(:customise)
         log_shell 'Configure', "./configure --prefix='#{prefix}' --with-libyaml-dir='#{yaml_location}' CC=/usr/bin/gcc-4.2"
-        log_shell 'Build',     "make -j#{Babushka::Base.host.cpus}"
+        log_shell 'Build',     "make -j#{Babushka.host.cpus}"
         log_shell 'Install',   "make install"
 
         # ruby-1.9.2 doesn't install bin/* when the build path contains a dot-dir.

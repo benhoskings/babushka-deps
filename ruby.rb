@@ -15,8 +15,8 @@ dep 'ruby.src', :version, :patchlevel do
   source "ftp://ftp.ruby-lang.org/pub/ruby/#{version_group}/ruby-#{version}-#{patchlevel}.tar.gz"
   provides "ruby == #{version}#{patchlevel}", 'gem', 'irb'
   configure_args '--disable-install-doc',
-    "--with-readline-dir=#{Babushka::Base.host.pkg_helper.prefix}",
-    "--with-libyaml-dir=#{Babushka::Base.host.pkg_helper.prefix}"
+    "--with-readline-dir=#{Babushka.host.pkg_helper.prefix}",
+    "--with-libyaml-dir=#{Babushka.host.pkg_helper.prefix}"
   postinstall {
     # TODO: hack for ruby bug where bin/* aren't installed when the build path
     # contains a dot-dir.
