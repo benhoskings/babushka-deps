@@ -1,5 +1,13 @@
 dep 'system', :host_name, :locale_name do
-  requires 'set.locale'.with(locale_name), 'hostname'.with(host_name), 'secured ssh logins', 'lax host key checking', 'admins can sudo', 'tmp cleaning grace period', 'core software'
+  requires [
+    'core software',
+    'set.locale'.with(locale_name),
+    'hostname'.with(host_name),
+    'secured ssh logins',
+    'lax host key checking',
+    'admins can sudo',
+    'tmp cleaning grace period'
+  ]
   requires 'bad certificates removed' if Babushka.host.linux?
   setup {
     unmeetable! "This dep has to be run as root." unless shell('whoami') == 'root'
