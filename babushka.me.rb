@@ -44,8 +44,8 @@ dep 'exists.bab_tarball' do
   met? {
     shell "tar -t -f #{tarball}"
   }
-  before { shell "mkdir -p #{tarball.parent}" }
   meet {
+    shell "mkdir -p #{tarball.parent}"
     shell "tar -zcv --exclude .git -f '#{tarball}' babushka/", :cd => Babushka::BuildPrefix
   }
 end
@@ -60,8 +60,8 @@ dep 'babushka.me db dump' do
   met? {
     db_dump.exists? && (db_dump.mtime + 300 > Time.now) # less than 5 minutes old
   }
-  before { db_dump_path.mkdir }
   meet {
+    db_dump_path.mkdir
     shell "pg_dump babushka.me > '#{db_dump}.tmp' && mv '#{db_dump}.tmp' '#{db_dump}'"
   }
 end
