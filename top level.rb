@@ -44,10 +44,10 @@ dep 'proxied app' do
   requires 'webapp'.with(:type => 'proxy')
 end
 
-dep 'webapp', :type, :domain, :domain_aliases, :username, :path, :listen_host, :listen_port, :nginx_prefix, :enable_ssl, :force_ssl do
+dep 'webapp', :type, :domain, :domain_aliases, :username, :path, :listen_host, :listen_port, :proxy_host, :proxy_port, :nginx_prefix, :enable_ssl, :force_ssl do
   username.default!(domain)
   requires 'user exists'.with(username, '/srv/http')
-  requires 'vhost enabled.nginx'.with(type, domain, domain_aliases, path, listen_host, listen_port, nginx_prefix, enable_ssl, force_ssl)
+  requires 'vhost enabled.nginx'.with(type, domain, domain_aliases, path, listen_host, listen_port, proxy_host, proxy_port, nginx_prefix, enable_ssl, force_ssl)
   requires 'running.nginx'
 end
 
