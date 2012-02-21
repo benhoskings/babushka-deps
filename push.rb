@@ -99,6 +99,7 @@ dep 'schema up to date.push', :ref, :remote do
 end
 
 dep 'marked on newrelic.task', :ref, :remote do
+  requires 'app bundled'.with('.', remote)
   run {
     if 'config/newrelic.yml'.p.exists?
       shell "bundle exec newrelic deployments -e #{remote} -r #{shell("git rev-parse --short #{ref}")}"
@@ -107,6 +108,7 @@ dep 'marked on newrelic.task', :ref, :remote do
 end
 
 dep 'marked on airbrake.task', :ref, :remote do
+  requires 'app bundled'.with('.', remote)
   run {
     if 'config/initializers/airbrake.rb'.p.exists?
       shell "bundle exec rake airbrake:deploy TO=#{remote} REVISION=#{shell("git rev-parse --short #{ref}")} REPO=#{shell("git config remote.origin.url")} USER=#{shell('whoami')}"
