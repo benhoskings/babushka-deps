@@ -7,18 +7,20 @@ upstream <%= upstream_name %> {
 }
 <% end %>
 
+<% if enable_http[/^y/] %>
 server {
   listen <%= listen_host %>:<%= listen_port %>;
   charset utf-8;
 
-  <% if force_ssl[/^y/] %>
+  <% if force_https[/^y/] %>
   rewrite ^(.*)$ https://<%= domain %>$1 redirect;
   <% else %>
   include vhosts/<%= domain %>.common;
   <% end %>
 }
+<% end %>
 
-<% if enable_ssl[/^y/] %>
+<% if enable_https[/^y/] %>
 server {
   listen <%= listen_host %>:443;
   charset utf-8;
