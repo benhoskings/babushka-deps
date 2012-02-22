@@ -48,6 +48,7 @@ dep 'ready.push' do
 end
 
 dep 'pushed.push', :ref, :remote do
+  ref.ask("What would you like to push?").default('HEAD')
   remote.ask("Where would you like to push to?").choose(repo.repo_shell('git remote').split("\n"))
   requires [
     'on origin.push'.with(ref),
