@@ -115,3 +115,47 @@ dep 'maintenance page down' do
   met? { !'public/system/maintenance.html'.p.exists? }
   meet { 'public/system/maintenance.html'.p.rm }
 end
+
+dep 'deployed migrations run', :old_id, :new_id, :env, :orm do
+  setup {
+    # If the branch was changed, git supplies 0000000 for old_id,
+    # so the commit range is 'everything'.
+    effective_old_id = old_id[/^0+$/] ? '' : old_id
+    pending = shell("git diff --numstat #{effective_old_id}..#{new_id}").split("\n").grep(/^[\d\s]+db\/migrate\//)
+    if pending.empty?
+      log "No new migrations."
+    else
+      log "#{pending.length} migration#{'s' unless pending.length == 1} to run:"
+      pending.each {|p| log p }
+
+      requires 'migrated db'.with('.', env)
+    end
+  }
+end
+
+dep 'deployed assets precompiled', :old_id, :new_id, :env, :orm do
+  setup {
+    # If the branch was changed, git supplies 0000000 for old_id,
+    # so the commit range is 'everything'.
+    effective_old_id = old_id[/^0+$/] ? '' : old_id
+    pending = shell(
+      "git diff --numstat #{effective_old_id}..#{new_id}"
+    ).split("\n").grep(
+      /^[\d\s]+app\/assets\//
+    )
+    if pending.empty?
+      log "No assets were changed."
+    else
+      log "#{pending.length} assets#{'s' unless pending.length == 1} changed:"
+      pending.each {|p| log p }
+
+      requires 'assets precompiled'.with(env)
+    end
+  }
+end
+
+dep 'assets precompiled', :env, :template => 'task' do
+  run {
+    shell "bundle exec rake assets:precompile RAILS_ENV=#{env}"
+  }
+end
