@@ -112,6 +112,7 @@ dep 'sshd.managed' do
   }
 end
 dep 'tmux.managed'
+dep 'traceroute.managed'
 dep 'tree.managed'
 dep 'vim.managed'
 dep 'wget.managed'
