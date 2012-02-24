@@ -133,7 +133,7 @@ dep 'deployed migrations run', :old_id, :new_id, :env, :orm do
   }
 end
 
-dep 'deployed assets precompiled', :old_id, :new_id, :env, :orm do
+dep 'deployed assets precompiled', :old_id, :new_id, :env do
   setup {
     # If the branch was changed, git supplies 0000000 for old_id,
     # so the commit range is 'everything'.
