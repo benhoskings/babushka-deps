@@ -5,6 +5,14 @@ dep 'dot files', :username do
   meet { shell %Q{curl -L "http://github.com/#{var :github_user, :default => 'benhoskings'}/#{var :dot_files_repo, :default => 'dot-files'}/raw/master/clone_and_link.sh" | bash} }
 end
 
+dep 'user setup for provisioning', :username, :key do
+  requires [
+    'user exists'.with(:username => username),
+    'passwordless ssh logins'.with(username, key),
+    'passwordless sudo'.with(username)
+  ]
+end
+
 dep 'user auth setup', :username, :password, :key do
   requires 'user exists with password'.with(username, password)
   requires 'passwordless ssh logins'.with(username, key)
