@@ -3,8 +3,8 @@ dep 'passwordless sudo', :username do
     unmeetable! "This dep must be run as root." unless shell('whoami') == 'root'
   }
   met? {
-    shell 'sudo -k', :as => 'ben' # expire an existing cached password
-    shell? 'sudo -n true', :as => 'ben'
+    shell 'sudo -k', :as => username # expire an existing cached password
+    shell? 'sudo -n true', :as => username
   }
   meet {
     shell "echo '#{username} ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers"
