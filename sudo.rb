@@ -19,6 +19,6 @@ dep 'passwordless sudo removed' do
     raw_shell('grep NOPASSWD /etc/sudoers').stdout.empty?
   }
   meet {
-    shell "sed -i '' '/NOPASSWD/d' /etc/sudoers"
+    shell "sed -i '' -e '/NOPASSWD/d' /etc/sudoers"
   }
 end
