@@ -1,9 +1,5 @@
-dep 'git.ppa' do
-  adds 'ppa:git-core/ppa'
-end
-
 dep 'git.managed' do
-  requires 'git.ppa'
+  requires 'ppa'.with('ppa:git-core/ppa')
   installs 'git'
   provides 'git >= 1.7.4.1'
 end

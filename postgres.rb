@@ -51,7 +51,7 @@ dep 'postgres.managed', :version do
   # Assume the installed version if there is one
   version.default!(shell('psql --version').val_for('psql (PostgreSQL)')[/^\d\.\d/]) if which('psql')
   requires {
-    on :apt, 'set.locale', 'postgres.ppa'
+    on :apt, 'set.locale', 'ppa'.with('ppa:pitti/postgresql')
     on :brew, 'set.locale'
   }
   installs {
@@ -59,8 +59,4 @@ dep 'postgres.managed', :version do
     via :brew, "postgresql"
   }
   provides "psql ~> #{version}.0"
-end
-
-dep 'postgres.ppa' do
-  adds 'ppa:pitti/postgresql'
 end
