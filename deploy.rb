@@ -121,7 +121,7 @@ dep 'deployed migrations run', :old_id, :new_id, :env, :orm do
     # If the branch was changed, git supplies 0000000 for old_id,
     # so the commit range is 'everything'.
     effective_old_id = old_id[/^0+$/] ? '' : old_id
-    pending = shell("git diff --numstat #{effective_old_id}..#{new_id}").split("\n").grep(/^[\d\s]+db\/migrate\//)
+    pending = shell("git diff --numstat #{effective_old_id}..#{new_id}").split("\n").grep(/^[\d\s\-]+db\/migrate\//)
     if pending.empty?
       log "No new migrations."
     else
@@ -141,7 +141,7 @@ dep 'deployed assets precompiled', :old_id, :new_id, :env do
     pending = shell(
       "git diff --numstat #{effective_old_id}..#{new_id}"
     ).split("\n").grep(
-      /^[\d\s]+app\/assets\//
+      /^[\d\s\-]+app\/assets\//
     )
     if pending.empty?
       log "No assets were changed."
