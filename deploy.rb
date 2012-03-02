@@ -146,7 +146,7 @@ dep 'deployed assets precompiled', :old_id, :new_id, :env do
     if pending.empty?
       log "No assets were changed."
     else
-      log "#{pending.length} assets#{'s' unless pending.length == 1} changed:"
+      log "#{pending.length} asset#{'s' unless pending.length == 1} changed:"
       pending.each {|p| log p }
 
       requires 'assets precompiled'.with(env)
