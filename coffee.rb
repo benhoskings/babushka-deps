@@ -1,14 +1,12 @@
-dep 'coffeescript.src' do
+dep 'coffeescript.src', :version do
+  version.default!('1.1.2')
   requires 'nodejs.src'
-  source 'http://github.com/jashkenas/coffee-script/tarball/1.1.1'
-  provides 'coffee ~> 1.1.1'
+  source "http://github.com/jashkenas/coffee-script/tarball/#{version}"
+  provides "coffee >= #{version}"
 
-  process_source {
-    cd 'jashkenas-coffee-script-d4d0271' do
-      shell "bin/cake build"
-      shell "bin/cake install"
-    end
-  }
+  configure { true }
+  build { shell "bin/cake build" }
+  install { shell "bin/cake install", :sudo => Babushka::SrcHelper.should_sudo? }
 end
 
 dep 'nodejs.src' do
