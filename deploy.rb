@@ -116,14 +116,6 @@ dep 'maintenance page down' do
   meet { 'public/system/maintenance.html'.p.rm }
 end
 
-dep 'deployed migrations run', :old_id, :new_id, :env, :orm do
-  requires 'when path changed'.with('db/migrate/', 'migrated db', old_id, new_id, env)
-end
-
-dep 'deployed assets precompiled', :old_id, :new_id, :env do
-  requires 'when path changed'.with('app/assets/', 'assets precompiled', old_id, new_id, env)
-end
-
 dep 'when path changed', :path, :dep_spec, :old_id, :new_id, :env do
   def effective_old_id
     # If the branch was changed, git supplies 0000000 for old_id,
