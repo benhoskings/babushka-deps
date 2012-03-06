@@ -117,39 +117,34 @@ dep 'maintenance page down' do
 end
 
 dep 'deployed migrations run', :old_id, :new_id, :env, :orm do
-  setup {
-    # If the branch was changed, git supplies 0000000 for old_id,
-    # so the commit range is 'everything'.
-    effective_old_id = old_id[/^0+$/] ? '' : old_id
-    pending = shell("git diff --numstat #{effective_old_id}..#{new_id}").split("\n").grep(/^[\d\s\-]+db\/migrate\//)
-    if pending.empty?
-      log "No new migrations."
-    else
-      log "#{pending.length} migration#{'s' unless pending.length == 1} to run:"
-      pending.each {|p| log p }
-
-      requires 'migrated db'.with('.', env)
-    end
-  }
+  requires 'when path changed'.with('db/migrate/', 'migrated db', old_id, new_id, env)
 end
 
 dep 'deployed assets precompiled', :old_id, :new_id, :env do
-  setup {
+  requires 'when path changed'.with('app/assets/', 'assets precompiled', old_id, new_id, env)
+end
+
+dep 'when path changed', :path, :dep_spec, :old_id, :new_id, :env do
+  def effective_old_id
     # If the branch was changed, git supplies 0000000 for old_id,
     # so the commit range is 'everything'.
-    effective_old_id = old_id[/^0+$/] ? '' : old_id
-    pending = shell(
+    old_id[/^0+$/] ? '' : old_id
+  end
+  def pending
+    shell(
       "git diff --numstat #{effective_old_id}..#{new_id}"
     ).split("\n").grep(
-      /^[\d\s\-]+app\/assets\//
+      /^[\d\s\-]+#{Regexp.escape(path.to_s)}/
     )
+  end
+  setup {
     if pending.empty?
-      log "No assets were changed."
+      log "No changes within #{path}."
     else
-      log "#{pending.length} asset#{'s' unless pending.length == 1} changed:"
+      log "#{pending.length} change#{'s' unless pending.length == 1} within #{path}:"
       pending.each {|p| log p }
 
-      requires 'assets precompiled'.with(env)
+      requires dep_spec.to_s.with('.', env)
     end
   }
 end
