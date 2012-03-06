@@ -144,7 +144,7 @@ dep 'when path changed', :path, :dep_spec, :old_id, :new_id, :env do
       log "#{pending.length} change#{'s' unless pending.length == 1} within #{path}:"
       pending.each {|p| log p }
 
-      requires dep_spec.to_s.with('.', env)
+      requires dep_spec.to_s.with(env: env)
     end
   }
 end
