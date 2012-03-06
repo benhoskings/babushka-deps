@@ -139,7 +139,7 @@ dep 'when path changed', :path, :dep_spec, :old_id, :new_id, :env do
   end
   setup {
     if pending.empty?
-      log "No changes within #{path}."
+      log "No changes within #{path} - not running '#{dep_spec}'."
     else
       log "#{pending.length} change#{'s' unless pending.length == 1} within #{path}:"
       pending.each {|p| log p }
