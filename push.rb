@@ -73,7 +73,7 @@ end
 
 dep 'schema up to date.push', :ref, :remote do
   def db_name
-    yaml('config/database.yml')[remote.to_s]['database']
+    'config/database.yml'.p.yaml[remote.to_s]['database']
   end
   def dump_schema_cmd
     pg_dump = "pg_dump #{db_name} --no-privileges --no-owner"
