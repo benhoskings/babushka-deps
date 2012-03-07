@@ -34,8 +34,10 @@ dep 'seeded db', :username, :root, :env, :db_name, :db_type, :orm, :template => 
   }
 end
 
-dep 'migrated db', :root, :env, :template => 'task' do
+dep 'migrated db', :username, :root, :env, :db_name, :db_type, :deploying, :template => 'task' do
   root.default!('.')
+  deploying.default!('no')
+  requires 'existing db'.with(username, db_name, db_type) unless deploying[/^y/]
   run {
     shell! "bundle exec rake db:migrate --trace RAILS_ENV=#{env} RACK_ENV=#{env}", :cd => root, :log => true
   }
