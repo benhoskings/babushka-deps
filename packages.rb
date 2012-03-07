@@ -71,6 +71,7 @@ dep 'mdns.managed' do
   }
   provides []
 end
+dep 'lsof.managed'
 dep 'memcached.managed'
 dep 'ncurses.managed' do
   installs {
