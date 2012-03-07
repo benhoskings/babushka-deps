@@ -75,7 +75,7 @@ end
 
 dep 'self signed cert.nginx', :domain, :nginx_prefix, :country, :state, :city, :organisation, :organisational_unit, :email do
   requires 'nginx.src'.with(:nginx_prefix => nginx_prefix)
-  met? { %w[key csr crt].all? {|ext| (cert_path / "#{domain}.#{ext}").exists? } }
+  met? { %w[key crt].all? {|ext| (cert_path / "#{domain}.#{ext}").exists? } }
   meet {
     cd cert_path, :create => "700", :sudo => true do
       log_shell("generating private key", "openssl genrsa -out #{domain}.key 2048", :sudo => true) and
