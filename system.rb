@@ -6,12 +6,9 @@ dep 'hostname', :host_name, :for => :linux do
   def current_hostname
     shell('hostname -f')
   end
-  def stored_hostname
-    '/etc/hostname'.p.read
-  end
   host_name.default(shell('hostname'))
   met? {
-    !stored_hostname.blank? && current_hostname == stored_hostname
+    current_hostname == host_name
   }
   meet {
     sudo "echo #{host_name} > /etc/hostname"
