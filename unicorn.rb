@@ -26,3 +26,18 @@ dep 'unicorn paths', :root do
   met? { missing_paths.empty? }
   meet { missing_paths.each {|p| (root / p).mkdir } }
 end
+
+dep 'unicorn running', :app_root, :env do
+  app_root.default('~/current')
+  requires 'lsof.managed'
+  met? {
+    running_count = shell('lsof -U').split("\n").grep(/#{Regexp.escape(app_root / 'tmp/sockets/unicorn.socket')}$/).count
+    expected_count = 1 + (app_root / 'config/unicorn.rb').read.val_for('worker_processes').to_i
+    (running_count == expected_count).tap {|result|
+      log "There #{running_count == 1 ? 'is' : 'are'} #{running_count} unicorn process#{'es' unless running_count == 1}", :as => (:ok if result)
+    }
+  }
+  meet {
+    shell "bundle exec unicorn -D -E #{env} -c config/unicorn.rb", :cd => app_root
+  }
+end
