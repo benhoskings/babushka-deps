@@ -41,8 +41,8 @@ dep 'migrated db', :root, :env, :template => 'task' do
   }
 end
 
-dep 'existing db', :username, :db_name, :db do
-  requires "existing #{db} db".with(username, db_name)
+dep 'existing db', :username, :db_name, :db_type do
+  requires "existing #{db_type} db".with(username, db_name)
 end
 
 dep 'db gem', :db do
