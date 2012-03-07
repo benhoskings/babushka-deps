@@ -95,6 +95,7 @@ dep 'self signed cert.nginx', :domain, :nginx_prefix, :country, :state, :city, :
       ) and
       log_shell("signing certificate with key", "openssl x509 -req -days 365 -in #{domain}.csr -signkey #{domain}.key -out #{domain}.crt", :sudo => true)
     end
+    restart_nginx
   }
 end
 
