@@ -29,7 +29,10 @@ end
 dep 'vhost enabled.nginx', :type, :domain, :domain_aliases, :path, :listen_host, :listen_port, :proxy_host, :proxy_port, :nginx_prefix, :enable_http, :enable_https, :force_https do
   requires 'vhost configured.nginx'.with(type, domain, domain_aliases, path, listen_host, listen_port, proxy_host, proxy_port, nginx_prefix, enable_http, enable_https, force_https)
   met? { vhost_link.exists? }
-  meet { sudo "ln -sf '#{vhost_conf}' '#{vhost_link}'" }
+  meet {
+    sudo "mkdir -p #{nginx_prefix / 'conf/vhosts/on'}"
+    sudo "ln -sf '#{vhost_conf}' '#{vhost_link}'"
+  }
   after { restart_nginx }
 end
 
@@ -68,6 +71,7 @@ dep 'vhost configured.nginx', :type, :domain, :domain_aliases, :path, :listen_ho
     Babushka::Renderable.new(vhost_common).from?(dependency.load_path.parent / "nginx/#{type}_vhost.common.erb")
   }
   meet {
+    sudo "mkdir -p #{nginx_prefix / 'conf/vhosts'}"
     render_erb "nginx/vhost.conf.erb", :to => vhost_conf, :sudo => true
     render_erb "nginx/#{type}_vhost.common.erb", :to => vhost_common, :sudo => true
   }
@@ -141,9 +145,6 @@ dep 'configured.nginx', :nginx_prefix do
   }
   meet {
     render_erb 'nginx/nginx.conf.erb', :to => nginx_conf, :sudo => true
-  }
-  after {
-    sudo "mkdir -p #{nginx_prefix / 'conf/vhosts/on'}"
   }
 end
 
