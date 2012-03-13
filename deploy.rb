@@ -141,7 +141,7 @@ dep 'when path changed', :path, :dep_spec, :old_id, :new_id, :env do
   }
 end
 
-dep 'assets precompiled', :env, :template => 'task' do
+dep 'assets precompiled', :env, :deploying, :template => 'task' do
   run {
     shell "bundle exec rake assets:precompile RAILS_ENV=#{env}"
   }
