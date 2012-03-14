@@ -16,18 +16,10 @@ meta :push do
     @remote_head = nil
   end
   def git_log from, to
-    range = if from[/^0+$/]
-      to # Log the full history under 'to' if 'from' isn't set.
+    if from[/^0+$/]
+      log "Starting HEAD at #{to[0...7]} (a #{shell("git rev-list #{to} | wc -l").strip}-commit history) since the repo is blank."
     else
-      "#{from}..#{to}"
-    end
-    log_cmd = "git log --graph --pretty='format:%C(yellow)%h%Cblue%d%Creset %s %C(white) %an, %ar%Creset'"
-    range_length = shell("git rev-list #{range} | wc -l").to_i
-    if range_length > 50
-      log shell("#{log_cmd} -50 #{range}")
-      log "[#{range_length - 50} more commits not shown]"
-    else
-      log shell("#{log_cmd} #{range}")
+      log shell("git log --graph --pretty='format:%C(yellow)%h%Cblue%d%Creset %s %C(white) %an, %ar%Creset' #{from}..#{to}")
     end
   end
 end
