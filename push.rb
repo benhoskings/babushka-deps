@@ -24,15 +24,17 @@ meta :push do
   end
 end
 
-dep 'push!', :ref, :remote do
+dep 'push!', :ref, :remote, :env do
   ref.ask("What would you like to push?").default('HEAD')
+  env.default!(remote)
+
   requires 'ready.push'
-  requires 'current dir:before push'.with(ref, remote) if Dep('current dir:before push')
+  requires 'current dir:before push'.with(ref, remote, env) if Dep('current dir:before push')
   requires 'pushed.push'.with(ref, remote)
-  requires 'schema up to date.push'.with(ref, remote)
-  requires 'marked on newrelic.task'.with(ref, remote)
-  requires 'marked on airbrake.task'.with(ref, remote)
-  requires 'current dir:after push'.with(ref, remote) if Dep('current dir:after push')
+  requires 'schema up to date.push'.with(ref, remote, env)
+  requires 'marked on newrelic.task'.with(ref, env)
+  requires 'marked on airbrake.task'.with(ref, env)
+  requires 'current dir:after push'.with(ref, remote, env) if Dep('current dir:after push')
 end
 
 dep 'ready.push' do
@@ -70,7 +72,7 @@ dep 'pushed.push', :ref, :remote do
   }
 end
 
-dep 'schema up to date.push', :ref, :remote do
+dep 'schema up to date.push', :ref, :remote, :env do
   def db_name
     'config/database.yml'.p.yaml[remote.to_s]['database']
   end
@@ -98,20 +100,20 @@ dep 'schema up to date.push', :ref, :remote do
   }
 end
 
-dep 'marked on newrelic.task', :ref, :remote do
+dep 'marked on newrelic.task', :ref, :env do
   requires 'app bundled'.with('.', 'development')
   run {
     if 'config/newrelic.yml'.p.exists?
-      shell "bundle exec newrelic deployments -e #{remote} -r #{shell("git rev-parse --short #{ref}")}"
+      shell "bundle exec newrelic deployments -e #{env} -r #{shell("git rev-parse --short #{ref}")}"
     end
   }
 end
 
-dep 'marked on airbrake.task', :ref, :remote do
+dep 'marked on airbrake.task', :ref, :env do
   requires 'app bundled'.with('.', 'development')
   run {
     if 'config/initializers/airbrake.rb'.p.exists?
-      shell "bundle exec rake airbrake:deploy TO=#{remote} REVISION=#{shell("git rev-parse --short #{ref}")} REPO=#{shell("git config remote.origin.url")} USER=#{shell('whoami')}"
+      shell "bundle exec rake airbrake:deploy TO=#{env} REVISION=#{shell("git rev-parse --short #{ref}")} REPO=#{shell("git config remote.origin.url")} USER=#{shell('whoami')}"
     end
   }
 end
