@@ -51,6 +51,10 @@ dep 'SCSS.tmbundle' do
   source 'git://github.com/kuroir/SCSS.tmbundle.git'
 end
 
+dep 'SASS.tmbundle' do
+  source 'https://github.com/seaofclouds/sass-textmate-bundle.git'
+end
+
 dep 'nginx.tmbundle' do
   source 'git://github.com/johnmuhl/nginx-tmbundle.git'
 end
