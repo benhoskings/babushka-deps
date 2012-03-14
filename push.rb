@@ -21,7 +21,14 @@ meta :push do
     else
       "#{from}..#{to}"
     end
-    log shell("git log --graph --pretty='format:%C(yellow)%h%Cblue%d%Creset %s %C(white) %an, %ar%Creset' #{range}")
+    log_cmd = "git log --graph --pretty='format:%C(yellow)%h%Cblue%d%Creset %s %C(white) %an, %ar%Creset'"
+    range_length = shell("git rev-list #{range} | wc -l").to_i
+    if range_length > 50
+      log shell("#{log_cmd} -50 #{range}")
+      log "[#{range_length - 50} more commits not shown]"
+    else
+      log shell("#{log_cmd} #{range}")
+    end
   end
 end
 
