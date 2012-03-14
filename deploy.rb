@@ -118,9 +118,10 @@ end
 
 dep 'when path changed', :path, :dep_spec, :old_id, :new_id, :env do
   def effective_old_id
-    # If the branch was changed, git supplies 0000000 for old_id,
-    # so the commit range is 'everything'.
-    old_id[/^0+$/] ? '' : old_id
+    # If there is no initial commit (first push or branch change), git
+    # replace git's '0000000' with a parentless commit (usually there's
+    # just one, the initial repo commit).
+    old_id[/^0+$/] ? shell('git rev-list HEAD | tail -n1') : old_id
   end
   def pending
     shell(
