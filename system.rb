@@ -53,7 +53,7 @@ end
 
 dep 'lax host key checking' do
   requires 'sed.managed'
-  met? { grep(/^StrictHostKeyChecking[ \t]+no/, ssh_conf_path(:ssh)) }
+  met? { ssh_conf_path(:ssh).p.grep(/^StrictHostKeyChecking[ \t]+no/) }
   meet { change_with_sed 'StrictHostKeyChecking', 'yes', 'no', ssh_conf_path(:ssh) }
 end
 
@@ -64,11 +64,11 @@ dep 'admins can sudo' do
 end
 
 dep 'admin group' do
-  met? { grep(/^admin\:/, '/etc/group') }
+  met? { '/etc/group'.p.grep(/^admin\:/) }
   meet { sudo 'groupadd admin' }
 end
 
 dep 'tmp cleaning grace period', :for => :ubuntu do
-  met? { !grep(/^[^#]*TMPTIME=0/, "/etc/default/rcS") }
+  met? { "/etc/default/rcS".p.grep(/^[^#]*TMPTIME=0/).nil? }
   meet { change_line "TMPTIME=0", "TMPTIME=30", "/etc/default/rcS" }
 end

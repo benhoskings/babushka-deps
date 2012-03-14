@@ -21,7 +21,7 @@ dep 'passwordless ssh logins', :username, :key do
 end
 
 dep 'public key' do
-  met? { grep(/^ssh-dss/, '~/.ssh/id_dsa.pub') }
+  met? { '~/.ssh/id_dsa.pub'.p.grep(/^ssh-dss/) }
   meet { log shell("ssh-keygen -t dsa -f ~/.ssh/id_dsa -N ''") }
 end
 

@@ -52,7 +52,7 @@ dep 'user exists', :username, :home_dir_base do
     }
   end
   on :linux do
-    met? { grep(/^#{username}:/, '/etc/passwd') }
+    met? { '/etc/passwd'.p.grep(/^#{username}:/) }
     meet {
       sudo "mkdir -p #{home_dir_base}" and
       sudo "useradd -m -s /bin/bash -b #{home_dir_base} -G admin #{username}" and
