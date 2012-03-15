@@ -154,6 +154,7 @@ dep 'delayed job restarted', :template => 'task' do
 
     if output.nil?
       log "`rake jobs:work` isn't running."
+      true
     else
       shell "kill -s TERM #{output.scan(/^\w+\s+(\d+)\s+/).flatten.first}"
     end
