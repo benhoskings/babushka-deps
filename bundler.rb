@@ -5,15 +5,15 @@ dep 'app bundled', :root, :env do
       log "No Gemfile - skipping bundling."
       true
     else
-      cd(root) { shell? 'bundle check', :log => true }
+      shell? 'bundle check', :cd => root, :log => true
     end
   }
-  meet { cd(root) {
+  meet {
     install_args = %w[development test].include?(env) ? '' : "--deployment --without 'development test'"
-    unless shell("bundle install #{install_args}", :log => true)
+    unless shell("bundle install #{install_args}", :cd => root, :log => true)
       confirm("Try a `bundle update`", :default => 'n') {
-        shell 'bundle update', :log => true
+        shell 'bundle update', :cd => root, :log => true
       }
     end
-  } }
+  }
 end
