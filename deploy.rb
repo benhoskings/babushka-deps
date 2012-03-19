@@ -127,7 +127,7 @@ dep 'when path changed', :path, :dep_spec, :old_id, :new_id, :env do
     shell(
       "git diff --numstat #{effective_old_id}..#{new_id}"
     ).split("\n").grep(
-      /^[\d\s\-]+#{Regexp.escape(path.to_s)}/
+      /^[\d\s\-]+#{path}/
     )
   end
   setup {
