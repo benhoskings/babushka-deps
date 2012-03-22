@@ -144,7 +144,7 @@ end
 
 dep 'assets precompiled', :env, :deploying, :template => 'task' do
   run {
-    shell "bundle exec rake assets:precompile RAILS_ENV=#{env}"
+    shell "bundle exec rake assets:precompile:primary RAILS_GROUPS=assets RAILS_ENV=#{env}"
   }
 end
 
