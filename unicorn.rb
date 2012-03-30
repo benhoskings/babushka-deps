@@ -40,6 +40,9 @@ dep 'unicorn running', :app_root, :env do
       (running_count == expected_count).tap {|result|
         if result
           log_ok "This app has #{running_count} unicorn#{'s' unless running_count == 1} running (1 master + #{running_count - 1} workers)."
+        elsif running_count > 0
+          log_warn "This app has #{running_count} unicorn processes running, which doesn't match the config."
+          true
         else
           log "This app has no unicorns running."
         end
