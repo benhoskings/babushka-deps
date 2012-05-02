@@ -135,7 +135,12 @@ dep 'when path changed', :path, :dep_spec, :old_id, :new_id, :env do
       log "No changes within #{path.inspect} - not running '#{dep_spec}'."
     else
       log "#{pending.length} change#{'s' unless pending.length == 1} within #{path.inspect}:"
-      pending.each {|p| log p }
+      if pending.length < 30
+        pending.each {|p| log p }
+      else
+        pending[0...15].each {|p| log p }
+        log "  [.. and #{pending.length - 15} more]"
+      end
 
       requires dep_spec.to_s.with(:env => env, :deploying => 'yes')
     end
