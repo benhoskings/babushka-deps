@@ -31,9 +31,6 @@ dep 'push!', :ref, :remote, :env do
   requires 'ready.push'
   requires 'current dir:before push'.with(ref, remote, env) if Dep('current dir:before push')
   requires 'pushed.push'.with(ref, remote)
-  requires 'schema up to date.push'.with(ref, remote, env)
-  requires 'marked on newrelic.task'.with(ref, env)
-  requires 'marked on airbrake.task'.with(ref, env)
   requires 'current dir:after push'.with(ref, remote, env) if Dep('current dir:after push')
 end
 
