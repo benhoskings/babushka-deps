@@ -139,7 +139,7 @@ dep 'when path changed', :path, :dep_spec, :old_id, :new_id, :env do
         pending.each {|p| log p }
       else
         pending[0...15].each {|p| log p }
-        log "  [.. and #{pending.length - 15} more]"
+        log "[and #{pending.length - 15} more]"
       end
 
       requires dep_spec.to_s.with(:env => env, :deploying => 'yes')
