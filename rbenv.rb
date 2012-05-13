@@ -22,7 +22,7 @@ meta :rbenv do
       "#{version}-#{patchlevel}"
     end
     def prefix
-      "~/.rbenv/versions" / basename
+      "~/.rbenv/versions" / version_spec
     end
     def version_group
       version.scan(/^\d\.\d/).first
