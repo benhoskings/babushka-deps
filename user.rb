@@ -1,7 +1,7 @@
 dep 'dot files', :username do
   username.default!(shell('whoami'))
   requires 'user exists'.with(:username => username), 'git', 'curl.managed', 'git-smart.gem'
-  met? { File.exists?(ENV['HOME'] / ".dot-files/.git") }
+  met? { "~/.dot-files/.git".p.exists? }
   meet { shell %Q{curl -L "http://github.com/#{var :github_user, :default => 'benhoskings'}/#{var :dot_files_repo, :default => 'dot-files'}/raw/master/clone_and_link.sh" | bash} }
 end
 
