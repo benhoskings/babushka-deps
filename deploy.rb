@@ -148,7 +148,7 @@ dep 'unicorn restarted', :pidfile, :old_pidfile do
     # 2) The new master starts and writes pidfile.
     # 3) On launch success, old_pidfile is deleted; on failure,
     #    old_pidfile is moved back into place.
-    wait_for(5, "Current unicorn (pid #{@original_pid}) moving aside") { pidfile.p.exists? && old_pidfile.p.exists? }
+    wait_for(5, "Current unicorn moving aside") { pidfile.p.exists? && old_pidfile.p.exists? }
     wait_for(5, "New unicorn forking") { pidfile.p.exists? }
     wait_for(30, "New unicorn booting") { !old_pidfile.p.exists? }
   }
