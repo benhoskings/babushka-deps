@@ -20,7 +20,7 @@ dep 'up to date.repo', :git_ref_data, :env do
     # checks trigger a source load when called.
     'on deploy'.with(ref_info[:old_id], ref_info[:new_id], ref_info[:branch], env),
 
-    'app flagged for restart.task',
+    'unicorn flagged for restart.task',
     'maintenance page down',
     'after deploy'.with(ref_info[:old_id], ref_info[:new_id], ref_info[:branch], env)
   ]
@@ -93,12 +93,13 @@ dep 'HEAD up to date.repo', :old_id, :new_id, :branch do
   }
 end
 
-dep 'app flagged for restart.task' do
+dep 'unicorn flagged for restart.task' do
   run {
-    if File.exists? 'tmp/pids/unicorn.pid'
-      shell "kill -USR2 #{'tmp/pids/unicorn.pid'.p.read}"
+    if !File.exists?('tmp/pids/unicorn.pid')
+      log "There are no unicorns running: not attempting a restart."
+      true
     else
-      shell "mkdir -p tmp && touch tmp/restart.txt"
+      shell "kill -USR2 #{'tmp/pids/unicorn.pid'.p.read}"
     end
   }
 end
