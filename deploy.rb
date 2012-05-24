@@ -136,7 +136,7 @@ dep 'unicorn restarted', :pidfile, :old_pidfile do
         elsif !result
           log_warn "The new unicorn failed to start. (The old one is still running, though.)"
         else
-          log "Unicorn restarted (pid #{@original_pid} -> #{pidfile.p.read})."
+          log_ok "Unicorn restarted (pid #{@original_pid} -> #{pidfile.p.read})."
         end
       }
     end
