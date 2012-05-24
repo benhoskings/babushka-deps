@@ -20,7 +20,7 @@ dep 'up to date.repo', :git_ref_data, :env do
     # checks trigger a source load when called.
     'on deploy'.with(ref_info[:old_id], ref_info[:new_id], ref_info[:branch], env),
 
-    'unicorn flagged for restart.task',
+    'unicorn restarted',
     'maintenance page down',
     'after deploy'.with(ref_info[:old_id], ref_info[:new_id], ref_info[:branch], env)
   ]
@@ -93,14 +93,64 @@ dep 'HEAD up to date.repo', :old_id, :new_id, :branch do
   }
 end
 
-dep 'unicorn flagged for restart.task' do
-  run {
-    if !File.exists?('tmp/pids/unicorn.pid')
-      log "There are no unicorns running: not attempting a restart."
-      true
-    else
-      shell "kill -USR2 #{'tmp/pids/unicorn.pid'.p.read}"
+dep 'unicorn restarted', :pidfile, :old_pidfile do
+  pidfile.default!('tmp/pids/unicorn.pid')
+  old_pidfile.default!("#{pidfile}.oldbin")
+  def running? pid
+    Process.getpgid(pid.to_i)
+  rescue Errno::ESRCH
+    false
+  end
+  def wait_for timeout, message, &block
+    waited_for, result = 0, nil
+    log_block message do
+      while !(result = yield) && (waited_for < timeout)
+        waited_for += 0.2
+        sleep 0.2
+      end
+      result
     end
+  end
+  setup {
+    @original_pid = pidfile.p.read
+  }
+  def restarted?(current_pid)
+    # The app has restarted if:
+    !old_pidfile.p.exists? && # A restart isn't in progress,
+    running?(current_pid) && # The current pid is running,
+    (current_pid != @original_pid) # And the value has changed.
+  end
+  met? {
+    current_pid = pidfile.p.read
+    if !running?(current_pid)
+      if @attempted_restart
+        log_fail "Unicorn exited! (This shouldn't ever happen.)"
+      else
+        log "There are no unicorns running: not attempting a restart."
+        true
+      end
+    else
+      restarted?(current_pid).tap {|result|
+        if !@attempted_restart
+          log "The unicorn master is running with pid #{current_pid}."
+        elsif !result
+          log_warn "The new unicorn failed to start. (The old one is still running, though.)"
+        else
+          log "Unicorn restarted (pid #{@original_pid} -> #{pidfile.p.read})."
+        end
+      }
+    end
+  }
+  meet {
+    shell "kill -USR2 #{'tmp/pids/unicorn.pid'.p.read}"
+    @attempted_restart = true
+    # 1) The current pidfile is moved to old_pidfile.
+    # 2) The new master starts and writes pidfile.
+    # 3) On launch success, old_pidfile is deleted; on failure,
+    #    old_pidfile is moved back into place.
+    wait_for(5, "Current unicorn (pid #{@original_pid}) moving aside") { pidfile.p.exists? && old_pidfile.p.exists? }
+    wait_for(5, "New unicorn forking") { pidfile.p.exists? }
+    wait_for(30, "New unicorn booting") { !old_pidfile.p.exists? }
   }
 end
 
