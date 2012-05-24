@@ -36,13 +36,11 @@ dep 'unicorn running', :app_root, :env do
       true
     else
       running_count = shell('lsof -U').split("\n").grep(/#{Regexp.escape(app_root / 'tmp/sockets/unicorn.socket')}$/).count
-      expected_count = 1 + (app_root / 'config/unicorn.rb').read.val_for('worker_processes').to_i
-      (running_count == expected_count).tap {|result|
+      (running_count >= 3).tap {|result| # 1 master + 2 workers
         if result
           log_ok "This app has #{running_count} unicorn#{'s' unless running_count == 1} running (1 master + #{running_count - 1} workers)."
         elsif running_count > 0
-          log_warn "This app has #{running_count} unicorn processes running, which doesn't match the config."
-          true
+          unmeetable! "This app is in an unexpected state: (1 master + #{running_count - 1} workers)."
         else
           log "This app has no unicorns running."
         end
