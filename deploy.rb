@@ -97,7 +97,11 @@ dep 'unicorn restarted', :pidfile, :old_pidfile do
   pidfile.default!('tmp/pids/unicorn.pid')
   old_pidfile.default!("#{pidfile}.oldbin")
   def running? pid
-    Process.getpgid(pid.to_i)
+    if pid.nil?
+      false
+    else
+      Process.getpgid(pid.to_i)
+    end
   rescue Errno::ESRCH
     false
   end
