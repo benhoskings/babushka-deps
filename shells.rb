@@ -22,7 +22,7 @@ dep 'zsh', :username do
 end
 
 dep 'zsh.shell_setup' do
-  requires 'zsh.managed'
+  requires 'zsh.bin'
 end
 
-dep 'zsh.managed'
+dep 'zsh.bin'
