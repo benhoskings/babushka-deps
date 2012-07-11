@@ -49,7 +49,7 @@ dep 'secured ssh logins' do
       PasswordAuthentication
       ChallengeResponseAuthentication
     ].each {|option|
-      shell("sed -i'' -e 's/^#{option}\s+yes\b/#{option} no/' #{ssh_conf_path(:sshd)}")
+      shell("sed -i'' -e 's/^[# ]*#{option}\W*\w*$/#{option} no/' #{ssh_conf_path(:sshd)}")
     }
   }
   after { sudo "/etc/init.d/ssh restart" }
