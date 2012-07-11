@@ -49,7 +49,7 @@ dep 'secured ssh logins' do
       PasswordAuthentication
       ChallengeResponseAuthentication
     ].each {|option|
-      shell("sed -i '' -e 's/^#{option}\s+yes\b/#{option} no/' #{ssh_conf_path(:sshd)}")
+      shell("sed -i'' -e 's/^#{option}\s+yes\b/#{option} no/' #{ssh_conf_path(:sshd)}")
     }
   }
   after { sudo "/etc/init.d/ssh restart" }
@@ -61,7 +61,7 @@ dep 'lax host key checking' do
     ssh_conf_path(:ssh).p.grep(/^StrictHostKeyChecking[ \t]+no/)
   }
   meet {
-    shell("sed -i '' -e 's/^StrictHostKeyChecking\s+yes\b/StrictHostKeyChecking no/' #{ssh_conf_path(:ssh)}")
+    shell("sed -i'' -e 's/^StrictHostKeyChecking\s+yes\b/StrictHostKeyChecking no/' #{ssh_conf_path(:ssh)}")
   }
 end
 
@@ -85,6 +85,6 @@ dep 'tmp cleaning grace period', :for => :ubuntu do
     "/etc/default/rcS".p.grep(/^[^#]*TMPTIME=0/).nil?
   }
   meet {
-    shell("sed -i '' -e 's/^TMPTIME=0$/TMPTIME=30/' '/etc/default/rcS'")
+    shell("sed -i'' -e 's/^TMPTIME=0$/TMPTIME=30/' '/etc/default/rcS'")
   }
 end
