@@ -1,8 +1,14 @@
-dep 'dot files', :username do
+dep 'dot files', :username, :github_user, :repo do
   username.default!(shell('whoami'))
+  github_user.default('benhoskings')
+  repo.default('dot-files')
   requires 'user exists'.with(:username => username), 'git', 'curl.bin', 'git-smart.gem'
-  met? { "~/.dot-files/.git".p.exists? }
-  meet { shell %Q{curl -L "http://github.com/#{var :github_user, :default => 'benhoskings'}/#{var :dot_files_repo, :default => 'dot-files'}/raw/master/clone_and_link.sh" | bash} }
+  met? {
+    "~/.dot-files/.git".p.exists?
+  }
+  meet {
+    shell %Q{curl -L "http://github.com/#{github_user}/#{repo}/raw/master/clone_and_link.sh" | bash}
+  }
 end
 
 dep 'user setup for provisioning', :username, :key do
