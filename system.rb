@@ -36,7 +36,7 @@ dep 'secured ssh logins' do
     output = raw_shell('ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no nonexistentuser@localhost').stderr
     if output.downcase['connection refused']
       log_ok "sshd doesn't seem to be running."
-    elsif (auth_methods = output.scan(/Permission denied \((.*)\)\./).join.split(/[^a-z]+/)).empty?
+    elsif (auth_methods = output.scan(/Permission denied \((.*)\)\./).join.split(',')).empty?
       log_error "sshd returned unexpected output."
     else
       (auth_methods == %w[publickey]).tap {|result|
