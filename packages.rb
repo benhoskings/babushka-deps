@@ -17,8 +17,7 @@ end
 dep 'freeimage.managed' do
   installs {
     via :apt, %w[libfreeimage3 libfreeimage-dev]
-    via :macports, 'freeimage'
-    via :brew, 'freeimage'
+    otherwise 'freeimage'
   }
   provides []
 end
@@ -76,7 +75,7 @@ dep 'memcached.managed'
 dep 'ncurses.managed' do
   installs {
     via :apt, 'libncurses5-dev', 'libncursesw5-dev'
-    via :macports, 'ncurses', 'ncursesw'
+    otherwise 'ncurses'
   }
   provides []
 end
@@ -84,10 +83,9 @@ dep 'nmap.managed'
 dep 'oniguruma.managed'
 dep 'pcre.managed' do
   installs {
-    via :brew, 'pcre'
-    via :macports, 'pcre'
     via :apt, 'libpcre3-dev'
     via :yum, 'pcre-devel'
+    otherwise 'pcre'
   }
   provides 'pcre-config'
 end
@@ -98,7 +96,6 @@ end
 dep 'sed.managed' do
   installs {
     via :brew, 'gnu-sed'
-    via :macports, 'gsed'
   }
   provides 'sed'
   after {
