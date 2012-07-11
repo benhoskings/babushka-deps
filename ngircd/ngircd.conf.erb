@@ -1,7 +1,7 @@
 [Global]
-  Name = <%= var :irc_hostname, :default => "irc.#{hostname}" %>
-  Info = <%= var :irc_description, :default => "#{hostname} IRC server" %>
-  AdminEMail = <%= var :admin_email, :default => "root@#{hostname}" %>
+  Name = <%= host %>
+  Info = <%= description %>
+  AdminEMail = <%= admin_email %>
 
   Ports = 6667
 
@@ -17,7 +17,7 @@
   MaxJoins = 10
 
 <%
-  var(:irc_channels).words.map {|chan|
+  channels.words.map {|chan|
     chan.start_with '#'
   }.each do |channel_name|
 %>
