@@ -67,8 +67,12 @@ end
 
 dep 'admins can sudo' do
   requires 'admin group'
-  met? { !sudo('cat /etc/sudoers').split("\n").grep(/^%admin\b/).empty? }
-  meet { append_to_file '%admin  ALL=(ALL) ALL', '/etc/sudoers', :sudo => true }
+  met? {
+    !'/etc/sudoers'.p.read.split("\n").grep(/^%admin\b/).empty?
+  }
+  meet {
+    '/etc/sudoers'.p.append("%admin  ALL=(ALL) ALL")
+  }
 end
 
 dep 'admin group' do
