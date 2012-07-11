@@ -61,7 +61,7 @@ dep 'lax host key checking' do
     ssh_conf_path(:ssh).p.grep(/^StrictHostKeyChecking[ \t]+no/)
   }
   meet {
-    shell("sed -i'' -e 's/^StrictHostKeyChecking\s+yes\b/StrictHostKeyChecking no/' #{ssh_conf_path(:ssh)}")
+    shell("sed -i'' -e 's/^[# ]*StrictHostKeyChecking\\W*\\w*$/StrictHostKeyChecking no/' #{ssh_conf_path(:ssh)}")
   }
 end
 
