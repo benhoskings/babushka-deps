@@ -81,6 +81,10 @@ dep 'admin group' do
 end
 
 dep 'tmp cleaning grace period', :for => :ubuntu do
-  met? { "/etc/default/rcS".p.grep(/^[^#]*TMPTIME=0/).nil? }
-  meet { change_line "TMPTIME=0", "TMPTIME=30", "/etc/default/rcS" }
+  met? {
+    "/etc/default/rcS".p.grep(/^[^#]*TMPTIME=0/).nil?
+  }
+  meet {
+    shell("sed -i '' -e 's/^TMPTIME=0$/TMPTIME=30/' '/etc/default/rcS'")
+  }
 end
