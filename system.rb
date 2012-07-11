@@ -71,7 +71,7 @@ dep 'admins can sudo' do
     !'/etc/sudoers'.p.read.split("\n").grep(/^%admin\b/).empty?
   }
   meet {
-    '/etc/sudoers'.p.append("%admin  ALL=(ALL) ALL")
+    '/etc/sudoers'.p.append("%admin  ALL=(ALL) ALL\n")
   }
 end
 
