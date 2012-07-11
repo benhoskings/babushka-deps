@@ -10,7 +10,7 @@ dep 'fish.shell_setup' do
 end
 
 dep 'fish.src' do
-  requires 'ncurses.managed', 'coreutils.managed', 'gettext.managed'
+  requires 'ncurses.managed', 'coreutils.managed', 'gettext.lib'
   source "git://github.com/benhoskings/fish.git"
 end
 
