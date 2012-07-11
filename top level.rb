@@ -17,7 +17,7 @@ end
 dep 'user setup', :username, :key do
   username.default(shell('whoami'))
   requires [
-    'dot files'.with(username),
+    'dot files'.with(:username => username),
     'passwordless ssh logins'.with(username, key),
     'public key',
     'zsh'.with(username)
