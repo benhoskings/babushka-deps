@@ -52,7 +52,7 @@ dep 'secured ssh logins' do
       shell("sed -i'' -e 's/^[# ]*#{option}\W*\w*$/#{option} no/' #{ssh_conf_path(:sshd)}")
     }
   }
-  after { sudo "/etc/init.d/ssh restart" }
+  after { shell "/etc/init.d/ssh restart" }
 end
 
 dep 'lax host key checking' do
