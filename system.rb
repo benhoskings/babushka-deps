@@ -45,16 +45,24 @@ dep 'secured ssh logins' do
     end
   }
   meet {
-    change_with_sed 'PasswordAuthentication',          'yes', 'no', ssh_conf_path(:sshd)
-    change_with_sed 'ChallengeResponseAuthentication', 'yes', 'no', ssh_conf_path(:sshd)
+    %w[
+      PasswordAuthentication
+      ChallengeResponseAuthentication
+    ].each {|option|
+      shell("sed -i '' -e 's/^#{option}\s+yes\b/#{option} no/' #{ssh_conf_path(:sshd)}")
+    }
   }
   after { sudo "/etc/init.d/ssh restart" }
 end
 
 dep 'lax host key checking' do
   requires 'sed.managed'
-  met? { ssh_conf_path(:ssh).p.grep(/^StrictHostKeyChecking[ \t]+no/) }
-  meet { change_with_sed 'StrictHostKeyChecking', 'yes', 'no', ssh_conf_path(:ssh) }
+  met? {
+    ssh_conf_path(:ssh).p.grep(/^StrictHostKeyChecking[ \t]+no/)
+  }
+  meet {
+    shell("sed -i '' -e 's/^StrictHostKeyChecking\s+yes\b/StrictHostKeyChecking no/' #{ssh_conf_path(:ssh)}")
+  }
 end
 
 dep 'admins can sudo' do
