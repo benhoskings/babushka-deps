@@ -29,7 +29,7 @@ end
 
 dep 'mysql.managed' do
   installs {
-    via :apt, %w[mysql-server libmysqlclient16-dev]
+    via :apt, %w[mysql-server libmysqlclient-dev]
   }
   provides 'mysql'
   after :on => :osx do
