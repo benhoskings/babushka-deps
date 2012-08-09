@@ -11,7 +11,7 @@ dep 'ruby.src', :version, :patchlevel do
   end
   version.default!('1.9.3')
   patchlevel.default!('p194')
-  requires 'readline headers.managed', 'yaml headers.managed'
+  requires 'readline headers.managed', 'yaml headers.managed', 'zlib headers.managed'
   source "ftp://ftp.ruby-lang.org/pub/ruby/#{version_group}/ruby-#{version}-#{patchlevel}.tar.gz"
   provides "ruby == #{version}#{patchlevel}", 'gem', 'irb'
   configure_args '--disable-install-doc',
