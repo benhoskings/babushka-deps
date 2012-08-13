@@ -11,6 +11,9 @@ dep 'coreutils.managed', :for => :osx do
     end
   end
 end
+dep 'curl.lib' do
+  installs 'libcurl4-openssl-dev'
+end
 dep 'erlang.managed' do
   provides 'erl', 'erlc'
 end
