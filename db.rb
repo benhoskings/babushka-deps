@@ -4,7 +4,7 @@ dep 'db', :username, :root, :env, :data_required, :require_db_deps do
   end
 
   def db_config
-    (db_config = (root / 'config/database.yml').yaml[env.to_s]).tap {|config|
+    (root / 'config/database.yml').yaml[env.to_s].tap {|config|
       unmeetable! "There's no database.yml entry for the #{env} environment." if config.nil?
     }
   end
