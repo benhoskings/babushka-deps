@@ -111,7 +111,7 @@ dep 'running.nginx', :nginx_prefix do
     }
   }
   meet :on => :linux do
-    sudo '/etc/init.d/nginx start'
+    sudo 'initctl start nginx'
   end
   meet :on => :osx do
     log_error "launchctl should have already started nginx. Check /var/log/system.log for errors."
@@ -121,11 +121,11 @@ end
 dep 'startup script.nginx', :nginx_prefix do
   requires 'nginx.src'.with(:nginx_prefix => nginx_prefix)
   on :linux do
-    requires 'rcconf.managed'
-    met? { shell("rcconf --list").val_for('nginx') == 'on' }
+    met? {
+      shell('initctl list | grep nginx')[/^nginx\b/]
+    }
     meet {
-      render_erb 'nginx/nginx.init.d.erb', :to => '/etc/init.d/nginx', :perms => '755', :sudo => true
-      sudo 'update-rc.d nginx defaults'
+      render_erb 'nginx/nginx.init.conf.erb', :to => '/etc/init/nginx.conf'
     }
   end
   on :osx do
