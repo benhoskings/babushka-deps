@@ -174,7 +174,7 @@ dep 'nginx.src', :nginx_prefix, :version, :upload_module_version do
       log "nginx isn't installed"
     else
       installed_version = shell(nginx_prefix / 'sbin/nginx -v') {|shell| shell.stderr }.val_for(/(nginx: )?nginx version:/).sub('nginx/', '')
-      (installed_version == version).tap {|result|
+      (installed_version.to_version >= version.to_s).tap {|result|
         log "nginx-#{installed_version} is installed"
       }
     end
