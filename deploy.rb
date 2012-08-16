@@ -128,7 +128,7 @@ dep 'unicorn restarted', :pidfile, :old_pidfile do
     current_pid = pidfile.p.read
     if !running?(current_pid)
       if @attempted_restart
-        log_fail "Unicorn exited! (This shouldn't ever happen.)"
+        log_error "Unicorn exited! (This shouldn't ever happen.)"
       else
         log "There are no unicorns running: not attempting a restart."
         true
