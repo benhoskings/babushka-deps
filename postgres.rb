@@ -19,7 +19,7 @@ dep 'existing data', :username, :db_name do
       else
         unmeetable! <<-MSG
 The '#{db_name}' database is empty. Load a database dump with:
-$ cat #{db_name} | ssh #{username}@#{shell('hostname -f')} 'psql #{db_name}'
+$ cat #{db_name}.psql | ssh #{username}@#{shell('hostname -f')} 'psql #{db_name}'
         MSG
       end
     }
