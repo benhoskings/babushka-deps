@@ -116,7 +116,7 @@ dep 'unicorn restarted', :pidfile, :old_pidfile do
     end
   end
   setup {
-    @original_pid = pidfile.p.read
+    @original_pid = pidfile.p.read.chomp
   }
   def restarted?(current_pid)
     # The app has restarted if:
@@ -125,7 +125,7 @@ dep 'unicorn restarted', :pidfile, :old_pidfile do
     (current_pid != @original_pid) # And the value has changed.
   end
   met? {
-    current_pid = pidfile.p.read
+    current_pid = pidfile.p.read.chomp
     if !running?(current_pid)
       if @attempted_restart
         log_error "Unicorn exited! (This shouldn't ever happen.)"
@@ -140,13 +140,13 @@ dep 'unicorn restarted', :pidfile, :old_pidfile do
         elsif !result
           log_warn "The new unicorn failed to start. (The old one is still running, though.)"
         else
-          log_ok "Restarted OK (pid #{@original_pid} -> #{pidfile.p.read})."
+          log_ok "Restarted OK (pid #{@original_pid} -> #{pidfile.p.read.chomp})."
         end
       }
     end
   }
   meet {
-    shell "kill -USR2 #{'tmp/pids/unicorn.pid'.p.read}"
+    shell "kill -USR2 #{'tmp/pids/unicorn.pid'.p.read.chomp}"
     @attempted_restart = true
     # 1) The current pidfile is moved to old_pidfile.
     # 2) The new master starts and writes pidfile.
