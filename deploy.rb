@@ -128,7 +128,7 @@ dep 'unicorn restarted', :pidfile, :old_pidfile do
     current_pid = pidfile.p.read.chomp
     if !running?(current_pid)
       if @attempted_restart
-        log_error "Unicorn exited! (This shouldn't ever happen.)"
+        log_error "Unicorn exited! (Possible cause: no free RAM on host.)"
       else
         log "There are no unicorns running: not attempting a restart."
         true
