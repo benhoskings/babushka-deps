@@ -210,7 +210,7 @@ end
 
 dep 'delayed job restarted', :template => 'task' do
   run {
-    output = shell?('ps aux | grep "rake jobs:work" | grep -v grep')
+    output = shell?('ps ux | grep -v grep | grep "rake jobs:work"')
 
     if output.nil?
       log "`rake jobs:work` isn't running."
