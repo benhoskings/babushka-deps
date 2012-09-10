@@ -24,8 +24,7 @@ dep 'ruby.src', :version, :patchlevel do
     "--with-readline-dir=#{Babushka.host.pkg_helper.prefix}",
     "--with-libyaml-dir=#{Babushka.host.pkg_helper.prefix}"
   postinstall {
-    # TODO: hack for ruby bug where bin/* aren't installed when the build path
-    # contains a dot-dir.
+    # The ruby <1.9.3 installer skips bin/* when the build path contains a dot-dir.
     shell "cp bin/* #{prefix / 'bin'}", :sudo => Babushka::SrcHelper.should_sudo?
   }
 end
