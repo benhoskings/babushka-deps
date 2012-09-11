@@ -32,7 +32,8 @@ dep 'pg.gem' do
 end
 
 dep 'postgres access', :username do
-  requires 'postgres.managed', 'user exists'.with(:username => username)
+  requires 'postgres.managed'
+  requires 'user exists'.with(:username => username)
   met? { !sudo("echo '\\du' | #{which 'psql'}", :as => 'postgres').split("\n").grep(/^\W*\b#{username}\b/).empty? }
   meet { sudo "createuser -SdR #{username}", :as => 'postgres' }
 end
