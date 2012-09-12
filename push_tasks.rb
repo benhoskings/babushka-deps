@@ -35,11 +35,11 @@ dep 'marked on newrelic.task', :ref, :env do
   }
 end
 
-dep 'marked on airbrake.task', :ref, :env do
+dep 'marked on bugsnag.task', :ref, :env do
   requires 'app bundled'.with('.', 'development')
   run {
-    if 'config/initializers/airbrake.rb'.p.exists?
-      shell "bundle exec rake airbrake:deploy TO=#{env} REVISION=#{shell("git rev-parse --short #{ref}")} REPO=#{shell("git config remote.origin.url")} USER=#{shell('whoami')}"
+    if 'config/initializers/bugsnag.rb'.p.exists?
+      log_shell "Notifying bugsnag", "bundle exec rake bugsnag:deploy BUGSNAG_REVISION=#{shell("git rev-parse --short #{ref}")}"
     end
   }
 end
