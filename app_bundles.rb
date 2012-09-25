@@ -3,6 +3,10 @@ dep 'Sublime Text 2.app' do
   version '>= 2.0.1'
 end
 
+dep 'Alfred.app' do
+  sparkle 'http://media.alfredapp.com/update/appcast.xml'
+end
+
 dep 'Vim.app' do
   source 'http://macvim.org/OSX/files/binaries/OSX10_4/Vim7.0-univ.tar.bz2'
 end
