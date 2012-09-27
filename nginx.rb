@@ -122,7 +122,7 @@ dep 'startup script.nginx', :nginx_prefix do
   requires 'nginx.src'.with(:nginx_prefix => nginx_prefix)
   on :linux do
     met? {
-      shell('initctl list | grep nginx')[/^nginx\b/]
+      raw_shell('initctl list | grep nginx').stdout[/^nginx\b/]
     }
     meet {
       render_erb 'nginx/nginx.init.conf.erb', :to => '/etc/init/nginx.conf'
