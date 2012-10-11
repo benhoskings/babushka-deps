@@ -1,6 +1,6 @@
 dep 'db', :username, :root, :env, :data_required, :require_db_deps do
   def orm
-    grep('dm-rails', root/'Gemfile') ? :datamapper : :activerecord
+    (root/'Gemfile').grep('dm-rails') ? :datamapper : :activerecord
   end
 
   def db_config
