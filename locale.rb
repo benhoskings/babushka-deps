@@ -15,11 +15,9 @@ dep 'set.locale', :locale_name do
   met? {
     shell('su -c locale').val_for('LANG')[locale_regex(locale_name)]
   }
-  on :apt do
-    meet {
-      sudo("echo 'LANG=#{local_locale(locale_name)}' > /etc/default/locale")
-    }
-  end
+  meet {
+    sudo("echo 'LANG=#{local_locale(locale_name)}' > /etc/default/locale")
+  }
 end
 
 dep 'exists.locale', :locale_name do
