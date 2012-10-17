@@ -13,11 +13,16 @@ dep 'set.locale', :locale_name do
   locale_name.default!('en_AU')
   requires 'exists.locale'.with(locale_name)
   met? {
-    shell('su -c locale').val_for('LANG')[locale_regex(locale_name)]
+    shell('locale').val_for('LANG')[locale_regex(locale_name)]
   }
-  meet {
-    sudo("echo 'LANG=#{local_locale(locale_name)}' > /etc/default/locale")
-  }
+  on :apt do
+    meet {
+      sudo("echo 'LANG=#{local_locale(locale_name)}' > /etc/default/locale")
+    }
+    after {
+      log "Setting the locale doesn't take effect until you log out and back in."
+    }
+  end
 end
 
 dep 'exists.locale', :locale_name do
