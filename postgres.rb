@@ -1,5 +1,5 @@
 dep 'existing postgres db', :username, :db_name do
-  requires 'postgres access'.with(username)
+  requires 'postgres access'.with(:username => username)
   met? {
     !shell("psql -l") {|shell|
       shell.stdout.split("\n").grep(/^\s*#{db_name}\s+\|/)
@@ -31,12 +31,13 @@ dep 'pg.gem' do
   provides []
 end
 
-dep 'postgres access', :username do
+dep 'postgres access', :username, :flags do
   requires 'postgres.managed'
   requires 'user exists'.with(:username => username)
   username.default(shell('whoami'))
+  flags.default!('-SdR')
   met? { !sudo("echo '\\du' | #{which 'psql'}", :as => 'postgres').split("\n").grep(/^\W*\b#{username}\b/).empty? }
-  meet { sudo "createuser -SdR #{username}", :as => 'postgres' }
+  meet { sudo "createuser #{flags} #{username}", :as => 'postgres' }
 end
 
 dep 'postgres backups' do
