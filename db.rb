@@ -56,7 +56,7 @@ dep 'schema loaded', :username, :root, :schema_path, :db_name, :db_type do
     } > 0
   }
   meet {
-    log_shell "Applying #{schema_path} to #{db_name}", "psql #{db_name} -f -", :input => schema_path.p.read!
+    log_shell "Applying #{schema_path} to #{db_name}", "psql #{db_name} -f -", :cd => root, :input => schema_path.p.read!
   }
 end
 
