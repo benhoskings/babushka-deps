@@ -151,7 +151,7 @@ end
 
 dep 'nginx.src', :nginx_prefix, :version, :upload_module_version do
   nginx_prefix.default!("/opt/nginx")
-  version.default!('1.2.1')
+  version.default!('1.2.4')
   upload_module_version.default!('2.2.0')
 
   requires 'pcre.managed', 'libssl headers.managed', 'zlib headers.managed'
