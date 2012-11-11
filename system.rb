@@ -30,7 +30,7 @@ dep 'utc' do
 end
 
 dep 'secured ssh logins' do
-  requires 'sshd.managed', 'sed.managed'
+  requires 'sshd.bin', 'sed.bin'
   met? {
     # -o NumberOfPasswordPrompts=0
     output = raw_shell('ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no nonexistentuser@localhost').stderr
@@ -56,7 +56,7 @@ dep 'secured ssh logins' do
 end
 
 dep 'lax host key checking' do
-  requires 'sed.managed'
+  requires 'sed.bin'
   met? {
     ssh_conf_path(:ssh).p.grep(/^StrictHostKeyChecking[ \t]+no/)
   }
