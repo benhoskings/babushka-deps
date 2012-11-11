@@ -24,7 +24,7 @@ end
 
 dep 'unicorn running', :app_root, :env do
   app_root.default('~/current')
-  requires 'lsof.managed'
+  requires 'lsof.bin'
   met? {
     if !(app_root / 'config/unicorn.rb').exists?
       log "Not starting any unicorns because there's no unicorn config."

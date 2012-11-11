@@ -53,8 +53,8 @@ end
 
 dep 'core software' do
   requires {
-    on :lenny, 'sudo.bin', 'lsof.managed', 'vim.managed', 'curl.bin', 'traceroute.managed', 'htop.managed', 'iotop.managed', 'jnettop.managed', 'nmap.managed', 'tree.managed', 'pv.managed'
-    on :linux, 'sudo.bin', 'lsof.managed', 'vim.managed', 'curl.bin', 'traceroute.managed', 'htop.managed', 'iotop.managed', 'jnettop.managed', 'tmux.managed', 'nmap.managed', 'tree.managed', 'pv.managed'
-    on :osx, 'nmap.managed', 'tree.managed', 'pv.managed'
+    on :lenny, 'sudo.bin', 'lsof.bin', 'vim.bin', 'curl.bin', 'traceroute.bin', 'htop.bin', 'iotop.bin', 'jnettop.bin', 'nmap.bin', 'tree.bin', 'pv.bin'
+    on :linux, 'sudo.bin', 'lsof.bin', 'vim.bin', 'curl.bin', 'traceroute.bin', 'htop.bin', 'iotop.bin', 'jnettop.bin', 'tmux.bin', 'nmap.bin', 'tree.bin', 'pv.bin'
+    on :osx, 'nmap.bin', 'tree.bin', 'pv.bin'
   }
 end

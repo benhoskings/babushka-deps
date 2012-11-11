@@ -30,7 +30,7 @@ end
 dep 'git-smart.gem' do
   provides %w[git-smart-log git-smart-merge git-smart-pull]
 end
-dep 'htop.managed'
+dep 'htop.bin'
 dep 'imagemagick.managed' do
   provides %w[compare animate convert composite conjure import identify stream display montage mogrify]
 end
@@ -38,14 +38,12 @@ dep 'image_science.gem' do
   requires 'freeimage.managed'
   provides []
 end
-dep 'iotop.managed'
+dep 'iotop.bin'
 dep 'java.managed' do
   installs { via :apt, 'sun-java6-jre' }
   after { shell "set -Ux JAVA_HOME /usr/lib/jvm/java-6-sun" }
 end
-dep 'jnettop.managed' do
-  installs { via :apt, 'jnettop' }
-end
+dep 'jnettop.bin'
 dep 'readline headers.managed' do
   installs {
     on :lenny, 'libreadline5-dev'
@@ -85,7 +83,7 @@ dep 'mdns.managed' do
   }
   provides []
 end
-dep 'lsof.managed'
+dep 'lsof.bin'
 dep 'memcached.managed'
 dep 'ncurses.managed' do
   installs {
@@ -94,7 +92,7 @@ dep 'ncurses.managed' do
   }
   provides []
 end
-dep 'nmap.managed'
+dep 'nmap.bin'
 dep 'oniguruma.managed'
 dep 'pcre.managed' do
   installs {
@@ -104,30 +102,29 @@ dep 'pcre.managed' do
   }
   provides 'pcre-config'
 end
-dep 'pv.managed'
+dep 'pv.bin'
 dep 'rcconf.managed' do
   installs { via :apt, 'rcconf' }
 end
-dep 'sed.managed' do
+dep 'sed.bin' do
   installs {
     via :brew, 'gnu-sed'
   }
-  provides 'sed'
   after {
     cd pkg_manager.bin_path do
       shell "ln -s gsed sed", :sudo => pkg_manager.should_sudo?
     end
   }
 end
-dep 'sshd.managed' do
+dep 'sshd.bin' do
   installs {
     via :apt, 'openssh-server'
   }
 end
-dep 'tmux.managed'
-dep 'traceroute.managed'
-dep 'tree.managed'
-dep 'vim.managed'
+dep 'tmux.bin'
+dep 'traceroute.bin'
+dep 'tree.bin'
+dep 'vim.bin'
 dep 'wget.managed'
 dep 'yaml headers.managed' do
   installs {
