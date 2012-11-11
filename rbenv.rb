@@ -54,7 +54,7 @@ dep '1.9.2.rbenv' do
 end
 
 dep '1.9.3.rbenv' do
-  patchlevel 'p194'
+  patchlevel 'p327'
 end
 
 dep '1.9.3-falcon.rbenv' do
