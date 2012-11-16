@@ -4,10 +4,10 @@ dep 'dot files', :username, :github_user, :repo do
   repo.default('dot-files')
   requires 'user exists'.with(:username => username), 'git', 'curl.bin', 'git-smart.gem'
   met? {
-    "~/.dot-files/.git".p.exists?
+    "~#{username}/.dot-files/.git".p.exists?
   }
   meet {
-    shell %Q{curl -L "http://github.com/#{github_user}/#{repo}/raw/master/clone_and_link.sh" | bash}
+    shell %Q{curl -L "http://github.com/#{github_user}/#{repo}/raw/master/clone_and_link.sh" | bash}, :as => username
   }
 end
 
