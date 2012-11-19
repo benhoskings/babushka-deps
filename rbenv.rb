@@ -49,10 +49,6 @@ meta :rbenv do
   }
 end
 
-dep '1.9.2.rbenv' do
-  patchlevel 'p290'
-end
-
 dep '1.9.3.rbenv' do
   patchlevel 'p327'
 end
@@ -66,10 +62,14 @@ dep '1.9.3-falcon.rbenv' do
   }
 end
 
-dep '1.8.6.rbenv' do
-  patchlevel 'p420'
+dep '1.9.2.rbenv' do
+  patchlevel 'p290'
 end
 
 dep '1.8.7.rbenv' do
   patchlevel 'p352'
+end
+
+dep '1.8.6.rbenv' do
+  patchlevel 'p420'
 end
