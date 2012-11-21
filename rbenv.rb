@@ -49,6 +49,10 @@ meta :rbenv do
   }
 end
 
+dep '2.0.0.rbenv' do
+  patchlevel 'preview1'
+end
+
 dep '1.9.3.rbenv' do
   patchlevel 'p327'
 end
