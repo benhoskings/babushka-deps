@@ -27,7 +27,7 @@ meta :rbenv do
     def version_group
       version.scan(/^\d\.\d/).first
     end
-    requires 'rbenv', 'yaml headers.managed'
+    requires 'rbenv', 'yaml headers.managed', 'openssl.lib'
     met? {
       (prefix / 'bin/ruby').executable? and
       shell(prefix / 'bin/ruby -v')[/^ruby #{version}#{patchlevel}\b/]
@@ -35,7 +35,7 @@ meta :rbenv do
     meet {
       Babushka::Resource.extract "http://ftp.ruby-lang.org/pub/ruby/#{version_group}/ruby-#{version_spec}.tar.gz" do |path|
         invoke(:customise)
-        log_shell 'Configure', "./configure --prefix='#{prefix}'"
+        log_shell 'Configure', "./configure --prefix='#{prefix}' --with-openssl-dir=$(brew --prefix openssl)"
         log_shell 'Build',     "make -j#{Babushka.host.cpus}"
         log_shell 'Install',   "make install"
 

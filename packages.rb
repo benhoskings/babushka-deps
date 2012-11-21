@@ -94,6 +94,12 @@ dep 'ncurses.managed' do
 end
 dep 'nmap.bin'
 dep 'oniguruma.managed'
+dep 'openssl.lib' do
+  installs {
+    via :apt, 'openssl', 'libssl-dev'
+    otherwise 'openssl'
+  }
+end
 dep 'pcre.managed' do
   installs {
     via :apt, 'libpcre3-dev'
