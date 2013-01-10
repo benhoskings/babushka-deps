@@ -165,7 +165,7 @@ dep 'nginx.src', :nginx_prefix, :version, :upload_module_version do
       "--with-pcre",
       "--with-http_ssl_module",
       "--with-http_gzip_static_module",
-      "--add-module='../../#{upload_module_version}/nginx_upload_module-#{upload_module_version}'",
+      "--add-module='../../#{upload_module_version}/nginx-upload-module-#{upload_module_version}'",
       "--with-ld-opt='#{shell('pcre-config --libs')}'"
     ].join(' ')
   }
