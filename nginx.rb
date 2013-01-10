@@ -140,7 +140,7 @@ end
 
 dep 'configured.nginx', :nginx_prefix do
   nginx_prefix.default!('/opt/nginx') # This is required because nginx.src might be cached.
-  requires 'nginx.src'.with(:nginx_prefix => nginx_prefix), 'www user and group', 'nginx.logrotate'
+  requires 'nginx.src'.with(:nginx_prefix => nginx_prefix), 'www user and group', 'nginx.logrotate', "unzip.managed"
   met? {
     Babushka::Renderable.new(nginx_conf).from?(dependency.load_path.parent / "nginx/nginx.conf.erb")
   }
