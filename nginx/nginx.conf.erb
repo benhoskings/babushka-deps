@@ -1,6 +1,6 @@
 user www www;
 worker_processes 8;
-pid /opt/nginx/logs/nginx.pid;
+pid <%=nginx_prefix%>/logs/nginx.pid;
 
 events {
   worker_connections 1024;
