@@ -26,8 +26,8 @@ meta :nginx do
   end
 end
 
-dep 'vhost enabled.nginx', :type, :domain, :domain_aliases, :path, :listen_host, :listen_port, :proxy_host, :proxy_port, :nginx_prefix, :enable_http, :enable_https, :force_https do
-  requires 'vhost configured.nginx'.with(type, domain, domain_aliases, path, listen_host, listen_port, proxy_host, proxy_port, nginx_prefix, enable_http, enable_https, force_https)
+dep 'vhost enabled.nginx', :vhost_type, :domain, :domain_aliases, :path, :listen_host, :listen_port, :proxy_host, :proxy_port, :nginx_prefix, :enable_http, :enable_https, :force_https do
+  requires 'vhost configured.nginx'.with(vhost_type, domain, domain_aliases, path, listen_host, listen_port, proxy_host, proxy_port, nginx_prefix, enable_http, enable_https, force_https)
   met? { vhost_link.exists? }
   meet {
     sudo "mkdir -p #{nginx_prefix / 'conf/vhosts/on'}"
@@ -36,7 +36,7 @@ dep 'vhost enabled.nginx', :type, :domain, :domain_aliases, :path, :listen_host,
   after { restart_nginx }
 end
 
-dep 'vhost configured.nginx', :type, :domain, :domain_aliases, :path, :listen_host, :listen_port, :proxy_host, :proxy_port, :nginx_prefix, :enable_http, :enable_https, :force_https do
+dep 'vhost configured.nginx', :vhost_type, :domain, :domain_aliases, :path, :listen_host, :listen_port, :proxy_host, :proxy_port, :nginx_prefix, :enable_http, :enable_https, :force_https do
   domain_aliases.default('').ask('Domains to alias (no need to specify www. aliases)')
   listen_host.default!('[::]')
   listen_port.default!('80')
@@ -60,20 +60,20 @@ dep 'vhost configured.nginx', :type, :domain, :domain_aliases, :path, :listen_ho
     ).uniq
   end
 
-  type.default('unicorn').choose(%w[unicorn proxy static])
+  vhost_type.default('unicorn').choose(%w[unicorn proxy static])
   path.default("~#{domain}/current".p) if shell?('id', domain)
 
   requires 'configured.nginx'.with(nginx_prefix)
-  requires 'unicorn configured'.with(path) if type == 'unicorn'
+  requires 'unicorn configured'.with(path) if vhost_type == 'unicorn'
 
   met? {
     Babushka::Renderable.new(vhost_conf).from?(dependency.load_path.parent / "nginx/vhost.conf.erb") and
-    Babushka::Renderable.new(vhost_common).from?(dependency.load_path.parent / "nginx/#{type}_vhost.common.erb")
+    Babushka::Renderable.new(vhost_common).from?(dependency.load_path.parent / "nginx/#{vhost_type}_vhost.common.erb")
   }
   meet {
     sudo "mkdir -p #{nginx_prefix / 'conf/vhosts'}"
     render_erb "nginx/vhost.conf.erb", :to => vhost_conf, :sudo => true
-    render_erb "nginx/#{type}_vhost.common.erb", :to => vhost_common, :sudo => true
+    render_erb "nginx/#{vhost_type}_vhost.common.erb", :to => vhost_common, :sudo => true
   }
 end
 
@@ -152,12 +152,15 @@ end
 dep 'nginx.src', :nginx_prefix, :version, :upload_module_version do
   nginx_prefix.default!("/opt/nginx")
   version.default!('1.2.4')
-  upload_module_version.default!('2.2.0')
+  upload_module_version.default!('2.2')
 
   requires 'pcre.managed', 'libssl headers.managed', 'zlib headers.managed'
+  on :linux do 
+    requires "unzip.managed"
+  end
 
   source "http://nginx.org/download/nginx-#{version}.tar.gz"
-  extra_source "http://www.grid.net.ru/nginx/download/nginx_upload_module-#{upload_module_version}.tar.gz"
+  extra_source "https://github.com/vkholodkov/nginx-upload-module/archive/#{upload_module_version}.zip"
 
   configure_args L{
     [
@@ -165,7 +168,7 @@ dep 'nginx.src', :nginx_prefix, :version, :upload_module_version do
       "--with-pcre",
       "--with-http_ssl_module",
       "--with-http_gzip_static_module",
-      "--add-module='../../nginx_upload_module-#{upload_module_version}/nginx_upload_module-#{upload_module_version}'",
+      "--add-module='../../#{upload_module_version}/nginx-upload-module-#{upload_module_version}'",
       "--with-ld-opt='#{shell('pcre-config --libs')}'"
     ].join(' ')
   }

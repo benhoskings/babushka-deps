@@ -130,6 +130,7 @@ end
 dep 'tmux.bin'
 dep 'traceroute.bin'
 dep 'tree.bin'
+dep 'unzip.managed'
 dep 'vim.bin'
 dep 'wget.managed'
 dep 'yaml headers.managed' do
