@@ -12,8 +12,9 @@ meta :push do
   def remote_host; self.class.remote_host_and_path(remote).first end
   def remote_path; self.class.remote_host_and_path(remote).last end
   def remote_head; self.class.remote_head(remote) end
-  def self.uncache_remote_head!
+  def self.uncache!
     @remote_head = nil
+    @remote_host_and_path = nil
   end
   def git_log from, to
     if from[/^0+$/]
@@ -46,6 +47,7 @@ dep 'ready.push' do
 end
 
 dep 'pushed.push', :ref, :remote do
+  self.class.uncache!
   ref.ask("What would you like to push?").default('HEAD')
   remote.ask("Where would you like to push to?").choose(repo.repo_shell('git remote').split("\n"))
   requires [
@@ -62,7 +64,7 @@ dep 'pushed.push', :ref, :remote do
     confirm "OK to push #{ref} to #{remote} (#{repo.repo_shell("git config remote.#{remote}.url")})?" do
       push_cmd = "git push #{remote} #{ref}:master -f"
       log push_cmd.colorize("on grey") do
-        self.class.uncache_remote_head!
+        self.class.uncache!
         shell push_cmd, :log => true
       end
     end
