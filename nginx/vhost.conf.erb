@@ -1,4 +1,4 @@
-<% if type == 'unicorn' %>
+<% if vhost_type == 'unicorn' %>
 <%# It'd be nice if this could be in the unicorn config instead, but it's only valid in the http{ } block. %>
 upstream <%= upstream_name %> {
   # fail_timeout=0 means we always retry the unicorn master, since it's
