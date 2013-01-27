@@ -19,10 +19,15 @@ dep 'set.locale', :locale_name do
     meet {
       sudo("echo 'LANG=#{local_locale(locale_name)}' > /etc/default/locale")
     }
-    after {
-      log "Setting the locale doesn't take effect until you log out and back in."
+  end
+  on :bsd do
+    meet {
+      sudo("echo 'LANG=#{local_locale(locale_name)}' > /etc/profile")
     }
   end
+  after {
+    log "Setting the locale doesn't take effect until you log out and back in."
+  }
 end
 
 dep 'exists.locale', :locale_name do
