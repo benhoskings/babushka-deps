@@ -19,12 +19,13 @@ dep 'user setup for provisioning', :username, :key do
   ]
 end
 
-dep 'app user setup', :user, :key, :env do
+dep 'app user setup', :username, :key, :env do
   env.default('production')
   requires [
-    'user setup'.with(user, key),        # Dot files, ssh keys, etc.
-    'app env vars set'.with(user, env),  # Set RACK_ENV and friends.
-    'web repo'.with("~#{user}/current") # Configure ~/current to accept deploys.
+    'user exists'.with(:username => username),
+    'user setup'.with(username, key), # Dot files, ssh keys, etc.
+    'app env vars set'.with(username, env), # Set RACK_ENV and friends.
+    'web repo'.with("~#{username}/current") # Configure ~/current to accept deploys.
   ]
 end
 
