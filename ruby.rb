@@ -23,6 +23,9 @@ dep 'ruby.src', :version, :patchlevel do
   configure_args '--disable-install-doc',
     "--with-readline-dir=#{Babushka.host.pkg_helper.prefix}",
     "--with-libyaml-dir=#{Babushka.host.pkg_helper.prefix}"
+  build {
+    log_shell "build", "make -j#{Babushka.host.cpus}"
+  }
   postinstall {
     # The ruby <1.9.3 installer skips bin/* when the build path contains a dot-dir.
     shell "cp bin/* #{prefix / 'bin'}", :sudo => Babushka::SrcHelper.should_sudo?
