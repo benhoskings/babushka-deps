@@ -49,6 +49,50 @@ meta :rbenv do
   }
 end
 
+dep 'ruby', :version, :patchlevel, :prefix do
+  def version_spec
+    "#{version}-#{patchlevel}"
+  end
+  def version_group
+    version.to_s.scan(/^\d\.\d/).first
+  end
+
+  def rbenv_prefix
+    "~/.rbenv/versions" / version_spec
+  end
+
+  version.default!('1.9.3')
+  patchlevel.default!('p374')
+  prefix.default!(rbenv_prefix)
+
+  def source_uri
+    "http://ftp.ruby-lang.org/pub/ruby/#{version_group}/ruby-#{version_spec}.tar.gz"
+  end
+
+  def build_ruby
+    log_shell 'Configure', "./configure --prefix='#{prefix}' --with-openssl-dir=$(brew --prefix openssl)"
+    log_shell 'Build',     "CFLAGS='-march=native -O3 -pipe -fomit-frame-pointer' make -j#{Babushka.host.cpus}"
+    log_shell 'Install',   "make install"
+
+    # ruby-1.9.2 doesn't install bin/* when the build path contains a dot-dir.
+    shell "cp bin/* #{prefix / 'bin'}"
+  end
+
+  requires 'rbenv', 'yaml headers.managed', 'openssl.lib'
+
+  met? {
+    (prefix / 'bin/ruby').executable? and
+    shell(prefix / 'bin/ruby -v')[/^ruby #{version}#{patchlevel}\b/]
+  }
+  meet {
+    Babushka::Resource.extract source_uri do |path|
+      build_ruby
+    end
+
+    log_shell 'rbenv rehash', 'rbenv rehash'
+  }
+end
+
 dep '2.0.0.rbenv' do
   patchlevel 'preview2'
 end
