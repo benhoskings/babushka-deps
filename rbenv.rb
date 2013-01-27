@@ -50,7 +50,7 @@ meta :rbenv do
 end
 
 dep '2.0.0.rbenv' do
-  patchlevel 'preview1'
+  patchlevel 'preview2'
 end
 
 dep '1.9.3.rbenv' do
