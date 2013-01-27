@@ -155,7 +155,7 @@ dep 'nginx.src', :nginx_prefix, :version, :upload_module_version do
   upload_module_version.default!('2.2')
 
   requires 'pcre.managed', 'libssl headers.managed', 'zlib headers.managed'
-  on :linux do 
+  on :linux do
     requires "unzip.managed"
   end
 

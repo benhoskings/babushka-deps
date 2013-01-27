@@ -53,6 +53,7 @@ end
 
 dep 'core software' do
   requires {
+    # tmux isn't available on lenny.
     on :lenny, 'sudo.bin', 'lsof.bin', 'vim.bin', 'curl.bin', 'traceroute.bin', 'htop.bin', 'iotop.bin', 'jnettop.bin', 'nmap.bin', 'tree.bin', 'pv.bin'
     on :linux, 'sudo.bin', 'lsof.bin', 'vim.bin', 'curl.bin', 'traceroute.bin', 'htop.bin', 'iotop.bin', 'jnettop.bin', 'tmux.bin', 'nmap.bin', 'tree.bin', 'pv.bin'
     on :osx, 'sudo.bin', 'lsof.bin', 'vim.bin', 'curl.bin', 'traceroute.bin', 'tmux.bin', 'nmap.bin', 'tree.bin', 'pv.bin'
