@@ -17,6 +17,8 @@ end
 dep 'zsh', :username do
   username.default!(shell('whoami'))
   requires 'zsh.shell_setup'
+  # It would be great to be able to do this, but GNU `login` doesn't have '-f'.
+  # met? { shell("login -f '#{username}' env").val_for('SHELL') == which('zsh') }
   met? { shell("sudo su - '#{username}' -c 'echo $SHELL'") == which('zsh') }
   meet { sudo("chsh -s '#{which('zsh')}' #{username}") }
 end
