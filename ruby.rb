@@ -10,7 +10,7 @@ dep 'ruby.src', :version, :patchlevel do
     version.to_s.scan(/^\d\.\d/).first
   end
   version.default!('1.9.3')
-  patchlevel.default!('p194')
+  patchlevel.default!('p374')
   requires [
     'curl.lib',
     'libssl headers.managed',
