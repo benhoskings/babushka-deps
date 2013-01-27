@@ -36,7 +36,7 @@ meta :rbenv do
       Babushka::Resource.extract "http://ftp.ruby-lang.org/pub/ruby/#{version_group}/ruby-#{version_spec}.tar.gz" do |path|
         invoke(:customise)
         log_shell 'Configure', "./configure --prefix='#{prefix}' --with-openssl-dir=$(brew --prefix openssl)"
-        log_shell 'Build',     "make -j#{Babushka.host.cpus}"
+        log_shell 'Build',     "CFLAGS='-march=native -O3 -pipe -fomit-frame-pointer' make -j#{Babushka.host.cpus}"
         log_shell 'Install',   "make install"
 
         # ruby-1.9.2 doesn't install bin/* when the build path contains a dot-dir.
