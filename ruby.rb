@@ -1,5 +1,5 @@
 dep 'ruby trunk.src' do
-  requires 'build tools', 'bison.managed', 'readline headers.managed'
+  requires_when_unmet 'build tools', 'bison.managed', 'readline headers.managed'
   source 'git://github.com/ruby/ruby.git'
   provides 'ruby == 1.9.3.dev', 'gem', 'irb'
   configure_args '--disable-install-doc', '--with-readline-dir=/usr'
@@ -11,7 +11,7 @@ dep 'ruby.src', :version, :patchlevel do
   end
   version.default!('1.9.3')
   patchlevel.default!('p374')
-  requires [
+  requires_when_unmet [
     'curl.lib',
     'libssl headers.managed',
     'readline headers.managed',
