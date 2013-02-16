@@ -4,6 +4,8 @@
 # rbenv global 1.9.3-rc1
 # rbenv rehash
 
+# TODO: delegate all this to ruby-build.
+
 dep 'rbenv' do
   met? {
     in_path? 'rbenv'
