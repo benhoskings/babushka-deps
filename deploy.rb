@@ -89,7 +89,7 @@ dep 'HEAD up to date.repo', :old_id, :new_id, :branch do
     else
       log shell("git diff --stat #{old_id}..#{new_id}")
     end
-    repo.reset_hard! new_id
+    repo.reset_hard!(new_id)
   }
 end
 
