@@ -10,10 +10,10 @@ dep 'ngircd', :host, :description, :admin_email, :channels do
   requires 'ngircd.bin'
 
   met? {
-    Babushka::Renderable.new().from?(dependency.load_path.parent / "nginx/vhost.conf.erb")
+    Babushka::Renderable.new('/etc/ngircd/ngircd.conf').from?(dependency.load_path.parent / 'ngircd/ngircd.conf.erb')
   }
   meet {
-    render_erb "nginx/vhost.conf.erb", :to => vhost_conf, :sudo => true
+    render_erb 'ngircd/ngircd.conf.erb', :to => '/etc/ngircd/ngircd.conf', :sudo => true
   }
 end
 
