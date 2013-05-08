@@ -15,16 +15,13 @@ dep 'set.locale', :locale_name do
   met? {
     shell('locale').val_for('LANG')[locale_regex(locale_name)]
   }
-  on :apt do
-    meet {
+  meet {
+    if Babushka.host.matches?(:apt)
       sudo("echo 'LANG=#{local_locale(locale_name)}' > /etc/default/locale")
-    }
-  end
-  on :bsd do
-    meet {
+    elsif Babushka.host.matches?(:bsd)
       sudo("echo 'LANG=#{local_locale(locale_name)}' > /etc/profile")
-    }
-  end
+    end
+  }
   after {
     log "Setting the locale doesn't take effect until you log out and back in."
   }
