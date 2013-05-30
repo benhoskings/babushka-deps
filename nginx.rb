@@ -3,6 +3,7 @@ meta :nginx do
   accepts_list_for :extra_source
 
   def nginx_bin;    nginx_prefix / "sbin/nginx" end
+  def nginx_pid;    nginx_prefix / 'logs/nginx.pid' end
   def cert_path;    nginx_prefix / "conf/certs" end
   def nginx_conf;   nginx_prefix / "conf/nginx.conf" end
   def vhost_conf;   nginx_prefix / "conf/vhosts/#{domain}.conf" end
