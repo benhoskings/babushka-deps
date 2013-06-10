@@ -63,3 +63,22 @@ dep 'github token set' do
   met? { !shell('git config --global github.token').blank? }
   meet { shell("git config --global github.token '#{var(:github_token)}'")}
 end
+
+dep 'git fs' do
+  def repo
+    Babushka::GitRepo.new('/')
+  end
+  met? {
+    repo.exists?
+  }
+  meet {
+    log_shell "Creating repo", 'git init', :cd => '/'
+    Babushka::Resource.get(
+      'https://raw.github.com/benhoskings/git-root/master/.gitignore'
+    ) {|path|
+      path.copy('/.gitignore')
+    }
+    repo.repo_shell('git add .gitignore')
+    repo.repo_shell('git commit -m "Initial commit."')
+  }
+end
