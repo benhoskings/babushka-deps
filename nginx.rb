@@ -161,7 +161,7 @@ dep 'nginx.src', :nginx_prefix, :version, :upload_module_version do
   end
 
   source "http://nginx.org/download/nginx-#{version}.tar.gz"
-  extra_source "https://github.com/vkholodkov/nginx-upload-module/archive/#{upload_module_version}.zip"
+  # extra_source "https://github.com/vkholodkov/nginx-upload-module/archive/#{upload_module_version}.zip"
 
   configure_args L{
     [
@@ -169,7 +169,7 @@ dep 'nginx.src', :nginx_prefix, :version, :upload_module_version do
       "--with-pcre",
       "--with-http_ssl_module",
       "--with-http_gzip_static_module",
-      "--add-module='../../#{upload_module_version}/nginx-upload-module-#{upload_module_version}'",
+      # "--add-module='../../#{upload_module_version}/nginx-upload-module-#{upload_module_version}'",
       "--with-ld-opt='#{shell('pcre-config --libs')}'"
     ].join(' ')
   }
