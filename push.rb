@@ -26,6 +26,7 @@ meta :push do
 end
 
 dep 'push!', :ref, :remote, :env do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:push!'", :callpoint => false, :instead => "'common:push!'"
   ref.ask("What would you like to push?").default('HEAD')
   env.default!(remote)
 
@@ -36,6 +37,7 @@ dep 'push!', :ref, :remote, :env do
 end
 
 dep 'ready.push' do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:ready.push'", :callpoint => false, :instead => "'common:ready.push'"
   met? {
     state = [:dirty, :rebasing, :merging, :applying, :bisecting].detect {|s| repo.send("#{s}?") }
     if !state.nil?
@@ -47,6 +49,7 @@ dep 'ready.push' do
 end
 
 dep 'pushed.push', :ref, :remote do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:pushed.push'", :callpoint => false, :instead => "'common:pushed.push'"
   self.class.uncache!
   ref.ask("What would you like to push?").default('HEAD')
   remote.ask("Where would you like to push to?").choose(repo.repo_shell('git remote').split("\n"))
@@ -72,6 +75,7 @@ dep 'pushed.push', :ref, :remote do
 end
 
 dep 'ok to update.push', :ref, :remote do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:ok to update.push'", :callpoint => false, :instead => "'common:ok to update.push'"
   met? {
     if remote_head[/^0+$/]
       log_ok "The remote repo is empty."
@@ -86,6 +90,7 @@ dep 'ok to update.push', :ref, :remote do
 end
 
 dep 'on origin.push', :ref do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:on origin.push'", :callpoint => false, :instead => "'common:on origin.push'"
   requires 'remote exists.push'.with('origin')
   met? {
     shell("git branch -r --contains #{ref}").split("\n").map(&:strip).include? "origin/#{repo.current_branch}"
@@ -99,6 +104,7 @@ dep 'on origin.push', :ref do
 end
 
 dep 'remote exists.push', :remote do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:remote exists.push'", :callpoint => false, :instead => "'common:remote exists.push'"
   met? {
     repo.repo_shell("git config remote.#{remote}.url") or log_error("The #{remote} remote isn't configured.")
   }

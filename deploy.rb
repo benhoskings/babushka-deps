@@ -1,4 +1,5 @@
 dep 'ready for update.repo', :git_ref_data, :env do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:ready for update.repo'", :callpoint => false, :instead => "'common:ready for update.repo'"
   env.default!(ENV['RAILS_ENV'] || ENV['RACK_ENV'] || 'production')
   requires [
     'valid git_ref_data.repo'.with(git_ref_data),
@@ -8,6 +9,7 @@ dep 'ready for update.repo', :git_ref_data, :env do
 end
 
 dep 'up to date.repo', :git_ref_data, :env do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:up to date.repo'", :callpoint => false, :instead => "'common:up to date.repo'"
   env.default!(ENV['RAILS_ENV'] || ENV['RACK_ENV'] || 'production')
   requires [
     'on correct branch.repo'.with(ref_info[:branch]),
@@ -27,22 +29,27 @@ dep 'up to date.repo', :git_ref_data, :env do
 end
 
 dep 'before deploy', :old_id, :new_id, :branch, :env do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:before deploy'", :callpoint => false, :instead => "'common:before deploy'"
   requires 'current dir:before deploy'.with(old_id, new_id, branch, env) if Dep('current dir:before deploy')
 end
 dep 'on deploy', :old_id, :new_id, :branch, :env do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:on deploy'", :callpoint => false, :instead => "'common:on deploy'"
   requires 'current dir:on deploy'.with(old_id, new_id, branch, env) if Dep('current dir:on deploy')
 end
 dep 'after deploy', :old_id, :new_id, :branch, :env do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:after deploy'", :callpoint => false, :instead => "'common:after deploy'"
   requires 'current dir:after deploy'.with(old_id, new_id, branch, env) if Dep('current dir:after deploy')
 end
 
 dep 'valid git_ref_data.repo', :git_ref_data do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:valid git_ref_data.repo'", :callpoint => false, :instead => "'common:valid git_ref_data.repo'"
   met? {
     git_ref_data[ref_data_regexp] || unmeetable!("Invalid git_ref_data '#{git_ref_data}'.")
   }
 end
 
 dep 'clean.repo' do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:clean.repo'", :callpoint => false, :instead => "'common:clean.repo'"
   setup {
     # Clear git's internal cache, which sometimes says the repo is dirty when it isn't.
     repo.repo_shell "git diff"
@@ -51,6 +58,7 @@ dep 'clean.repo' do
 end
 
 dep 'branch exists.repo', :branch do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:branch exists.repo'", :callpoint => false, :instead => "'common:branch exists.repo'"
   met? {
     repo.branches.include? branch
   }
@@ -62,6 +70,7 @@ dep 'branch exists.repo', :branch do
 end
 
 dep 'on correct branch.repo', :branch do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:on correct branch.repo'", :callpoint => false, :instead => "'common:on correct branch.repo'"
   requires 'branch exists.repo'.with(branch)
   met? {
     repo.current_branch == branch
@@ -74,6 +83,7 @@ dep 'on correct branch.repo', :branch do
 end
 
 dep 'HEAD up to date.repo', :old_id, :new_id, :branch do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:HEAD up to date.repo'", :callpoint => false, :instead => "'common:HEAD up to date.repo'"
   met? {
     (repo.current_full_head == new_id && repo.clean?).tap {|result|
       if result
@@ -94,6 +104,7 @@ dep 'HEAD up to date.repo', :old_id, :new_id, :branch do
 end
 
 dep 'unicorn restarted', :pidfile, :old_pidfile do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:unicorn restarted'", :callpoint => false, :instead => "'common:unicorn restarted'"
   pidfile.default!('tmp/pids/unicorn.pid')
   old_pidfile.default!("#{pidfile}.oldbin")
   def running? pid
@@ -159,6 +170,7 @@ dep 'unicorn restarted', :pidfile, :old_pidfile do
 end
 
 dep 'maintenance page up' do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:maintenance page up'", :callpoint => false, :instead => "'common:maintenance page up'"
   met? {
     !'public/system/maintenance.html.off'.p.exists? or
     'public/system/maintenance.html'.p.exists?
@@ -167,11 +179,13 @@ dep 'maintenance page up' do
 end
 
 dep 'maintenance page down' do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:maintenance page down'", :callpoint => false, :instead => "'common:maintenance page down'"
   met? { !'public/system/maintenance.html'.p.exists? }
   meet { 'public/system/maintenance.html'.p.rm }
 end
 
 dep 'when path changed', :path, :dep_spec, :old_id, :new_id, :env do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:when path changed'", :callpoint => false, :instead => "'common:when path changed'"
   def effective_old_id
     # If there is no initial commit (first push or branch change), git
     # replace git's '0000000' with a parentless commit (usually there's
@@ -203,12 +217,14 @@ dep 'when path changed', :path, :dep_spec, :old_id, :new_id, :env do
 end
 
 dep 'assets precompiled', :env, :deploying, :template => 'task' do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:assets precompiled'", :callpoint => false, :instead => "'common:assets precompiled'"
   run {
     shell "bundle exec rake assets:precompile:primary RAILS_GROUPS=assets RAILS_ENV=#{env}"
   }
 end
 
 dep 'delayed job restarted', :template => 'task' do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:delayed job restarted'", :callpoint => false, :instead => "'common:delayed job restarted'"
   run {
     output = shell?('ps ux | grep -v grep | grep "rake jobs:work"')
 

@@ -1,4 +1,5 @@
 dep 'apt packages removed', :match, :for => :apt do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:apt packages removed'", :callpoint => false, :instead => "'common:apt packages removed'"
   def packages
     shell("dpkg --get-selections").split("\n").select {|l|
       l[/\binstall$/]

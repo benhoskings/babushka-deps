@@ -10,6 +10,7 @@ meta :locale do
 end
 
 dep 'set.locale', :locale_name do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:set.locale'", :callpoint => false, :instead => "'common:set.locale'"
   locale_name.default!('en_AU')
   requires 'exists.locale'.with(locale_name)
   met? {
@@ -28,6 +29,7 @@ dep 'set.locale', :locale_name do
 end
 
 dep 'exists.locale', :locale_name do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:exists.locale'", :callpoint => false, :instead => "'common:exists.locale'"
   met? {
     local_locale(locale_name)
   }

@@ -1,4 +1,5 @@
 dep 'app bundled', :root, :env do
+  deprecated! "2013-12-12", :method_name => "'benhoskings:app bundled'", :callpoint => false, :instead => "'common:app bundled'"
   requires_when_unmet Dep('current dir:packages')
   met? {
     if !(root / 'Gemfile').exists?
