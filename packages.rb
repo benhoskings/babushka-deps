@@ -125,6 +125,7 @@ end
 dep 'sshd.bin' do
   installs {
     via :apt, 'openssh-server'
+    via :pacman, 'openssh'
   }
 end
 dep 'tmux.bin'
