@@ -9,8 +9,8 @@ dep 'ruby.src', :version, :patchlevel do
   def version_group
     version.to_s.scan(/^\d\.\d/).first
   end
-  version.default!('1.9.3')
-  patchlevel.default!('p374')
+  version.default!('2.0.0')
+  patchlevel.default!('p247')
   requires_when_unmet [
     'curl.lib',
     'libssl headers.managed',
