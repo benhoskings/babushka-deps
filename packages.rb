@@ -93,6 +93,16 @@ dep 'ncurses.managed' do
   provides []
 end
 dep 'nmap.bin'
+dep 'nodejs.src', :version do
+  version.default!('0.10.17')
+  source "http://nodejs.org/dist/v#{version}/node-v#{version}.tar.gz"
+  provides "node >= #{version}"
+  after {
+    # Trigger the creation of npm's global package dir, which it can't run
+    # without. (Only newer nodes bundle npm, though.)
+    shell!('npm --version') if which('npm')
+  }
+end
 dep 'oniguruma.managed'
 dep 'openssl.lib' do
   installs {
