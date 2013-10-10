@@ -25,8 +25,10 @@ dep 'ruby.src', :version, :patchlevel do
   provides "ruby == #{version}#{patchlevel}", 'gem', 'irb'
   configure {
     log_shell "configure", "./configure --prefix=#{prefix} --disable-install-doc"
+    add_extension 'openssl'
     add_extension 'psych'
     add_extension 'readline'
+    add_extension 'zlib'
   }
   build {
     log_shell "build", "make -j#{Babushka.host.cpus}"
