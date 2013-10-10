@@ -39,9 +39,8 @@ dep 'image_science.gem' do
   provides []
 end
 dep 'iotop.bin'
-dep 'java.managed' do
-  installs { via :apt, 'sun-java6-jre' }
-  after { shell "set -Ux JAVA_HOME /usr/lib/jvm/java-6-sun" }
+dep 'java.bin' do
+  installs 'openjdk-7-jre'
 end
 dep 'jnettop.bin'
 dep 'readline headers.managed' do
