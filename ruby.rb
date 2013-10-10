@@ -13,10 +13,10 @@ dep 'ruby.src', :version, :patchlevel do
   patchlevel.default!('p247')
   requires_when_unmet [
     'curl.lib',
-    'libssl headers.managed',
-    'readline headers.managed',
-    'yaml headers.managed',
-    'zlib headers.managed'
+    'openssl.lib',
+    'readline.lib',
+    'yaml.lib',
+    'zlib.lib'
   ]
   source "ftp://ftp.ruby-lang.org/pub/ruby/#{version_group}/ruby-#{version}-#{patchlevel}.tar.gz"
   provides "ruby == #{version}#{patchlevel}", 'gem', 'irb'

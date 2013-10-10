@@ -43,19 +43,17 @@ dep 'java.bin' do
   installs 'openjdk-7-jre'
 end
 dep 'jnettop.bin'
-dep 'readline headers.managed' do
+dep 'readline.lib' do
   installs {
     on :lenny, 'libreadline5-dev'
     via :apt, 'libreadline6-dev'
   }
-  provides []
 end
-dep 'libssl headers.managed' do
+dep 'openssl.lib' do
   installs {
     via :apt, 'libssl-dev'
     via :yum, 'openssl-devel'
   }
-  provides []
 end
 
 dep 'libxml.managed' do
@@ -143,17 +141,15 @@ dep 'tree.bin'
 dep 'unzip.managed'
 dep 'vim.bin'
 dep 'wget.managed'
-dep 'yaml headers.managed' do
+dep 'yaml.lib' do
   installs {
     via :brew, 'libyaml'
     via :apt, 'libyaml-dev'
   }
-  provides []
 end
-dep 'zlib headers.managed' do
+dep 'zlib.lib' do
   installs {
     via :apt, 'zlib1g-dev'
     via :yum, 'zlib-devel'
   }
-  provides []
 end
