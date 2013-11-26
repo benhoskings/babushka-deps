@@ -52,7 +52,13 @@ dep 'secured ssh logins' do
       shell("sed -i'' -e 's/^[# ]*#{option}\\W*\\w*$/#{option} no/' #{ssh_conf_path(:sshd)}")
     }
   }
-  after { shell "/etc/init.d/ssh restart" }
+  after {
+    if Babushka.host.matches?(:arch)
+      shell "systemctl restart sshd"
+    elsif Babushka.host.matches?(:apt)
+      shell "/etc/init.d/ssh restart"
+    end
+  }
 end
 
 dep 'lax host key checking' do
