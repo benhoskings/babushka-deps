@@ -14,7 +14,10 @@ dep 'ruby.src', :version, :patchlevel do
   end
   def check_exts *ext_names
     ext_names.each {|ext_name|
-      log_shell("checking for #{ext_name}", %Q{./ruby -e 'require "#{ext_name}"'}).tap {|result|
+      log_shell(
+        "checking for #{ext_name}",
+        %Q{./ruby --disable-gems -I.ext/common -I.ext/x86_64-linux -e 'require "#{ext_name}"'}
+      ).tap {|result|
         # TODO: this shouldn't be called from the meet{} block.
         unmeetable! "The ruby built without #{ext_name} support." unless result
       }
