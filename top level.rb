@@ -1,6 +1,6 @@
 dep 'system', :host_name, :locale_name do
   requires [
-    'set.locale'.with(locale_name),
+    'common:set.locale'.with(locale_name),
     'core software',
     'hostname'.with(host_name),
     'secured ssh logins',
