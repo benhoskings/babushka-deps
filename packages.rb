@@ -51,12 +51,6 @@ dep 'readline.lib' do
     otherwise 'readline'
   }
 end
-dep 'openssl.lib' do
-  installs {
-    via :apt, 'libssl-dev'
-    via :yum, 'openssl-devel'
-  }
-end
 
 dep 'libxml.managed' do
   installs {
