@@ -6,6 +6,9 @@ dep 'ruby trunk.src' do
 end
 
 dep 'ruby.src', :version, :patchlevel do
+  if patchlevel.set? && patchlevel[/^p/].nil?
+    unmeetable! "patchlevel must start with 'p'."
+  end
   def download_version
     patchlevel.set? ? "#{version}-#{patchlevel}" : version
   end
