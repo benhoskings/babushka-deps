@@ -1,10 +1,3 @@
-dep 'ruby trunk.src' do
-  requires_when_unmet 'build tools', 'bison.managed', 'readline headers.managed'
-  source 'git://github.com/ruby/ruby.git'
-  provides 'ruby == 1.9.3.dev', 'gem', 'irb'
-  configure_args '--disable-install-doc', '--with-readline-dir=/usr'
-end
-
 dep 'ruby.src', :version, :patchlevel do
   if patchlevel.set? && patchlevel[/^p/].nil?
     unmeetable! "patchlevel must start with 'p'."
