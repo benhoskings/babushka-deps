@@ -6,6 +6,13 @@ dep 'ruby trunk.src' do
 end
 
 dep 'ruby.src', :version, :patchlevel do
+  def download_version
+    patchlevel.set? ? "#{version}-#{patchlevel}" : version
+  end
+  def specified_ruby_version
+    # If the patchlevel isn't set, allow any patchlevel of the given version.
+    patchlevel.set? ? "ruby == #{version}#{patchlevel}" : "ruby ~> #{version}p0"
+  end
   def version_group
     version.to_s.scan(/^\d\.\d/).first
   end
@@ -26,8 +33,8 @@ dep 'ruby.src', :version, :patchlevel do
     'yaml.lib',
     'zlib.lib'
   ]
-  source "ftp://ftp.ruby-lang.org/pub/ruby/#{version_group}/ruby-#{version}-#{patchlevel}.tar.gz"
-  provides "ruby == #{version}#{patchlevel}", 'gem', 'irb'
+  source "ftp://ftp.ruby-lang.org/pub/ruby/#{version_group}/ruby-#{download_version}.tar.gz"
+  provides specified_ruby_version, 'gem', 'irb'
   configure {
     log_shell "configure", "./configure --prefix=#{prefix} --disable-install-doc"
   }
