@@ -9,8 +9,13 @@ dep 'ruby.src', :version, :patchlevel do
   def version_group
     version.to_s.scan(/^\d\.\d/).first
   end
-  def add_extension ext_name
-    log_shell "configure #{ext_name}", "ruby extconf.rb", :cd => "ext/#{ext_name}"
+  def check_exts *ext_names
+    ext_names.each {|ext_name|
+      log_shell("checking for #{ext_name}", %Q{./ruby -e 'require "#{ext_name}"'}).tap {|result|
+        # TODO: this shouldn't be called from the meet{} block.
+        unmeetable! "The ruby built without #{ext_name} support." unless result
+      }
+    }
   end
   version.default!('2.0.0')
   patchlevel.default!('p247')
@@ -25,13 +30,10 @@ dep 'ruby.src', :version, :patchlevel do
   provides "ruby == #{version}#{patchlevel}", 'gem', 'irb'
   configure {
     log_shell "configure", "./configure --prefix=#{prefix} --disable-install-doc"
-    add_extension 'openssl'
-    add_extension 'psych'
-    add_extension 'readline'
-    add_extension 'zlib'
   }
   build {
     log_shell "build", "make -j#{Babushka.host.cpus}"
+    check_exts 'openssl', 'psych', 'readline', 'zlib'
   }
   postinstall {
     # The ruby <1.9.3 installer skips bin/* when the build path contains a dot-dir.
