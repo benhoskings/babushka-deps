@@ -27,8 +27,7 @@ dep 'ruby.src', :version, :patchlevel do
       }
     }
   end
-  version.default!('2.0.0')
-  patchlevel.default!('p247')
+  version.default!('2.1.2')
   requires_when_unmet [
     'curl.lib',
     'openssl.lib',
