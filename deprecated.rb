@@ -10,8 +10,7 @@
   dep old_name do
     deprecated! '2014-04-10', :method_name => "'#{name}'", :callpoint => false, :instead => "the '#{new_name}' dep"
     requires new_name
-    # This is just a wrapper dep; override the template. (Shouldn't be
-    # necessary but :template is checked for truthiness, not presence.)
+    # This is just a wrapper dep; bypass the template's logic.
     met? { true }
   end
 
