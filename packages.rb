@@ -104,13 +104,12 @@ dep 'openssl.lib' do
     otherwise 'openssl'
   }
 end
-dep 'pcre.managed' do
+dep 'pcre.lib' do
   installs {
     via :apt, 'libpcre3-dev'
     via :yum, 'pcre-devel'
     otherwise 'pcre'
   }
-  provides 'pcre-config'
 end
 dep 'pv.bin'
 dep 'rcconf.managed' do
@@ -135,7 +134,7 @@ end
 dep 'tmux.bin'
 dep 'traceroute.bin'
 dep 'tree.bin'
-dep 'unzip.managed'
+dep 'unzip.bin'
 dep 'vim.bin'
 dep 'wget.managed'
 dep 'yaml.lib' do

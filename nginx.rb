@@ -155,9 +155,9 @@ dep 'nginx.src', :nginx_prefix, :version, :upload_module_version do
   version.default!('1.2.7')
   upload_module_version.default!('2.2')
 
-  requires 'pcre.managed', 'libssl headers.managed', 'zlib headers.managed'
+  requires 'pcre.lib', 'openssl.lib', 'zlib.lib'
   on :linux do
-    requires "unzip.managed"
+    requires "unzip.bin"
   end
 
   source "http://nginx.org/download/nginx-#{version}.tar.gz"
