@@ -147,6 +147,7 @@ dep 'zlib.lib' do
   installs {
     via :apt, 'zlib1g-dev'
     via :yum, 'zlib-devel'
+    via :brew, []
     otherwise 'zlib'
   }
 end
