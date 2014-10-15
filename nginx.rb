@@ -84,7 +84,7 @@ dep 'self signed cert.nginx', :domain, :nginx_prefix, :country, :state, :city, :
   meet {
     cd cert_path, :create => "700", :sudo => true do
       log_shell("generating private key", "openssl genrsa -out #{domain}.key 2048", :sudo => true) and
-      log_shell("generating certificate", "openssl req -new -sha256 -key #{domain}.key -out #{domain}.csr",
+      log_shell("generating certificate request", "openssl req -new -sha256 -key #{domain}.key -out #{domain}.csr",
         :sudo => true, :input => [
           country.default('AU'),
           state,
@@ -98,7 +98,7 @@ dep 'self signed cert.nginx', :domain, :nginx_prefix, :country, :state, :city, :
           '' # done
         ].join("\n")
       ) and
-      log_shell("signing certificate with key", "openssl x509 -req -days 365 -sha256 -in #{domain}.csr -signkey #{domain}.key -out #{domain}.crt", :sudo => true)
+      log_shell("generating certificate", "openssl x509 -req -days 365 -sha256 -in #{domain}.csr -signkey #{domain}.key -out #{domain}.crt", :sudo => true)
     end
     restart_nginx
   }
