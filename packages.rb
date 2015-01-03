@@ -21,6 +21,9 @@ end
 dep 'erlang.managed' do
   provides 'erl', 'erlc'
 end
+dep 'ffi.lib' do
+  installs 'libffi-dev'
+end
 dep 'freeimage.managed' do
   installs {
     via :apt, %w[libfreeimage3 libfreeimage-dev]

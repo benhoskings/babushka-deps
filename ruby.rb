@@ -26,6 +26,7 @@ dep 'ruby.src', :version, :patchlevel do
   version.default!('2.1.2')
   requires_when_unmet [
     'curl.lib',
+    'ffi.lib',
     'openssl.lib',
     'readline.lib',
     'yaml.lib',
