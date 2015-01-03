@@ -44,10 +44,10 @@ class PsqlGit
   private
 
   def setup
+    shell "mkdir -p '#{PREFIX}'" unless File.exists?(PREFIX)
     @fds ||= [STDOUT, STDERR].each {|fd|
       fd.reopen(LOG_PATH, 'a').sync = true
     }
-    shell "mkdir -p '#{PREFIX}'" unless File.exists?(PREFIX)
   end
 
   def dump
