@@ -32,7 +32,7 @@ dep 'ruby.src', :version, :patchlevel do
     'yaml.lib',
     'zlib.lib'
   ]
-  source "ftp://ftp.ruby-lang.org/pub/ruby/#{version_group}/ruby-#{download_version}.tar.gz"
+  source "http://cache.ruby-lang.org/pub/ruby/#{version_group}/ruby-#{download_version}.tar.gz"
   provides specified_ruby_version, 'gem', 'irb'
   configure {
     log_shell "configure", "./configure --prefix=#{prefix} --disable-install-doc"
