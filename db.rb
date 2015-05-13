@@ -27,7 +27,7 @@ dep 'db', :username, :root, :env, :data_required, :require_db_deps do
   end
 end
 
-dep 'seeded db', :username, :root, :env, :db_name, :db_type, :orm, :template => 'benhoskings:task' do
+dep 'seeded db', :username, :root, :env, :db_name, :db_type, :orm, :template => 'task' do
   requires "migrated db".with(username, root, env, db_name, db_type, 'no')
   root.default!('.')
   run {
