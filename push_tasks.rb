@@ -1,6 +1,6 @@
 dep 'schema up to date.push', :ref, :remote, :env do
   def db_name
-    'config/database.yml'.p.yaml[env.to_s]['database']
+    YAML.load_file('config/database.yml'.p)[env.to_s]['database']
   end
   def dump_schema_cmd
     pg_dump = "pg_dump #{db_name} --no-privileges --no-owner"
